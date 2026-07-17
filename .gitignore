@@ -33,3 +33,6 @@ docker/cert.crt
 docker/private.key
 .idea
 /yarn.lock
+
+docker/.ssh/
+
