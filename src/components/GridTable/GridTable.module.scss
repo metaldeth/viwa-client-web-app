@@ -1,0 +1,52 @@
+$cellWrapperMobileMinWidth: 100px;
+
+.gridTable {
+  flex-direction: column;
+
+  display: flex;
+
+  width: 100%;
+}
+
+.gridRow {
+  flex-direction: column;
+
+  display: flex;
+
+  width: 100%;
+}
+
+.rowHeader {
+  align-items: center;
+
+  display: flex;
+
+  border-radius: var(--control-radius-round-m) var(--control-radius-round-m) 0 0;
+  box-sizing: border-box;
+  padding: var(--space-xs) var(--space-l);
+
+  background: var(--bg-main-quaternary);
+}
+
+.defaultRowHeader {
+  width: 100%;
+}
+
+.rowContent {
+  display: grid;
+
+  border-bottom: none;
+  border-radius: 0 0 var(--control-radius-round-m) var(--control-radius-round-m);
+  box-sizing: border-box;
+  padding: var(--space-xs) var(--space-2xs);
+
+  background-color: var(--bg-main-tertriary);
+
+  overflow-x: scroll;
+  scrollbar-width: none;
+}
+
+.cellWrapper {
+  min-width: $cellWrapperMobileMinWidth;
+  width: 100%;
+}

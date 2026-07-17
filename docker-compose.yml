@@ -1,0 +1,21 @@
+services:
+  wiva-client-web-app:
+    build:
+      context: .
+    container_name: wiva-client-web-app
+    restart: on-failure
+    ports:
+      - '3005:3005'
+    env_file:
+      - .env
+    environment:
+      - VITE_APP_URL_FRONT=${VITE_APP_URL_FRONT}
+      - VITE_APP_URL_AUTH=${VITE_APP_URL_AUTH}
+      - VITE_APP_BASE_URL=${VITE_APP_BASE_URL}
+    networks:
+      - default
+      - web-external-network
+
+networks:
+  web-external-network:
+    external: true

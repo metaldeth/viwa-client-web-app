@@ -1,0 +1,16 @@
+$BottomSheetModalMaxHeight: 594px;
+
+.BottomSheetModal {
+  background: #1a1a28;
+  border-top: 1px solid rgba(124, 58, 237, 0.3);
+
+  bottom: 0;
+  left: 0;
+
+  max-width: 100%;
+  max-height: $BottomSheetModalMaxHeight;
+  margin: 0;
+  padding: var(--space-l);
+
+  border-radius: var(--control-radius-round-m) var(--control-radius-round-m) 0 0;
+}

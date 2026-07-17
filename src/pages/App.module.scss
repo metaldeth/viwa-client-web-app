@@ -1,0 +1,26 @@
+.theme {
+  position: relative;
+
+  height: 100%;
+
+  background-color: var(--bg-main-body);
+
+  .app {
+    box-sizing: border-box;
+    width: 100dvw;
+    height: 100dvh;
+    padding: var(--space-m);
+
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+
+    .appContent {
+      flex-direction: column;
+      align-items: stretch;
+
+      display: flex;
+    }
+  }
+}

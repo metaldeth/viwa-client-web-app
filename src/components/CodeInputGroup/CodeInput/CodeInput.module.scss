@@ -1,0 +1,37 @@
+$codeInputSize: 64px;
+$codeInputBorderRadius: 12px;
+$codeInputInvalidColor: #FFD5D7;
+$codeInputDisabledColor: #e5e5e5;
+
+.CodeInput {
+  width: $codeInputSize;
+  height: $codeInputSize;
+
+  text-align: center;
+
+  border: none;
+  border-radius: $codeInputBorderRadius;
+
+  background: var(--bg-status-system);
+
+  font-size: var(--size-text-3xl);
+  line-height: var(--line-height-text-xs);
+  font-family: var(--font-primary), system-ui;
+  font-weight: var(--font-weight-text-medium);
+
+  color: var(--typo-main-primary);
+
+  transition: background 0.2s ease-in-out;
+}
+
+.invalid {
+  background: $codeInputInvalidColor;
+}
+
+.CodeInput:focus-visible {
+  outline: none;
+}
+
+.CodeInput:disabled {
+  background: $codeInputDisabledColor;
+}

@@ -1,0 +1,25 @@
+$contendCardHeaderPadding: 8px 20px;
+
+.AppHeader {
+  justify-content: space-between !important;
+
+  width: 100%;
+  padding: 0 0 var(--space-m) 0;
+
+  .cardLogo {
+    width: auto;
+    padding: $contendCardHeaderPadding;
+
+    background: transparent;
+    border: none;
+    box-shadow: none;
+
+    .text {
+      color: #ffffff;
+      letter-spacing: 0.08em;
+      font-size: 28px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+  }
+}

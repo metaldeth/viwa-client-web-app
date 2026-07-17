@@ -1,0 +1,73 @@
+.SubscriptionPage {
+  .scanSubscriptionCard {
+    padding: var(--space-m);
+
+    box-shadow: 0 4px 30px 0 rgba(124, 58, 237, 0.15);
+    border: 1px solid rgba(124, 58, 237, 0.25);
+
+    background: #141420;
+  }
+
+  .makeSubscriptionCard {
+    padding: 0 0 0 var(--space-m);
+
+    box-shadow: 0 4px 30px 0 rgba(124, 58, 237, 0.15);
+    border: 1px solid rgba(124, 58, 237, 0.25);
+
+    background: linear-gradient(135deg, #1e1030 0%, #2a1550 100%);
+
+    .textContainer {
+      padding: var(--space-m) 0;
+    }
+
+    .img {
+      width: 125px;
+    }
+  }
+}
+
+.qrWhitePad,
+.qrWhitePadLarge {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  box-sizing: content-box;
+
+  background: #ffffff;
+  border-radius: var(--control-radius-round-s);
+  border: 1px solid rgba(124, 58, 237, 0.35);
+}
+
+.qrWhitePad {
+  padding: 16px;
+}
+
+.qrWhitePadLarge {
+  padding: 24px;
+}
+
+.levelRow {
+  display: flex;
+  gap: var(--space-s);
+  align-items: center;
+  cursor: pointer;
+}
+
+.payLink {
+  color: #c4b5fd;
+  text-decoration: underline;
+}
+
+.DescriptionSheetModal {
+  .iconContainer {
+    border-radius: var(--control-radius-round-xs);
+    padding: var(--space-xs);
+
+    background: #7c3aed;
+
+    .icon {
+      color: #ffffff;
+    }
+  }
+}

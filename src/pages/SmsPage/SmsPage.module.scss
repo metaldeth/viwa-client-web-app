@@ -1,0 +1,34 @@
+$instructionWidth: 221px;
+$resendCodeCardBorderRadius: 12px;
+$resendCodeCardPadding: 4px 12px;
+$resendCodeCardHeight: 28px;
+
+.instructionText{
+  width: $instructionWidth;
+}
+
+.resendCodeCard {
+  border-radius: $resendCodeCardBorderRadius;
+  height: $resendCodeCardHeight;
+  padding: $resendCodeCardPadding;
+
+  background: rgba(124, 58, 237, 0.1);
+  border: 1px solid rgba(124, 58, 237, 0.2);
+
+  .text{
+    color: #9090b0;
+
+    &.asButton{
+      color: #9b72f0;
+    }
+  }
+
+  &.asButton{
+    background: rgba(124, 58, 237, 0.2);
+    border-color: rgba(124, 58, 237, 0.4);
+  }
+}
+
+.link {
+  color: #9b72f0;
+}
