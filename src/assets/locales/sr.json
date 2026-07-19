@@ -1261,7 +1261,7 @@
     "machineControl.machine.list.tooltip.iconLock.label": "Блокирани контејнери{{blockedCellLength}}",
     "machineControl.machine.list.tooltip.iconAutomatDisconnectFilled.label": "Празан контејнер{{emptyCellLength}}",
     "machineControl.machine.list.tooltip.iconFaucet.label": "Нема воде",
-    "machineControl.machine.list.tooltip.iconWivaCup.label": "Нема чаша",
+    "machineControl.machine.list.tooltip.iconViwaCup.label": "Нема чаша",
     "machineControl.machine.list.tooltip.online.label": "У мрежи",
     "machineControl.machine.list.tooltip.offline.label": "Није у мрежи",
     "machineControl.machine.list.tooltip.terminalOnline.label": "Терминал је исправан",

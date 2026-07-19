@@ -1261,7 +1261,7 @@
     "machineControl.machine.list.tooltip.iconLock.label": "Engellenmiş hazneler{{blockedCellLength}}",
     "machineControl.machine.list.tooltip.iconAutomatDisconnectFilled.label": "Boş hazneler{{emptyCellLength}}",
     "machineControl.machine.list.tooltip.iconFaucet.label": "Su yok",
-    "machineControl.machine.list.tooltip.iconWivaCup.label": "Bardak yok",
+    "machineControl.machine.list.tooltip.iconViwaCup.label": "Bardak yok",
     "machineControl.machine.list.tooltip.online.label": "Ağda",
     "machineControl.machine.list.tooltip.offline.label": "Ağda değil",
     "machineControl.machine.list.tooltip.terminalOnline.label": "Terminal çalışıyor",

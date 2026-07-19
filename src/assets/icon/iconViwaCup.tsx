@@ -1,7 +1,7 @@
-﻿import { SVGProps } from 'react';
+import { SVGProps } from 'react';
 import { createIcon } from '@asnefedov/icons/Icon';
 
-const IconWivaCupSizeXS = (props: SVGProps<SVGSVGElement>) => (
+const IconViwaCupSizeXS = (props: SVGProps<SVGSVGElement>) => (
   <svg width="12" height="12" viewBox="0 0 12 12" {...props}>
     <path
       fillRule="evenodd"
@@ -11,7 +11,7 @@ const IconWivaCupSizeXS = (props: SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
-const IconWivaCupSizeS = (props: SVGProps<SVGSVGElement>) => (
+const IconViwaCupSizeS = (props: SVGProps<SVGSVGElement>) => (
   <svg width="16" height="16" viewBox="0 0 16 16" {...props}>
     <path
       fillRule="evenodd"
@@ -21,7 +21,7 @@ const IconWivaCupSizeS = (props: SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
-const IconWivaCupSizeM = (props: SVGProps<SVGSVGElement>) => (
+const IconViwaCupSizeM = (props: SVGProps<SVGSVGElement>) => (
   <svg width="24" height="24" viewBox="0 0 24 24" {...props}>
     <path
       fillRule="evenodd"
@@ -31,10 +31,10 @@ const IconWivaCupSizeM = (props: SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
-export const IconWivaCup = createIcon({
-  name: 'IconWivaCup',
-  xs: IconWivaCupSizeXS,
-  s: IconWivaCupSizeS,
-  m: IconWivaCupSizeM,
-  l: IconWivaCupSizeM,
+export const IconViwaCup = createIcon({
+  name: 'IconViwaCup',
+  xs: IconViwaCupSizeXS,
+  s: IconViwaCupSizeS,
+  m: IconViwaCupSizeM,
+  l: IconViwaCupSizeM,
 });

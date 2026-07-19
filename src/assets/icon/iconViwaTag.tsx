@@ -1,7 +1,7 @@
-﻿import { SVGProps } from 'react';
+import { SVGProps } from 'react';
 import { createIcon } from '@asnefedov/icons/Icon';
 
-const IconWivaTagSizeXS = (props: SVGProps<SVGSVGElement>) => (
+const IconViwaTagSizeXS = (props: SVGProps<SVGSVGElement>) => (
   <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" {...props}>
     <path
       fillRule="evenodd"
@@ -16,7 +16,7 @@ const IconWivaTagSizeXS = (props: SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
-const IconWivaTagSizeS = (props: SVGProps<SVGSVGElement>) => (
+const IconViwaTagSizeS = (props: SVGProps<SVGSVGElement>) => (
   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" {...props}>
     <path
       fillRule="evenodd"
@@ -31,7 +31,7 @@ const IconWivaTagSizeS = (props: SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
-const IconWivaTagSizeM = (props: SVGProps<SVGSVGElement>) => (
+const IconViwaTagSizeM = (props: SVGProps<SVGSVGElement>) => (
   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" {...props}>
     <path
       fillRule="evenodd"
@@ -46,10 +46,10 @@ const IconWivaTagSizeM = (props: SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
-export const IconWivaTag = createIcon({
-  name: 'IconWivaTag',
-  xs: IconWivaTagSizeXS,
-  s: IconWivaTagSizeS,
-  m: IconWivaTagSizeM,
-  l: IconWivaTagSizeM,
+export const IconViwaTag = createIcon({
+  name: 'IconViwaTag',
+  xs: IconViwaTagSizeXS,
+  s: IconViwaTagSizeS,
+  m: IconViwaTagSizeM,
+  l: IconViwaTagSizeM,
 });

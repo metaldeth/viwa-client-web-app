@@ -1261,7 +1261,7 @@
     "machineControl.machine.list.tooltip.iconLock.label": "Μπλοκαρισμένα δοχεία: {{blockedCellLength}}",
     "machineControl.machine.list.tooltip.iconAutomatDisconnectFilled.label": "Άδεια δοχεία: {{emptyCellLength}}",
     "machineControl.machine.list.tooltip.iconFaucet.label": "Δεν υπάρχει νερό",
-    "machineControl.machine.list.tooltip.iconWivaCup.label": "Δεν υπάρχουν ποτήρια",
+    "machineControl.machine.list.tooltip.iconViwaCup.label": "Δεν υπάρχουν ποτήρια",
     "machineControl.machine.list.tooltip.online.label": "Σε σύνδεση",
     "machineControl.machine.list.tooltip.offline.label": "Εκτός σύνδεσης",
     "machineControl.machine.list.tooltip.terminalOnline.label": "Το τερματικό είναι σε καλή κατάσταση",

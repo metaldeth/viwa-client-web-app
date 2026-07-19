@@ -1,7 +1,7 @@
-﻿import { SVGProps } from 'react';
+import { SVGProps } from 'react';
 import { createIcon } from '@asnefedov/icons/Icon';
 
-const IconLogoWivaSizeL = (props: SVGProps<SVGSVGElement>) => (
+const IconLogoViwaSizeL = (props: SVGProps<SVGSVGElement>) => (
   <svg width="232" height="48" viewBox="0 0 232 48" xmlns="http://www.w3.org/2000/svg" {...props}>
     <path d="M162.314 27.9429H187.997L193.219 12.6857C193.733 11.1428 193.476 9.59999 192.62 8.22856C191.678 6.94285 190.223 6.17143 188.682 6.17143H165.225C163.17 6.17143 161.287 7.45714 160.602 9.42857L151.785 35.1429C151.271 36.6857 151.528 38.2286 152.384 39.6C153.325 40.8857 154.781 41.6571 156.322 41.6571H183.289L186.028 33.6857H162.571C162.058 33.6857 161.544 33.4286 161.287 33C160.945 32.5714 160.945 32.0571 161.116 31.5428L162.314 27.9429ZM165.054 19.9714L166.68 15.2571C166.937 14.5714 167.537 14.1429 168.221 14.1429H182.261C182.775 14.1429 183.289 14.4 183.545 14.8286C183.888 15.2571 183.888 15.7714 183.802 16.2857L182.604 19.9714H165.054Z" />
     <path d="M75.9351 6.17143L71.141 19.9714H53.6768L58.3852 6.17143H50.2524L38.0103 41.6571H46.1432L50.9373 27.9429H68.4015L63.693 41.6571H71.8258L84.0679 6.17143H75.9351Z" />
@@ -12,10 +12,10 @@ const IconLogoWivaSizeL = (props: SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
-export const IconLogoWiva = createIcon({
-  name: 'IconLogoWiva',
-  m: IconLogoWivaSizeL,
-  s: IconLogoWivaSizeL,
-  xs: IconLogoWivaSizeL,
-  l: IconLogoWivaSizeL,
+export const IconLogoViwa = createIcon({
+  name: 'IconLogoViwa',
+  m: IconLogoViwaSizeL,
+  s: IconLogoViwaSizeL,
+  xs: IconLogoViwaSizeL,
+  l: IconLogoViwaSizeL,
 });

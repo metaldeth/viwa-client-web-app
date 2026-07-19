@@ -1261,7 +1261,7 @@
     "machineControl.machine.list.tooltip.iconLock.label": "Contêineres bloqueados{{blockedCellLength}}",
     "machineControl.machine.list.tooltip.iconAutomatDisconnectFilled.label": "Contêineres vazios{{emptyCellLength}}",
     "machineControl.machine.list.tooltip.iconFaucet.label": "Sem água",
-    "machineControl.machine.list.tooltip.iconWivaCup.label": "Sem copos",
+    "machineControl.machine.list.tooltip.iconViwaCup.label": "Sem copos",
     "machineControl.machine.list.tooltip.online.label": "Online",
     "machineControl.machine.list.tooltip.offline.label": "Offline",
     "machineControl.machine.list.tooltip.terminalOnline.label": "Terminal operacional",
