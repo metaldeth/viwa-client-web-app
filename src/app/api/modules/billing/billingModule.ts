@@ -1,40 +1,76 @@
 import { AbstractApiModule } from '../../abstractApiModule';
-import { billingBaseUrl } from '../../../../consts';
+import { viwaTelemetryApiUrl } from '../../../../consts';
 import type {
+  InitSubscriptionPaymentRequest,
   InitSubscriptionPaymentResponse,
   PaymentPollResponse,
   SubscriptionPollResponse,
 } from '../../../../types/billing';
 
-export type InitSubscriptionPaymentRequest = {
-  clientId: string;
-  organizationId: number;
-  subscriptionLevelUuid: string;
-};
+const POLL_INTERVAL_MS = 2_000;
+const POLL_MAX_MS = 120_000;
 
-const LONG_POLL_MS = 120_000;
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export class BillingModule extends AbstractApiModule {
   initSubscriptionPayment(body: InitSubscriptionPaymentRequest) {
     return this.request.post<InitSubscriptionPaymentRequest, InitSubscriptionPaymentResponse>(
-      `${billingBaseUrl}/api/v1/subscription-payments/init`,
+      `${viwaTelemetryApiUrl}/client/billing/subscription-payments/init`,
       body,
     );
   }
 
-  longPollPayment(sessionId: string) {
+  getPaymentStatus(paymentId: string) {
     return this.request.get<void, PaymentPollResponse>(
-      `${billingBaseUrl}/api/v1/subscription-payments/${sessionId}/payment`,
-      undefined,
-      { timeout: LONG_POLL_MS },
+      `${viwaTelemetryApiUrl}/client/billing/subscription-payments/${encodeURIComponent(paymentId)}/status`,
     );
   }
 
-  longPollSubscription(sessionId: string) {
+  getSubscriptionStatus(paymentId: string) {
     return this.request.get<void, SubscriptionPollResponse>(
-      `${billingBaseUrl}/api/v1/subscription-payments/${sessionId}/subscription`,
-      undefined,
-      { timeout: LONG_POLL_MS },
+      `${viwaTelemetryApiUrl}/client/billing/subscription-payments/${encodeURIComponent(paymentId)}/subscription`,
     );
   }
+
+  async pollPaymentUntilPaid(paymentId: string): Promise<PaymentPollResponse> {
+    const started = Date.now();
+
+    while (Date.now() - started < POLL_MAX_MS) {
+      const response = await this.getPaymentStatus(paymentId);
+
+      if (response.status === 'PAID') {
+        return response;
+      }
+
+      if (response.status === 'FAILED' || response.status === 'EXPIRED') {
+        throw new Error(response.message || 'Оплата не прошла');
+      }
+
+      await sleep(POLL_INTERVAL_MS);
+    }
+
+    throw new Error('Время ожидания оплаты истекло');
+  }
+
+  async pollSubscriptionUntilCompleted(paymentId: string): Promise<SubscriptionPollResponse> {
+    const started = Date.now();
+
+    while (Date.now() - started < POLL_MAX_MS) {
+      const response = await this.getSubscriptionStatus(paymentId);
+
+      if (response.status === 'COMPLETED') {
+        return response;
+      }
+
+      if (response.status === 'FAILED') {
+        throw new Error(response.message || 'Не удалось подтвердить абонемент');
+      }
+
+      await sleep(POLL_INTERVAL_MS);
+    }
+
+    throw new Error('Время ожидания подтверждения абонемента истекло');
+  }
 }
+
+export default BillingModule;

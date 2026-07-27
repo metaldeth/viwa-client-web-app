@@ -1,12 +1,16 @@
 ﻿import { ClientDataType } from '../../types/enums/clientDataType';
-import { ACCESS_TOKEN_STORAGE_NAME } from '../../consts/env/storage';
+import { ACCESS_TOKEN_STORAGE_NAME, REFRESH_TOKEN_STORAGE_NAME } from '../../consts/env/storage';
 
-/**
- * Проверка наличия токенов
- */
 export const hasAuthTokens = () => {
-  const clientToken = localStorage.getItem(ClientDataType.CLIENT_TOKEN);
   const accessToken = localStorage.getItem(ACCESS_TOKEN_STORAGE_NAME);
+  const refreshToken = localStorage.getItem(REFRESH_TOKEN_STORAGE_NAME);
+  const clientId = localStorage.getItem(ClientDataType.CLIENT_TOKEN);
 
-  return Boolean(clientToken && accessToken);
+  return Boolean(accessToken && refreshToken && clientId);
+};
+
+export const clearClientAuthStorage = () => {
+  localStorage.removeItem(ACCESS_TOKEN_STORAGE_NAME);
+  localStorage.removeItem(REFRESH_TOKEN_STORAGE_NAME);
+  localStorage.removeItem(ClientDataType.CLIENT_TOKEN);
 };

@@ -1,8 +1,11 @@
 ﻿import { FC, memo } from 'react';
 import { matchPath, Navigate, Outlet, useLocation } from 'react-router-dom';
-import { useValidatedBaseParams } from './useValidatedBaseParams';
 import { ValidationPageProps } from './types';
 import { hasAuthTokens } from './helpers';
+import { useMachineSerialValidation } from './useMachineSerialValidation';
+import ErrorPage from '../ErrorPage/ErrorPage';
+import { Loader } from '@asnefedov/uikit/Loader';
+import VerticalContainer from '../../components/VerticalContainer';
 
 const trimTrailingSlashes = (p: string) => p.replace(/\/+$/, '');
 
@@ -20,18 +23,26 @@ const isHomePath = (pathname: string, basePathPattern: string) => {
   return matchPath({ path: `${basePattern}/home`, end: true }, path) !== null;
 };
 
-/**
- * Страница валидации
- */
 const ValidationPage: FC<ValidationPageProps> = memo(function ValidationRoute({ validAddress }) {
   const location = useLocation();
+  const machineValidation = useMachineSerialValidation();
 
   const match = matchPath(validAddress, location.pathname) !== null;
 
-  const { isValid } = useValidatedBaseParams(['orgId', 'sportId', 'machineId']);
-
-  if (!match || !isValid) {
+  if (!match) {
     return <Navigate to="/errorPage" replace />;
+  }
+
+  if (machineValidation.status === 'loading' || machineValidation.status === 'idle') {
+    return (
+      <VerticalContainer isAutoWidth align="center">
+        <Loader view="primary" />
+      </VerticalContainer>
+    );
+  }
+
+  if (machineValidation.status === 'invalid') {
+    return <ErrorPage message={machineValidation.message} />;
   }
 
   const authed = hasAuthTokens();

@@ -1,16 +1,23 @@
+export type InitSubscriptionPaymentRequest = {
+  subscriptionLevelId: string;
+  requestUuid: string;
+};
+
 export type InitSubscriptionPaymentResponse = {
-  sessionId: string;
-  paymentUrl: string;
-  paymasterOrderId: string;
+  paymentId: string;
+  sbpQrUrl: string;
   amountKopecks: number;
+  expiresAt: string;
 };
 
 export type PaymentPollResponse = {
-  status: 'PAID' | 'PENDING' | 'FAILED' | 'TIMEOUT';
+  status: 'PAID' | 'PENDING' | 'FAILED' | 'EXPIRED';
+  paidAt?: string | null;
   message?: string | null;
 };
 
 export type SubscriptionPollResponse = {
-  status: 'COMPLETED' | 'PENDING' | 'FAILED' | 'TIMEOUT';
+  status: 'COMPLETED' | 'PENDING' | 'FAILED';
+  client?: import('./serverInterface/clientDTO').ClientProfileDTO;
   message?: string | null;
 };

@@ -12,7 +12,7 @@ import ValidationPage from './ValidationPage';
 import SubscriptionPage from './SubscriptionPage';
 
 export const App: FC = () => {
-  const validAddress = '/main/:orgId/:sportId/:machineId/*';
+  const validAddress = '/m/:machineSerial/*';
 
   return (
     <Theme className={styles.theme} preset={presetGpnDefault}>

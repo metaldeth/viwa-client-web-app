@@ -11,14 +11,9 @@ import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../app/hooks/store';
 import { sendCodeToPhoneThunk } from '../../state/auth/thunk';
 
-/**
- * Страница авторизации
- */
 const AuthPage: FC = () => {
   const dispatch = useAppDispatch();
-
-  const isOnRequest = true; // Флаг для включения/выключения запроса кода по номеру телефона (предназначено для тестирования)
-
+  const isOnRequest = true;
   const navigate = useNavigate();
 
   const { ref, unmaskedValue } = useIMask<HTMLInputElement, ReactMaskOpts>({
@@ -34,15 +29,12 @@ const AuthPage: FC = () => {
     setPhoneValidation(checkPhoneValidation(unmaskedValue));
   }, [unmaskedValue]);
 
-  // Обработчики
   const handleSendCode = () => {
     if (isOnRequest) {
       dispatch(sendCodeToPhoneThunk(unmaskedValue))
         .unwrap()
-        .then((response: string) => {
-          if (response) {
-            navigate(`sms/${response}/${unmaskedValue}`);
-          }
+        .then((response) => {
+          navigate(`sms/${response.cooldownSeconds}/${unmaskedValue}`);
         })
         .catch((error: Error) => {
           setPhoneValidation({
@@ -55,7 +47,6 @@ const AuthPage: FC = () => {
     }
   };
 
-  // Рендер методы
   const renderHeader = () => (
     <Text size="2xl" weight="semibold" lineHeight="xs">
       Авторизация

@@ -1,11 +1,10 @@
 ﻿import {
-  getClientInfoThunk,
-  getCurrentClientInfoThunk,
+  getCurrentClientProfileThunk,
   getClientsListThunk,
   getWaterHistoryListThunk,
 } from './thunk';
 import {
-  ClientDTO,
+  ClientProfileDTO,
   CreateClientRes,
   SendCodeResponse,
   ShortClientResponseDTO,
@@ -26,7 +25,7 @@ type WaterHistoryListState = StateItemType<WaterHistoryDTO[]> & {
 
 export type LoyaltyState = {
   clientList: StateItemType<ShortClientResponseDTO[]>;
-  clientInfo: StateItemType<ClientDTO>;
+  clientProfile: StateItemType<ClientProfileDTO>;
   waterHistoryList: WaterHistoryListState;
   sendCodeToPhone: StateItemType<SendCodeResponse>;
   checkCodeAndCreateClient: StateItemType<CreateClientRes>;
@@ -38,7 +37,7 @@ const initialState: LoyaltyState = {
     isLoading: false,
     isReject: false,
   },
-  clientInfo: {
+  clientProfile: {
     state: null,
     isLoading: false,
     isReject: false,
@@ -66,7 +65,6 @@ export const loyaltySlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    // getClientsListThunk
     builder.addCase(getClientsListThunk.pending, (state) => {
       state.clientList.isLoading = true;
       state.clientList.isReject = false;
@@ -83,42 +81,23 @@ export const loyaltySlice = createSlice({
       state.clientList.isReject = false;
     });
 
-    //getClientInfoThunk
-    builder.addCase(getClientInfoThunk.pending, (state) => {
-      state.clientInfo.state = null;
-      state.clientInfo.isLoading = true;
-      state.clientInfo.isReject = false;
+    builder.addCase(getCurrentClientProfileThunk.pending, (state) => {
+      state.clientProfile.state = null;
+      state.clientProfile.isLoading = true;
+      state.clientProfile.isReject = false;
     });
 
-    builder.addCase(getClientInfoThunk.rejected, (state) => {
-      state.clientInfo.isLoading = false;
-      state.clientInfo.isReject = true;
+    builder.addCase(getCurrentClientProfileThunk.rejected, (state) => {
+      state.clientProfile.isLoading = false;
+      state.clientProfile.isReject = true;
     });
 
-    builder.addCase(getClientInfoThunk.fulfilled, (state, action) => {
-      state.clientInfo.state = action.payload;
-      state.clientInfo.isLoading = false;
-      state.clientInfo.isReject = false;
+    builder.addCase(getCurrentClientProfileThunk.fulfilled, (state, action) => {
+      state.clientProfile.state = action.payload;
+      state.clientProfile.isLoading = false;
+      state.clientProfile.isReject = false;
     });
 
-    builder.addCase(getCurrentClientInfoThunk.pending, (state) => {
-      state.clientInfo.state = null;
-      state.clientInfo.isLoading = true;
-      state.clientInfo.isReject = false;
-    });
-
-    builder.addCase(getCurrentClientInfoThunk.rejected, (state) => {
-      state.clientInfo.isLoading = false;
-      state.clientInfo.isReject = true;
-    });
-
-    builder.addCase(getCurrentClientInfoThunk.fulfilled, (state, action) => {
-      state.clientInfo.state = action.payload;
-      state.clientInfo.isLoading = false;
-      state.clientInfo.isReject = false;
-    });
-
-    //getWaterHistoryListThunk
     builder.addCase(getWaterHistoryListThunk.pending, (state) => {
       state.waterHistoryList.state = null;
       state.waterHistoryList.totalElements = null;

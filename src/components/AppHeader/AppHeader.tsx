@@ -7,28 +7,28 @@ import { motion } from 'framer-motion';
 import { initialLogo, visibleLogo } from '../../animations/variants/logoVariants';
 import { Button } from '@asnefedov/uikit/Button';
 import { IconSignOut } from '../../assets/icon/iconSignOut';
-import { ACCESS_TOKEN_STORAGE_NAME } from '../../consts/env/storage';
-import { ClientDataType } from '../../types/enums/clientDataType';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { api } from '../../app/api';
+import { clearClientAuthStorage } from '../../pages/ValidationPage/helpers';
 
-/**
- * Заголовок приложения
- */
 const AppHeader: FC = () => {
   const location = useLocation();
-
   const navigate = useNavigate();
 
   const isLogOutButtonShown = location.pathname.includes('home');
 
-  // Обработчики
   const handleClickSignOut = () => {
+    const refreshToken = api.getRefreshToken();
+
+    if (refreshToken) {
+      void api.auth.logout(refreshToken).catch(() => undefined);
+    }
+
+    api.clearTokens();
+    clearClientAuthStorage();
+
     const newPath = location.pathname.replace('home', 'auth');
-
     navigate(newPath);
-
-    localStorage.removeItem(ACCESS_TOKEN_STORAGE_NAME);
-    localStorage.removeItem(ClientDataType.CLIENT_TOKEN);
   };
 
   return (
@@ -49,4 +49,5 @@ const AppHeader: FC = () => {
     </HorizontalContainer>
   );
 };
+
 export default AppHeader;

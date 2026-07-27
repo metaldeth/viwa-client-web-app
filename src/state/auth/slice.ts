@@ -1,7 +1,6 @@
-﻿import { CreateClientRes, SendCodeResponse } from '../../types/serverInterface/clientDTO';
+﻿import { CheckCodeResponse, SendCodeResponse } from '../../types/serverInterface/clientDTO';
 import { createSlice } from '@reduxjs/toolkit';
 import { checkCodeAndCreateClientThunk, sendCodeToPhoneThunk } from './thunk';
-import { ACCESS_TOKEN_STORAGE_NAME } from '../../consts/env/storage';
 import { api } from '../../app/api';
 
 type StateItemType<T> = {
@@ -12,7 +11,7 @@ type StateItemType<T> = {
 
 export type AuthState = {
   sendCodeToPhone: StateItemType<SendCodeResponse>;
-  checkCodeAndCreateClient: StateItemType<CreateClientRes>;
+  checkCodeAndCreateClient: StateItemType<CheckCodeResponse>;
 };
 
 const initialState: AuthState = {
@@ -33,7 +32,6 @@ export const authSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    // sendCodeToPhoneThunk
     builder.addCase(sendCodeToPhoneThunk.pending, (state) => {
       state.sendCodeToPhone.isLoading = true;
       state.sendCodeToPhone.isReject = false;
@@ -50,14 +48,13 @@ export const authSlice = createSlice({
 
     builder.addCase(sendCodeToPhoneThunk.fulfilled, (state, action) => {
       state.sendCodeToPhone.state = {
-        result: action.payload,
+        result: String(action.payload.cooldownSeconds),
         error: '',
       };
       state.sendCodeToPhone.isLoading = false;
       state.sendCodeToPhone.isReject = false;
     });
 
-    // checkCodeAndCreateClientThunk
     builder.addCase(checkCodeAndCreateClientThunk.pending, (state) => {
       state.checkCodeAndCreateClient.isLoading = true;
       state.checkCodeAndCreateClient.isReject = false;
@@ -73,11 +70,10 @@ export const authSlice = createSlice({
       state.checkCodeAndCreateClient.isLoading = false;
       state.checkCodeAndCreateClient.isReject = false;
 
-      const token = action.payload.token;
+      const { accessToken, refreshToken, client } = action.payload;
 
-      if (token) {
-        localStorage.setItem(ACCESS_TOKEN_STORAGE_NAME, token);
-        api.saveToken(token);
+      if (accessToken && refreshToken) {
+        api.saveTokens(accessToken, refreshToken, client.id);
       }
     });
   },

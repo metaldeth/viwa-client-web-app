@@ -20,7 +20,13 @@ export const organizationBaseUrl = `${import.meta.env.VITE_APP_BASE_URL}telemetr
 export const machineControlBaseUrl = `${import.meta.env.VITE_APP_BASE_URL}telemetry-machine-control`;
 
 /**
- * Базовый url модуля "Клиенты"
+ * Viwa Telemetry API (loyalty client web: auth, profile, billing, public entry)
+ */
+export const viwaTelemetryApiUrl =
+  import.meta.env.VITE_VIWA_TELEMETRY_API_URL ?? `${import.meta.env.VITE_APP_BASE_URL}api/v1`;
+
+/**
+ * Базовый url модуля "Клиенты" (legacy dashboard/admin)
  */
 export const loyaltyBaseUrl = `${import.meta.env.VITE_APP_BASE_URL}telemetry-loyalty`;
 

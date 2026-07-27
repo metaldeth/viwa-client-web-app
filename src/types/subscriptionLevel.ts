@@ -1,11 +1,14 @@
 /**
- * Уровень подписки (telemetry-loyalty SubscriptionLevel)
+ * Уровень подписки (Viwa Telemetry GET /client/subscription-levels)
  */
 export type SubscriptionLevelDTO = {
-  uuid: string;
+  id: string;
   name: string;
-  volume: number;
-  price: number;
-  orgId: number;
-  isArchive?: boolean | null;
+  dailyVolumeMl: number;
+  priceKopecks: number;
+  sortOrder: number;
+};
+
+export type SubscriptionLevelsResponse = {
+  items: SubscriptionLevelDTO[];
 };

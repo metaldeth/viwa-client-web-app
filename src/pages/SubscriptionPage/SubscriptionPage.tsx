@@ -10,18 +10,17 @@ import VolumeCircle from '../../components/VolumeCircle';
 import BottomSheetModal from '../../components/BottomSheetModal';
 import subscriptionImg from '../../assets/img/subscription.png';
 import { useAppDispatch, useAppSelector } from '../../app/hooks/store';
-import { getClientInfoAction } from '../../state/loyalty/actions';
-import { selectClientInfo } from '../../state/loyalty/selectors';
+import { getCurrentClientProfileAction } from '../../state/loyalty/actions';
+import { selectClientProfile } from '../../state/loyalty/selectors';
 import { IconHeart } from '../../assets/icon/iconHeart';
 import { IconBrilliant } from '../../assets/icon/iconBrilliant';
 import { IconSparkles } from '../../assets/icon/iconSparkles';
 import { IconDoubleDrops } from '../../assets/icon/iconDoubleDrops';
 import { QRCodeSVG } from 'qrcode.react';
-import { ClientDataType } from '../../types/enums/clientDataType';
 import { formatDateDDMMYYYY } from '../../helpers/transformDateDDMMYYY';
-import { litersFieldToMl } from '../../helpers/litersFieldToMl';
 import { api } from '../../app/api';
 import type { SubscriptionLevelDTO } from '../../types/subscriptionLevel';
+import { hasAuthTokens } from '../ValidationPage/helpers';
 
 type PayPhase =
   | 'idle'
@@ -33,24 +32,23 @@ type PayPhase =
   | 'done'
   | 'error';
 
-/**
- * Подключение подписки (выбор уровня, оплата СБП через billing API)
- */
+const formatPriceRub = (priceKopecks: number) => Math.round(priceKopecks / 100);
+
 const SubscriptionPage: FC = () => {
   const dispatch = useAppDispatch();
+  const { state: client } = useAppSelector(selectClientProfile());
 
-  const { state: client } = useAppSelector(selectClientInfo());
-
-  const clientId = localStorage.getItem(ClientDataType.CLIENT_TOKEN) || null;
-  const isTrial = client?.subscriptionEnd === null;
-  const isActiveSubscription = client?.isActiveSubscribe;
-  const volumeMl = litersFieldToMl(client?.remainingVolume ?? client?.volume);
-  const maxLimitMlFromApi = litersFieldToMl(client?.maxVolume ?? client?.dailyVolumeLimit);
-  const maxVolumeMl = maxLimitMlFromApi > 0 ? maxLimitMlFromApi : volumeMl > 0 ? volumeMl : 0;
-  const isDailyLimitExhausted =
-    volumeMl === 0 && maxLimitMlFromApi > 0 && (isTrial || isActiveSubscription);
-  const subscriptionEnd = formatDateDDMMYYYY(client?.subscriptionEnd);
-  const qrPayload = client ? `CLIENT_${client.id}` : '';
+  const isAuthed = hasAuthTokens();
+  const isTrial = !client?.tierName && client?.subscriptionEndsAt === null;
+  const isActiveSubscription = Boolean(client?.tierName && client?.subscriptionEndsAt);
+  const volumeMl = client?.dailyRemainingMl ?? client?.volumeMl ?? 0;
+  const maxVolumeMl = client?.dailyLimitMl ?? 0;
+  const isDailyLimitExhausted = Boolean(client?.limitExhausted);
+  const subscriptionEnd = formatDateDDMMYYYY(client?.subscriptionEndsAt ?? null);
+  const qrPayload = client?.qrPayload ?? '';
+  const limitResetHint = client?.limitResetsAt
+    ? `Лимит израсходован, обновится ${formatDateDDMMYYYY(client.limitResetsAt)}`
+    : 'Лимит израсходован, обновится завтра';
 
   const subscriptionBenefits = [
     { icon: <IconDoubleDrops className={styles.icon} />, label: 'До 31 литра спортивных напитков' },
@@ -60,7 +58,7 @@ const SubscriptionPage: FC = () => {
   ];
 
   const [levels, setLevels] = useState<SubscriptionLevelDTO[]>([]);
-  const [selectedLevelUuid, setSelectedLevelUuid] = useState<string | null>(null);
+  const [selectedLevelId, setSelectedLevelId] = useState<string | null>(null);
   const [payPhase, setPayPhase] = useState<PayPhase>('idle');
   const [payError, setPayError] = useState<string | null>(null);
   const [paymentUrl, setPaymentUrl] = useState<string | null>(null);
@@ -69,19 +67,23 @@ const SubscriptionPage: FC = () => {
   const [isDescriptionModalOpen, setIsDescriptionModalOpen] = useState(false);
 
   useEffect(() => {
-    clientId && dispatch(getClientInfoAction(clientId));
-  }, [dispatch, clientId]);
+    if (isAuthed) {
+      dispatch(getCurrentClientProfileAction());
+    }
+  }, [dispatch, isAuthed]);
 
   useEffect(() => {
-    if (!client?.organizationId) return;
+    if (!isAuthed) return;
+
     let cancelled = false;
     setPayPhase('loading_levels');
+
     api.loyalty
-      .fetchSubscriptionLevels(client.organizationId)
-      .then((list) => {
+      .fetchSubscriptionLevels()
+      .then((response) => {
         if (cancelled) return;
-        const active = (list || []).filter((l) => !l.isArchive);
-        setLevels(active);
+        const sorted = [...(response.items || [])].sort((a, b) => a.sortOrder - b.sortOrder);
+        setLevels(sorted);
         setPayPhase('ready');
       })
       .catch(() => {
@@ -90,61 +92,37 @@ const SubscriptionPage: FC = () => {
           setPayError('Не удалось загрузить тарифы');
         }
       });
+
     return () => {
       cancelled = true;
     };
-  }, [client?.organizationId]);
-
-  const waitPaymentLoop = useCallback(async (sid: string) => {
-    for (;;) {
-      const r = await api.billing.longPollPayment(sid);
-      if (r.status === 'PAID') return;
-      if (r.status === 'FAILED') {
-        throw new Error(r.message || 'Оплата не прошла');
-      }
-    }
-  }, []);
-
-  const waitSubscriptionLoop = useCallback(async (sid: string) => {
-    for (;;) {
-      const r = await api.billing.longPollSubscription(sid);
-      if (r.status === 'COMPLETED') return;
-      if (r.status === 'FAILED') {
-        throw new Error(r.message || 'Не удалось подтвердить абонемент');
-      }
-    }
-  }, []);
+  }, [isAuthed]);
 
   const handlePurchase = useCallback(async () => {
-    if (!clientId || !client?.organizationId || !selectedLevelUuid) return;
+    if (!selectedLevelId) return;
+
     setPayError(null);
     setPayPhase('init');
+
     try {
       const init = await api.billing.initSubscriptionPayment({
-        clientId,
-        organizationId: client.organizationId,
-        subscriptionLevelUuid: selectedLevelUuid,
+        subscriptionLevelId: selectedLevelId,
+        requestUuid: crypto.randomUUID(),
       });
-      setPaymentUrl(init.paymentUrl);
+
+      setPaymentUrl(init.sbpQrUrl);
       setPayPhase('await_payment');
-      await waitPaymentLoop(init.sessionId);
+      await api.billing.pollPaymentUntilPaid(init.paymentId);
       setPayPhase('await_subscription');
-      await waitSubscriptionLoop(init.sessionId);
+      await api.billing.pollSubscriptionUntilCompleted(init.paymentId);
       setPayPhase('done');
-      dispatch(getClientInfoAction(clientId));
+      dispatch(getCurrentClientProfileAction());
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : 'Ошибка оплаты';
       setPayError(msg);
       setPayPhase('ready');
     }
-  }, [
-    clientId,
-    client?.organizationId,
-    selectedLevelUuid,
-    dispatch,
-    waitPaymentLoop,
-    waitSubscriptionLoop,
-  ]);
+  }, [selectedLevelId, dispatch]);
 
   const handleScanModalOpen = () => {
     setIsScanModalOpen(true);
@@ -162,9 +140,7 @@ const SubscriptionPage: FC = () => {
     setIsDescriptionModalOpen(false);
     setPaymentUrl(null);
     setPayError(null);
-    if (client?.organizationId) {
-      setPayPhase('ready');
-    }
+    setPayPhase('ready');
   };
 
   const renderScanSubscriptionCard = () => (
@@ -185,14 +161,14 @@ const SubscriptionPage: FC = () => {
         <VerticalContainer space={0}>
           {isDailyLimitExhausted && (
             <Text size="s" weight="medium" align="center">
-              Лимит израсходован, обновится завтра
+              {limitResetHint}
             </Text>
           )}
           <Text size="s" weight="medium" align="center">
             {isTrial
               ? 'Пробный абонемент активен'
               : isActiveSubscription
-                ? `Абонемент действует до ${subscriptionEnd}`
+                ? `Абонемент «${client?.tierName}» действует до ${subscriptionEnd}`
                 : 'Абонемент не активен'}
           </Text>
         </VerticalContainer>
@@ -228,12 +204,12 @@ const SubscriptionPage: FC = () => {
         <VerticalContainer space={0}>
           {isDailyLimitExhausted && (
             <Text size="s" weight="medium" align="center">
-              Лимит израсходован, обновится завтра
+              {limitResetHint}
             </Text>
           )}
           {!isTrial && isActiveSubscription && (
             <Text size="s" weight="medium" align="center">
-              Абонемент действует до {subscriptionEnd}
+              Абонемент «{client?.tierName}» действует до {subscriptionEnd}
             </Text>
           )}
         </VerticalContainer>
@@ -250,7 +226,7 @@ const SubscriptionPage: FC = () => {
     </HorizontalContainer>
   );
 
-  const selectedLevel = levels.find((l) => l.uuid === selectedLevelUuid);
+  const selectedLevel = levels.find((l) => l.id === selectedLevelId);
 
   const renderDescriptionModalBody = () => (
     <VerticalContainer space="l">
@@ -273,15 +249,15 @@ const SubscriptionPage: FC = () => {
           </Text>
         )}
         {levels.map((lvl) => (
-          <label key={lvl.uuid} className={styles.levelRow}>
+          <label key={lvl.id} className={styles.levelRow}>
             <input
               type="radio"
               name="level"
-              checked={selectedLevelUuid === lvl.uuid}
-              onChange={() => setSelectedLevelUuid(lvl.uuid)}
+              checked={selectedLevelId === lvl.id}
+              onChange={() => setSelectedLevelId(lvl.id)}
             />
             <Text size="m" weight="medium">
-              {lvl.name} — {lvl.price} ₽ / мес
+              {lvl.name} — {formatPriceRub(lvl.priceKopecks)} ₽ / мес
             </Text>
           </label>
         ))}
@@ -310,8 +286,7 @@ const SubscriptionPage: FC = () => {
               : 'Оформить'
           }
           disabled={
-            !selectedLevelUuid ||
-            !clientId ||
+            !selectedLevelId ||
             payPhase === 'init' ||
             payPhase === 'await_payment' ||
             payPhase === 'await_subscription' ||
@@ -341,11 +316,11 @@ const SubscriptionPage: FC = () => {
         )}
         <VerticalContainer space="3xs" align="center">
           <Text size="m" weight="medium" view="secondary">
-            Лимит 1000 мл в сутки
+            Лимит обновляется ежедневно (МСК)
           </Text>
           {selectedLevel && (
             <Text size="s" weight="medium" align="center" view="secondary">
-              Выбрано: {selectedLevel.name}, {selectedLevel.price} ₽/мес
+              Выбрано: {selectedLevel.name}, {formatPriceRub(selectedLevel.priceKopecks)} ₽/мес
             </Text>
           )}
         </VerticalContainer>

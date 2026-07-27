@@ -1,7 +1,12 @@
-﻿import axios, { AxiosInstance, AxiosResponse, AxiosRequestConfig } from 'axios';
+﻿import axios, {
+  AxiosInstance,
+  AxiosResponse,
+  AxiosRequestConfig,
+  InternalAxiosRequestConfig,
+} from 'axios';
 import { api } from './index';
-import { ACCESS_TOKEN_STORAGE_NAME } from '../../consts/env/storage';
-import { ClientDataType } from '../../types/enums/clientDataType';
+import { ACCESS_TOKEN_STORAGE_NAME, REFRESH_TOKEN_STORAGE_NAME } from '../../consts/env/storage';
+import { viwaTelemetryApiUrl } from '../../consts';
 
 type ApiError = {
   code: string;
@@ -11,12 +16,14 @@ type ApiError = {
 
 export type AxiosRequestConfigWithAuth = AxiosRequestConfig & {
   skipAuth?: boolean;
+  _retry?: boolean;
 };
 
 export class AxiosCoreApi {
   private readonly _apiConfig: AxiosRequestConfig;
   private _axiosInstance: AxiosInstance;
   private _accessToken: string | null = null;
+  private _refreshPromise: Promise<string | null> | null = null;
 
   constructor(apiConfig?: AxiosRequestConfig) {
     this._apiConfig = apiConfig || {};
@@ -28,14 +35,14 @@ export class AxiosCoreApi {
 
     this._axiosInstance.interceptors.request.use(
       (config) => {
-        const cfg = config as AxiosRequestConfigWithAuth;
+        const cfg = config as InternalAxiosRequestConfig & AxiosRequestConfigWithAuth;
 
         if (this._accessToken && !cfg.skipAuth) {
-          config.headers = config.headers || {};
-          config.headers.Authorization = `Bearer ${this._accessToken}`;
+          cfg.headers = cfg.headers || {};
+          cfg.headers.Authorization = `Bearer ${this._accessToken}`;
         }
 
-        return config;
+        return cfg;
       },
 
       (error) => {
@@ -46,15 +53,34 @@ export class AxiosCoreApi {
 
     this._axiosInstance.interceptors.response.use(
       (data) => data,
-      (error): Promise<ApiError> => {
+      async (error): Promise<ApiError> => {
         const status = error.response?.status;
+        const originalConfig = error.config as AxiosRequestConfigWithAuth | undefined;
+
+        if (
+          status === 401 &&
+          originalConfig &&
+          !originalConfig.skipAuth &&
+          !originalConfig._retry &&
+          !originalConfig.url?.includes('/client/auth/refresh')
+        ) {
+          originalConfig._retry = true;
+
+          try {
+            const newAccessToken = await this.refreshAccessToken();
+
+            if (newAccessToken) {
+              originalConfig.headers = originalConfig.headers || {};
+              originalConfig.headers.Authorization = `Bearer ${newAccessToken}`;
+              return this._axiosInstance.request(originalConfig);
+            }
+          } catch {
+            // fall through to clear tokens
+          }
+        }
 
         if (status === 401) {
           api.clearTokens();
-
-          localStorage.removeItem(ACCESS_TOKEN_STORAGE_NAME);
-          localStorage.removeItem(ClientDataType.CLIENT_TOKEN);
-
           this._accessToken = null;
         }
 
@@ -67,6 +93,49 @@ export class AxiosCoreApi {
         });
       },
     );
+  }
+
+  private async refreshAccessToken(): Promise<string | null> {
+    if (this._refreshPromise) {
+      return this._refreshPromise;
+    }
+
+    this._refreshPromise = (async () => {
+      const refreshToken = localStorage.getItem(REFRESH_TOKEN_STORAGE_NAME);
+
+      if (!refreshToken) {
+        return null;
+      }
+
+      try {
+        const response = await axios.post<{
+          accessToken: string;
+          refreshToken: string;
+          expiresIn: number;
+        }>(
+          `${viwaTelemetryApiUrl}/client/auth/refresh`,
+          { refreshToken },
+          { headers: { 'Content-Type': 'application/json' } },
+        );
+
+        const { accessToken, refreshToken: nextRefreshToken } = response.data;
+
+        localStorage.setItem(ACCESS_TOKEN_STORAGE_NAME, accessToken);
+        localStorage.setItem(REFRESH_TOKEN_STORAGE_NAME, nextRefreshToken);
+        this._accessToken = accessToken;
+        api.saveToken(accessToken);
+
+        return accessToken;
+      } catch {
+        api.clearTokens();
+        this._accessToken = null;
+        return null;
+      } finally {
+        this._refreshPromise = null;
+      }
+    })();
+
+    return this._refreshPromise;
   }
 
   public get accessToken() {

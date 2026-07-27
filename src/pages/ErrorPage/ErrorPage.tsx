@@ -2,13 +2,14 @@
 import HorizontalContainer from '../../components/HorizontalContainer';
 import { Text } from '@asnefedov/uikit/Text';
 
-/**
- * Страница ошибки
- */
-const ErrorPage: FC = () => {
+type ErrorPageProps = {
+  message?: string;
+};
+
+const ErrorPage: FC<ErrorPageProps> = ({ message = 'Ресурс не найден' }) => {
   return (
     <HorizontalContainer isAutoWidth justify="center">
-      <Text size="l">Ресурс не найден</Text>
+      <Text size="l">{message}</Text>
     </HorizontalContainer>
   );
 };

@@ -1,34 +1,54 @@
 ﻿import { AbstractApiModule } from '../../abstractApiModule';
-import { authBaseUrl } from '../../../../consts';
-import { CreateClientDto, CreateClientRes } from '../../../../types/serverInterface/clientDTO';
+import { viwaTelemetryApiUrl } from '../../../../consts';
+import {
+  CheckCodeRequest,
+  CheckCodeResponse,
+  SendCodeResult,
+} from '../../../../types/serverInterface/clientDTO';
+import { normalizePhoneE164 } from '../../../../helpers/normalizePhoneE164';
 
 export class AuthModule extends AbstractApiModule {
-  /**
-   * Отправка номера телефона для получения кода авторизации (код авторизации приходит по звонку с сервиса)
-   * А запрос возвращает количество секунд между запросами
-   *
-   * @param phoneNumber номер телефона
-   */
   sendCodeToPhone(phoneNumber: string) {
-    return this.request.post<void, string>(
-      `${authBaseUrl}/authorization/send-code?phoneNumber=${phoneNumber}`,
-      undefined,
+    const phone = normalizePhoneE164(phoneNumber);
+
+    return this.request.post<{ phone: string }, SendCodeResult>(
+      `${viwaTelemetryApiUrl}/client/auth/send-code`,
+      { phone },
       { skipAuth: true },
     );
   }
 
-  /**
-   * Отправка номера телефона, кода подтверждения и данных информации клиента для получения токена клиента
-   *
-   * @param phoneNumber номер телефона
-   * @param code код
-   * @param data dto информации клиента
-   */
-  checkCodeAndCreateClient(phoneNumber: string, code: string, data: CreateClientDto) {
-    return this.request.post<CreateClientDto, CreateClientRes>(
-      `${authBaseUrl}/authorization/check-code?phoneNumber=${phoneNumber}&code=${code}`,
-      data,
+  checkCodeAndCreateClient(phoneNumber: string, code: string, machineSerial?: string) {
+    const body: CheckCodeRequest = {
+      phone: normalizePhoneE164(phoneNumber),
+      code,
+    };
+
+    if (machineSerial) {
+      body.machineSerial = machineSerial;
+    }
+
+    return this.request.post<CheckCodeRequest, CheckCodeResponse>(
+      `${viwaTelemetryApiUrl}/client/auth/check-code`,
+      body,
       { skipAuth: true },
+    );
+  }
+
+  refreshToken(refreshToken: string) {
+    return this.request.post<{ refreshToken: string }, Omit<CheckCodeResponse, 'client'>>(
+      `${viwaTelemetryApiUrl}/client/auth/refresh`,
+      { refreshToken },
+      { skipAuth: true },
+    );
+  }
+
+  logout(refreshToken?: string) {
+    return this.request.post<{ refreshToken?: string }, { ok: boolean }>(
+      `${viwaTelemetryApiUrl}/client/auth/logout`,
+      refreshToken ? { refreshToken } : {},
     );
   }
 }
+
+export default AuthModule;

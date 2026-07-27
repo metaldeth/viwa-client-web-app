@@ -11,20 +11,16 @@ import { getFormatPhone } from '../../helpers/getFormattedPhone';
 import { useTimer } from '../../hooks/useTimer';
 import { useAppDispatch } from '../../app/hooks/store';
 import { Loader } from '@asnefedov/uikit/Loader';
-import { CreateClientDto, CreateClientRes } from '../../types/serverInterface/clientDTO';
-import { ClientDataType } from '../../types/enums/clientDataType';
+import { CheckCodeResponse } from '../../types/serverInterface/clientDTO';
 import { AnimatePresence, motion } from 'framer-motion';
 import { checkCodeAndCreateClientThunk, sendCodeToPhoneThunk } from '../../state/auth/thunk';
 
 const smsCodeLength = 4;
 
-/**
- * Страница отправки смс кода
- */
 const SmsPage: FC = () => {
   const dispatch = useAppDispatch();
 
-  const { orgId, sportId, machineId, time, phone } = useParams();
+  const { machineSerial, time, phone } = useParams();
   const navigate = useNavigate();
 
   const [canRequest, setCanRequest] = useState(false);
@@ -36,14 +32,9 @@ const SmsPage: FC = () => {
 
   const { currentTime, start } = useTimer();
 
-  const formattedOrgId = Number(orgId);
-  const formattedSportId = String(sportId);
-  const formattedMachineId = Number(machineId);
   const formattedPhone = String(phone);
-
-  // TODO: В дальнейшем лучше добавить провайдер через контекст для приложения, где можно будет добавить состояние isDebug
-  const isOnRequest = true; // Флаг для включения/выключения запроса токена (предназначено для тестирования)
-  const isValidRequest = true; // Флаг для включения/выключения валидности запроса (предназначено для тестирования)
+  const isOnRequest = true;
+  const isValidRequest = true;
 
   useEffect(() => {
     if (!canRequest) {
@@ -51,7 +42,6 @@ const SmsPage: FC = () => {
     }
   }, [canRequest]);
 
-  // Обработчики
   const handleInvalidRequest = () => {
     codeInputGroupInvalidRef.current?.();
   };
@@ -74,24 +64,17 @@ const SmsPage: FC = () => {
     setIsLoadRequest(true);
 
     if (isOnRequest) {
-      // Логика запроса
-      const data: CreateClientDto = {
-        organizationId: formattedOrgId,
-        sportNetId: formattedSportId,
-        machineId: formattedMachineId,
-      };
-
       dispatch(
-        checkCodeAndCreateClientThunk({ phoneNumber: formattedPhone, code: code, data: data }),
+        checkCodeAndCreateClientThunk({
+          phoneNumber: formattedPhone,
+          code,
+          machineSerial,
+        }),
       )
         .unwrap()
-        .then((response: CreateClientRes) => {
-          if (response && response.clientId) {
+        .then((response: CheckCodeResponse) => {
+          if (response?.accessToken) {
             setIsValidCode(true);
-
-            localStorage.setItem(ClientDataType.CLIENT_TOKEN, response.clientId);
-
-            // Логика навигации на домашнюю страницу
             navigate('../home');
           } else {
             setIsValidCode(false);
@@ -104,11 +87,9 @@ const SmsPage: FC = () => {
           setIsLoadRequest(false);
         });
     } else {
-      // Логика эмуляции запроса
       setTimeout(() => {
         if (isValidRequest) {
           setIsValidCode(true);
-          // Логика навигации на домашнюю страницу
           navigate('../home');
         } else {
           setIsValidCode(false);
@@ -125,10 +106,18 @@ const SmsPage: FC = () => {
     setIsValidCode(true);
     setResetVersion((v) => v + 1);
 
-    if (isOnRequest) dispatch(sendCodeToPhoneThunk(formattedPhone));
+    if (isOnRequest) {
+      dispatch(sendCodeToPhoneThunk(formattedPhone))
+        .unwrap()
+        .then((response) => {
+          start(response.cooldownSeconds, handleCompleteTimer);
+        })
+        .catch(() => {
+          setCanRequest(true);
+        });
+    }
   };
 
-  // Рендер методы
   const renderPhoneNumber = () => (
     <span className={styles.link}>{phone && getFormatPhone(phone, true)}</span>
   );

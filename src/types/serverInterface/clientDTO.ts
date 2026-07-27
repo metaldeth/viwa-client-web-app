@@ -1,32 +1,60 @@
 ﻿/**
- * dto создания клиента
+ * dto создания клиента (legacy telemetry-loyalty)
  */
 export type CreateClientDto = {
-  /**
-   * Номер организации клиента
-   */
   organizationId: number;
-  /**
-   * ID SportNet клиента
-   */
   sportNetId: string;
-  /**
-   * Номер автомата клиента
-   */
   machineId: number;
 };
 
 /**
- * res создания клиента
+ * Viwa Telemetry POST /client/auth/check-code request
+ */
+export type CheckCodeRequest = {
+  phone: string;
+  code: string;
+  machineSerial?: string;
+};
+
+/**
+ * Viwa Telemetry client profile (GET /client/me, nested in check-code)
+ */
+export type ClientProfileDTO = {
+  id: string;
+  phone: string;
+  volumeMl: number;
+  dailyLimitMl: number;
+  dailyUsedMl: number;
+  dailyRemainingMl: number;
+  tierName: string | null;
+  subscriptionEndsAt: string | null;
+  limitExhausted?: boolean;
+  limitResetsAt?: string | null;
+  qrPayload: string;
+};
+
+/**
+ * Viwa Telemetry POST /client/auth/check-code response
+ */
+export type CheckCodeResponse = {
+  accessToken: string;
+  refreshToken: string;
+  expiresIn: number;
+  client: ClientProfileDTO;
+};
+
+/**
+ * Viwa Telemetry POST /client/auth/send-code response
+ */
+export type SendCodeResult = {
+  cooldownSeconds: number;
+};
+
+/**
+ * res создания клиента (legacy)
  */
 export type CreateClientRes = {
-  /**
-   * id клиента
-   */
   clientId: string;
-  /**
-   * Токен
-   */
   token: string;
 };
 
