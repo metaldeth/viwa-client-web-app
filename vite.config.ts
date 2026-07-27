@@ -9,6 +9,10 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export default defineConfig({
   base: '/',
   plugins: [react(), checker({ typescript: true })],
+  // Avoid /assets/ clash when served on same host as viwa-telemetry dashboard.
+  build: {
+    assetsDir: 'client-assets',
+  },
   server: {
     port: 3000,
     strictPort: false,
