@@ -63,7 +63,24 @@ const initialState: LoyaltyState = {
 export const loyaltySlice = createSlice({
   name: 'loyalty',
   initialState,
-  reducers: {},
+  reducers: {
+    patchClientProfile: (
+      state,
+      action: PayloadAction<Partial<ClientProfileDTO> & { id: string }>,
+    ) => {
+      if (!state.clientProfile.state) {
+        state.clientProfile.state = action.payload as ClientProfileDTO;
+      } else {
+        state.clientProfile.state = {
+          ...state.clientProfile.state,
+          ...action.payload,
+          qrPayload: action.payload.qrPayload ?? state.clientProfile.state.qrPayload,
+        };
+      }
+      state.clientProfile.isLoading = false;
+      state.clientProfile.isReject = false;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(getClientsListThunk.pending, (state) => {
       state.clientList.isLoading = true;
@@ -82,8 +99,9 @@ export const loyaltySlice = createSlice({
     });
 
     builder.addCase(getCurrentClientProfileThunk.pending, (state) => {
-      state.clientProfile.state = null;
-      state.clientProfile.isLoading = true;
+      if (state.clientProfile.state === null) {
+        state.clientProfile.isLoading = true;
+      }
       state.clientProfile.isReject = false;
     });
 
@@ -122,4 +140,5 @@ export const loyaltySlice = createSlice({
   },
 });
 
+export const { patchClientProfile } = loyaltySlice.actions;
 export const loyaltyReducer = loyaltySlice.reducer;

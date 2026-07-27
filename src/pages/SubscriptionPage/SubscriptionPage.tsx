@@ -1,4 +1,4 @@
-﻿import { FC, useCallback, useEffect, useState } from 'react';
+﻿import { FC, memo, useCallback, useEffect, useState } from 'react';
 import VerticalContainer from '../../components/VerticalContainer';
 import { Button } from '@asnefedov/uikit/Button';
 import ContentCard from '../../components/ContentCard';
@@ -21,6 +21,7 @@ import { formatDateDDMMYYYY } from '../../helpers/transformDateDDMMYYY';
 import { api } from '../../app/api';
 import type { SubscriptionLevelDTO } from '../../types/subscriptionLevel';
 import { hasAuthTokens } from '../ValidationPage/helpers';
+import { useClientSubscriptionWs } from '../../hooks/useClientSubscriptionWs';
 
 type PayPhase =
   | 'idle'
@@ -34,15 +35,35 @@ type PayPhase =
 
 const formatPriceRub = (priceKopecks: number) => Math.round(priceKopecks / 100);
 
+const LoyaltyQrCode = memo(function LoyaltyQrCode({
+  value,
+  size,
+}: {
+  value: string;
+  size: number;
+}) {
+  if (!value) {
+    return null;
+  }
+  return <QRCodeSVG value={value} size={size} />;
+});
+
 const SubscriptionPage: FC = () => {
   const dispatch = useAppDispatch();
   const { state: client } = useAppSelector(selectClientProfile());
 
   const isAuthed = hasAuthTokens();
+  useClientSubscriptionWs(isAuthed);
   const isTrial = !client?.tierName && client?.subscriptionEndsAt === null;
   const isActiveSubscription = Boolean(client?.tierName && client?.subscriptionEndsAt);
-  const volumeMl = client?.dailyRemainingMl ?? client?.volumeMl ?? 0;
-  const maxVolumeMl = client?.dailyLimitMl ?? 0;
+  // Trial has no daily tier: dailyRemainingMl is always 0 — show volumeMl (trial balance).
+  // Subscribed clients show today's remaining daily allowance.
+  const dailyLimitMl = client?.dailyLimitMl ?? 0;
+  const volumeMl =
+    dailyLimitMl > 0
+      ? (client?.dailyRemainingMl ?? client?.volumeMl ?? 0)
+      : (client?.volumeMl ?? 0);
+  const maxVolumeMl = dailyLimitMl > 0 ? dailyLimitMl : volumeMl > 0 ? volumeMl : 0;
   const isDailyLimitExhausted = Boolean(client?.limitExhausted);
   const subscriptionEnd = formatDateDDMMYYYY(client?.subscriptionEndsAt ?? null);
   const qrPayload = client?.qrPayload ?? '';
@@ -66,11 +87,15 @@ const SubscriptionPage: FC = () => {
   const [isScanModalOpen, setIsScanModalOpen] = useState(false);
   const [isDescriptionModalOpen, setIsDescriptionModalOpen] = useState(false);
 
-  useEffect(() => {
+  const refreshProfile = useCallback(() => {
     if (isAuthed) {
       dispatch(getCurrentClientProfileAction());
     }
   }, [dispatch, isAuthed]);
+
+  useEffect(() => {
+    refreshProfile();
+  }, [refreshProfile]);
 
   useEffect(() => {
     if (!isAuthed) return;
@@ -155,7 +180,7 @@ const SubscriptionPage: FC = () => {
         <HorizontalContainer isAutoWidth isAutoSpace>
           <VolumeCircle currentVolume={volumeMl} maxVolume={maxVolumeMl} />
           <div className={styles.qrWhitePad}>
-            <QRCodeSVG value={qrPayload} size={133} />
+            <LoyaltyQrCode value={qrPayload} size={133} />
           </div>
         </HorizontalContainer>
         <VerticalContainer space={0}>
@@ -195,7 +220,7 @@ const SubscriptionPage: FC = () => {
   const renderScanModalBody = () => (
     <VerticalContainer space="l" isAutoWidth align="center">
       <div className={styles.qrWhitePadLarge}>
-        <QRCodeSVG value={qrPayload} size={315} />
+        <LoyaltyQrCode value={qrPayload} size={315} />
       </div>
       <VerticalContainer space="s">
         <Text size="xl" weight="medium" align="center">

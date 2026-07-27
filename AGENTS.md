@@ -27,6 +27,7 @@
 
 - Entry: `/m/:machineSerial/*` (machine validated via public API before auth UI).
 - Auth tokens: client JWT pair in `localStorage` (`api/accessToken`, `api/refreshToken`, `CLIENT_TOKEN` = clientId).
+- Live profile on subscription page: WebSocket `ws(s)://<telemetry-host>/api/v1/client/ws?access_token=…` (see `viwa-telemetry` `docs/contracts/client-ws.md`). One-shot `GET /client/me` on mount; no 5s HTTP poll.
 
 ## Env (client web loyalty)
 
