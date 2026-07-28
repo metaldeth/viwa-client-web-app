@@ -1,7 +1,7 @@
 ﻿import { FC, memo } from 'react';
 import { matchPath, Navigate, Outlet, useLocation } from 'react-router-dom';
 import { ValidationPageProps } from './types';
-import { hasAuthTokens } from './helpers';
+import { hasAuthTokens, isClientAuthRoute } from './helpers';
 import { useMachineSerialValidation } from './useMachineSerialValidation';
 import ErrorPage from '../ErrorPage/ErrorPage';
 import { Loader } from '@asnefedov/uikit/Loader';
@@ -14,13 +14,6 @@ const isEntryPoint = (pathname: string, basePathPattern: string) => {
   const basePattern = trimTrailingSlashes(basePathPattern).replace(/\/\*$/, '');
 
   return matchPath({ path: basePattern, end: true }, path) !== null;
-};
-
-const isHomePath = (pathname: string, basePathPattern: string) => {
-  const path = trimTrailingSlashes(pathname);
-  const basePattern = trimTrailingSlashes(basePathPattern).replace(/\/\*$/, '');
-
-  return matchPath({ path: `${basePattern}/home`, end: true }, path) !== null;
 };
 
 const ValidationPage: FC<ValidationPageProps> = memo(function ValidationRoute({ validAddress }) {
@@ -51,7 +44,7 @@ const ValidationPage: FC<ValidationPageProps> = memo(function ValidationRoute({ 
     return <Navigate to={authed ? 'home' : 'auth'} replace />;
   }
 
-  if (!authed && isHomePath(location.pathname, validAddress)) {
+  if (!authed && !isClientAuthRoute(location.pathname)) {
     return <Navigate to="auth" replace />;
   }
 

@@ -7,6 +7,7 @@
 import { api } from './index';
 import { ACCESS_TOKEN_STORAGE_NAME, REFRESH_TOKEN_STORAGE_NAME } from '../../consts/env/storage';
 import { viwaTelemetryApiUrl } from '../../consts';
+import { redirectToClientAuth } from '../../pages/ValidationPage/helpers';
 
 type ApiError = {
   code: string;
@@ -82,6 +83,7 @@ export class AxiosCoreApi {
         if (status === 401) {
           api.clearTokens();
           this._accessToken = null;
+          redirectToClientAuth();
         }
 
         return Promise.reject({

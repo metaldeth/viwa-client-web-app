@@ -1,4 +1,5 @@
 ﻿import { FC, memo, useCallback, useEffect, useState } from 'react';
+import { Navigate } from 'react-router-dom';
 import VerticalContainer from '../../components/VerticalContainer';
 import { Button } from '@asnefedov/uikit/Button';
 import ContentCard from '../../components/ContentCard';
@@ -50,7 +51,7 @@ const LoyaltyQrCode = memo(function LoyaltyQrCode({
 
 const SubscriptionPage: FC = () => {
   const dispatch = useAppDispatch();
-  const { state: client } = useAppSelector(selectClientProfile());
+  const { state: client, isReject } = useAppSelector(selectClientProfile());
 
   const isAuthed = hasAuthTokens();
   useClientSubscriptionWs(isAuthed);
@@ -374,6 +375,10 @@ const SubscriptionPage: FC = () => {
       {renderDescriptionModalBody()}
     </BottomSheetModal>
   );
+
+  if (isReject && !isAuthed) {
+    return <Navigate to="../auth" replace />;
+  }
 
   return (
     <VerticalContainer space="m" className={styles.SubscriptionPage}>
