@@ -14,6 +14,7 @@ import { Loader } from '@asnefedov/uikit/Loader';
 import { CheckCodeResponse } from '../../types/serverInterface/clientDTO';
 import { AnimatePresence, motion } from 'framer-motion';
 import { checkCodeAndCreateClientThunk, sendCodeToPhoneThunk } from '../../state/auth/thunk';
+import { POST_AUTH_HOME_PATH } from '../../state/auth/navigation';
 
 const smsCodeLength = 4;
 
@@ -75,7 +76,7 @@ const SmsPage: FC = () => {
         .then((response: CheckCodeResponse) => {
           if (response?.accessToken) {
             setIsValidCode(true);
-            navigate('../home');
+            navigate(POST_AUTH_HOME_PATH, { replace: true });
           } else {
             setIsValidCode(false);
           }
@@ -90,7 +91,7 @@ const SmsPage: FC = () => {
       setTimeout(() => {
         if (isValidRequest) {
           setIsValidCode(true);
-          navigate('../home');
+          navigate(POST_AUTH_HOME_PATH, { replace: true });
         } else {
           setIsValidCode(false);
           handleInvalidRequest();

@@ -1,12 +1,12 @@
-import path from 'path';
-import { fileURLToPath } from 'url';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import checker from 'vite-plugin-checker';
+import { projectRoot, resolveFromRoot } from './scripts/projectRoot.mjs';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+process.chdir(projectRoot);
 
 export default defineConfig({
+  root: projectRoot,
   base: '/',
   plugins: [react(), checker({ typescript: true })],
   // Avoid /assets/ clash when served on same host as viwa-telemetry dashboard.
@@ -19,9 +19,9 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, 'src'),
-      '@consta/uikit': path.resolve(__dirname, 'node_modules/@asnefedov/uikit'),
-      '@consta/icons': path.resolve(__dirname, 'node_modules/@asnefedov/icons'),
+      '@': resolveFromRoot('src'),
+      '@consta/uikit': resolveFromRoot('node_modules/@asnefedov/uikit'),
+      '@consta/icons': resolveFromRoot('node_modules/@asnefedov/icons'),
     },
   },
 });

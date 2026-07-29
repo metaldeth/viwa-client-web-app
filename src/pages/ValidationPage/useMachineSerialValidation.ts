@@ -1,21 +1,15 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { api } from '../../app/api';
+import { consumeMachineSerialValidated } from '../../utils/machineSerialValidationCache';
+import { isMachineSerialFormatValid } from './machineSerialValidation';
 
-const MACHINE_SERIAL_PATTERN = /^[A-Za-z0-9][A-Za-z0-9-]{1,62}[A-Za-z0-9]$/;
+export { isMachineSerialFormatValid } from './machineSerialValidation';
 
 export type MachineValidationState =
   | { status: 'idle' | 'loading' }
   | { status: 'valid'; machineSerial: string }
   | { status: 'invalid'; message: string };
-
-export const isMachineSerialFormatValid = (value: string | undefined): value is string => {
-  if (!value) {
-    return false;
-  }
-
-  return MACHINE_SERIAL_PATTERN.test(value);
-};
 
 export const useMachineSerialValidation = (): MachineValidationState => {
   const { machineSerial } = useParams();
@@ -31,6 +25,11 @@ export const useMachineSerialValidation = (): MachineValidationState => {
 
     if (!formatValid) {
       setState({ status: 'invalid', message: 'Некорректный серийный номер автомата' });
+      return;
+    }
+
+    if (consumeMachineSerialValidated(machineSerial)) {
+      setState({ status: 'valid', machineSerial });
       return;
     }
 

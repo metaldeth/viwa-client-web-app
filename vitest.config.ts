@@ -1,13 +1,23 @@
-import { mergeConfig } from 'vite';
+import react from '@vitejs/plugin-react-swc';
 import { defineConfig } from 'vitest/config';
-import viteConfig from './vite.config';
+import { projectRoot, resolveFromRoot } from './scripts/projectRoot.mjs';
 
-export default mergeConfig(
-  viteConfig,
-  defineConfig({
-    test: {
-      environment: 'node',
-      include: ['src/**/*.{test,spec}.{ts,tsx}'],
+process.chdir(projectRoot);
+
+export default defineConfig({
+  root: projectRoot,
+  plugins: [react()],
+  resolve: {
+    alias: {
+      '@': resolveFromRoot('src'),
+      '@consta/uikit': resolveFromRoot('node_modules/@asnefedov/uikit'),
+      '@consta/icons': resolveFromRoot('node_modules/@asnefedov/icons'),
     },
-  }),
-);
+  },
+  test: {
+    globals: true,
+    environment: 'node',
+    pool: 'forks',
+    include: ['src/**/*.{test,spec}.{ts,tsx}'],
+  },
+});

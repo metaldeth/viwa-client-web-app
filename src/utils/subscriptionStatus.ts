@@ -1,0 +1,54 @@
+import type { ClientProfileDTO } from '../types/serverInterface/clientDTO';
+
+export type SubscriptionStatusInput = Pick<
+  ClientProfileDTO,
+  'tierName' | 'subscriptionEndsAt' | 'monthlyLimitMl' | 'dailyLimitMl'
+>;
+
+export function isSubscriptionEndDateActive(
+  subscriptionEndsAt: string | null | undefined,
+  nowMs: number = Date.now(),
+): boolean {
+  if (!subscriptionEndsAt) {
+    return false;
+  }
+  const endMs = new Date(subscriptionEndsAt).getTime();
+  return Number.isFinite(endMs) && endMs > nowMs;
+}
+
+/**
+ * Active marketing monthly subscription: future end date and positive monthly pool.
+ * Expired profiles must surface renewal/plan cards (architecture v1.2 §3).
+ */
+export function isActiveSubscriptionProfile(
+  profile: SubscriptionStatusInput | null | undefined,
+  nowMs: number = Date.now(),
+): boolean {
+  if (!profile?.tierName || !profile.subscriptionEndsAt) {
+    return false;
+  }
+
+  if (!isSubscriptionEndDateActive(profile.subscriptionEndsAt, nowMs)) {
+    return false;
+  }
+
+  const limitMl = profile.monthlyLimitMl ?? profile.dailyLimitMl ?? 0;
+  return limitMl > 0;
+}
+
+export function isExpiredSubscriptionProfile(
+  profile: SubscriptionStatusInput | null | undefined,
+  nowMs: number = Date.now(),
+): boolean {
+  if (!profile?.tierName || !profile.subscriptionEndsAt) {
+    return false;
+  }
+  return !isSubscriptionEndDateActive(profile.subscriptionEndsAt, nowMs);
+}
+
+export function shouldShowRenewalPlans(
+  profile: SubscriptionStatusInput | null | undefined,
+  nowMs: number = Date.now(),
+): boolean {
+  return !isActiveSubscriptionProfile(profile, nowMs);
+}

@@ -4,7 +4,9 @@
 export type SubscriptionLevelDTO = {
   id: string;
   name: string;
-  dailyVolumeMl: number;
+  monthlyVolumeMl: number;
+  /** @deprecated one-release alias — prefer monthlyVolumeMl */
+  dailyVolumeMl?: number;
   priceKopecks: number;
   sortOrder: number;
 };

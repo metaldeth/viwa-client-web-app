@@ -1,14 +1,17 @@
 {
   "name": "viwa-client-web-app",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "test": "vitest run --config vitest.config.ts",
+    "test": "vitest run --config vitest.config.ts && node --test scripts/projectRoot.test.mjs",
     "test:watch": "vitest --config vitest.config.ts",
+    "locale:verify": "node scripts/locale-verify-subscription.mjs",
+    "locale:sync": "node scripts/locale-verify-subscription.mjs",
+    "locale:sort": "node scripts/locale-verify-subscription.mjs",
     "preview": "vite preview",
     "start:mobile": "npm run dev -- --host 0.0.0.0"
   },
@@ -75,8 +78,9 @@
     "@types/qrcode": "^1.5.5",
     "@typescript-eslint/parser": "^8.48.1",
     "eslint": "^8.57.0",
+    "jsdom": "^26.1.0",
     "typescript-eslint": "^8.48.1",
     "vite-plugin-checker": "^0.8.0",
-    "vitest": "^2.1.9"
+    "vitest": "^3.2.4"
   }
 }

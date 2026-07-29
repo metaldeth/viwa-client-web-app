@@ -3,6 +3,7 @@ import { viwaTelemetryApiUrl } from '../../../../consts';
 import {
   CheckCodeRequest,
   CheckCodeResponse,
+  RegistrationHint,
   SendCodeResult,
 } from '../../../../types/serverInterface/clientDTO';
 import { normalizePhoneE164 } from '../../../../helpers/normalizePhoneE164';
@@ -18,14 +19,22 @@ export class AuthModule extends AbstractApiModule {
     );
   }
 
-  checkCodeAndCreateClient(phoneNumber: string, code: string, machineSerial?: string) {
+  checkCodeAndCreateClient(
+    phoneNumber: string,
+    code: string,
+    options?: { machineSerial?: string; registrationHint?: RegistrationHint },
+  ) {
     const body: CheckCodeRequest = {
       phone: normalizePhoneE164(phoneNumber),
       code,
     };
 
-    if (machineSerial) {
-      body.machineSerial = machineSerial;
+    if (options?.machineSerial) {
+      body.machineSerial = options.machineSerial;
+    }
+
+    if (options?.registrationHint) {
+      body.registrationHint = options.registrationHint;
     }
 
     return this.request.post<CheckCodeRequest, CheckCodeResponse>(

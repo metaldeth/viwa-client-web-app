@@ -7,6 +7,8 @@ export type CreateClientDto = {
   machineId: number;
 };
 
+export type RegistrationHint = 'website' | 'machine_qr';
+
 /**
  * Viwa Telemetry POST /client/auth/check-code request
  */
@@ -14,6 +16,7 @@ export type CheckCodeRequest = {
   phone: string;
   code: string;
   machineSerial?: string;
+  registrationHint?: RegistrationHint;
 };
 
 /**
@@ -23,8 +26,18 @@ export type ClientProfileDTO = {
   id: string;
   phone: string;
   volumeMl: number;
+  /** Monthly pool limit (marketing tiers). Deprecated alias: dailyLimitMl */
+  monthlyLimitMl?: number;
+  monthlyUsedMl?: number;
+  monthlyRemainingMl?: number;
+  favoriteTasteKeys?: string[];
+  poolExpiresAt?: string | null;
+  registrationSource?: 'WEBSITE' | 'MACHINE_QR' | 'UNKNOWN';
+  /** @deprecated one-release alias — prefer monthly* */
   dailyLimitMl: number;
+  /** @deprecated one-release alias — prefer monthlyUsedMl */
   dailyUsedMl: number;
+  /** @deprecated one-release alias — prefer monthlyRemainingMl */
   dailyRemainingMl: number;
   tierName: string | null;
   subscriptionEndsAt: string | null;

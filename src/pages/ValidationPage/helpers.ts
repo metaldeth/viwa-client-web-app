@@ -1,5 +1,6 @@
 ﻿import { ClientDataType } from '../../types/enums/clientDataType';
 import { ACCESS_TOKEN_STORAGE_NAME, REFRESH_TOKEN_STORAGE_NAME } from '../../consts/env/storage';
+import { POST_AUTH_HOME_PATH } from '../../state/auth/navigation';
 
 const trimTrailingSlashes = (path: string) => path.replace(/\/+$/, '');
 
@@ -17,7 +18,21 @@ export const getMachineAuthPath = (pathname: string): string | null => {
   return `/m/${serial}/auth`;
 };
 
+export const isReturningAuthRoute = (pathname: string): boolean => {
+  const path = trimTrailingSlashes(pathname);
+
+  if (path === '/auth') {
+    return true;
+  }
+
+  return path.startsWith('/auth/sms/');
+};
+
 export const isClientAuthRoute = (pathname: string): boolean => {
+  if (isReturningAuthRoute(pathname)) {
+    return true;
+  }
+
   const serial = getMachineSerialFromPath(pathname);
   if (!serial) {
     return false;
@@ -41,6 +56,11 @@ export const shouldRedirectToClientAuth = (pathname: string): boolean => {
   return !isClientAuthRoute(pathname);
 };
 
+export const getReturningAuthPath = (): string => '/auth';
+
+export const getMachineEntryRedirectPath = (authed: boolean): string =>
+  authed ? POST_AUTH_HOME_PATH : 'auth';
+
 export const redirectToClientAuth = (): void => {
   if (typeof window === 'undefined') {
     return;
@@ -48,21 +68,22 @@ export const redirectToClientAuth = (): void => {
 
   const { pathname } = window.location;
 
-  if (!shouldRedirectToClientAuth(pathname)) {
+  if (isReturningAuthRoute(pathname)) {
     return;
   }
 
   const authPath = getMachineAuthPath(pathname);
-  if (!authPath) {
+  if (authPath) {
+    const normalizedPath = trimTrailingSlashes(pathname);
+
+    if (normalizedPath !== authPath && shouldRedirectToClientAuth(pathname)) {
+      window.location.replace(authPath);
+    }
+
     return;
   }
 
-  const normalizedPath = trimTrailingSlashes(pathname);
-  if (normalizedPath === authPath) {
-    return;
-  }
-
-  window.location.replace(authPath);
+  window.location.replace(getReturningAuthPath());
 };
 
 export const hasAuthTokens = () => {

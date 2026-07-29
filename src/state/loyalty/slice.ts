@@ -12,11 +12,18 @@ import {
   WaterHistoryPageDTO,
 } from '../../types/serverInterface/clientDTO';
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import { mergeClientProfileFromServer } from './mergeClientProfile';
 
 type StateItemType<T> = {
   state: T extends [] ? T : T | null;
   isLoading: boolean;
   isReject: boolean;
+};
+
+type ClientProfileSliceState = StateItemType<ClientProfileDTO> & {
+  /** Bumped on WS/PATCH merges to guard against stale GET full-replace. */
+  localRevision: number;
+  pendingFetchRevision: number | null;
 };
 
 type WaterHistoryListState = StateItemType<WaterHistoryDTO[]> & {
@@ -25,7 +32,7 @@ type WaterHistoryListState = StateItemType<WaterHistoryDTO[]> & {
 
 export type LoyaltyState = {
   clientList: StateItemType<ShortClientResponseDTO[]>;
-  clientProfile: StateItemType<ClientProfileDTO>;
+  clientProfile: ClientProfileSliceState;
   waterHistoryList: WaterHistoryListState;
   sendCodeToPhone: StateItemType<SendCodeResponse>;
   checkCodeAndCreateClient: StateItemType<CreateClientRes>;
@@ -41,6 +48,8 @@ const initialState: LoyaltyState = {
     state: null,
     isLoading: false,
     isReject: false,
+    localRevision: 0,
+    pendingFetchRevision: null,
   },
   waterHistoryList: {
     state: [],
@@ -68,6 +77,8 @@ export const loyaltySlice = createSlice({
       state,
       action: PayloadAction<Partial<ClientProfileDTO> & { id: string }>,
     ) => {
+      state.clientProfile.localRevision += 1;
+
       if (!state.clientProfile.state) {
         state.clientProfile.state = action.payload as ClientProfileDTO;
       } else {
@@ -99,6 +110,7 @@ export const loyaltySlice = createSlice({
     });
 
     builder.addCase(getCurrentClientProfileThunk.pending, (state) => {
+      state.clientProfile.pendingFetchRevision = state.clientProfile.localRevision;
       if (state.clientProfile.state === null) {
         state.clientProfile.isLoading = true;
       }
@@ -111,7 +123,16 @@ export const loyaltySlice = createSlice({
     });
 
     builder.addCase(getCurrentClientProfileThunk.fulfilled, (state, action) => {
-      state.clientProfile.state = action.payload;
+      const preserveVolatile =
+        state.clientProfile.pendingFetchRevision !== null &&
+        state.clientProfile.localRevision > state.clientProfile.pendingFetchRevision;
+
+      state.clientProfile.state = mergeClientProfileFromServer(
+        state.clientProfile.state,
+        action.payload,
+        { preserveVolatileFromCurrent: preserveVolatile },
+      );
+      state.clientProfile.pendingFetchRevision = null;
       state.clientProfile.isLoading = false;
       state.clientProfile.isReject = false;
     });

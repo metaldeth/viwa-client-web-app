@@ -1,18 +1,20 @@
-﻿import { FC, memo, useCallback, useEffect, useState } from 'react';
+﻿import { FC, memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import VerticalContainer from '../../components/VerticalContainer';
 import { Button } from '@asnefedov/uikit/Button';
-import ContentCard from '../../components/ContentCard';
 import HorizontalContainer from '../../components/HorizontalContainer';
 import { IconArrowRight } from '../../assets/icon/iconArrowRight';
 import { Text } from '@asnefedov/uikit/Text';
 import styles from './SubscriptionPage.module.scss';
 import VolumeCircle from '../../components/VolumeCircle';
 import BottomSheetModal from '../../components/BottomSheetModal';
-import subscriptionImg from '../../assets/img/subscription.png';
+import FavoriteFlavorsSection from '../../components/FavoriteFlavorsSection';
+import BottomNav from '../../components/BottomNav';
+import { ViwaBrandLogo } from '../../components/ViwaBrandLogo/ViwaBrandLogo';
 import { useAppDispatch, useAppSelector } from '../../app/hooks/store';
 import { getCurrentClientProfileAction } from '../../state/loyalty/actions';
 import { selectClientProfile } from '../../state/loyalty/selectors';
+import { patchClientProfile } from '../../state/loyalty/slice';
 import { IconHeart } from '../../assets/icon/iconHeart';
 import { IconBrilliant } from '../../assets/icon/iconBrilliant';
 import { IconSparkles } from '../../assets/icon/iconSparkles';
@@ -23,6 +25,13 @@ import { api } from '../../app/api';
 import type { SubscriptionLevelDTO } from '../../types/subscriptionLevel';
 import { hasAuthTokens } from '../ValidationPage/helpers';
 import { useClientSubscriptionWs } from '../../hooks/useClientSubscriptionWs';
+import { formatLitersFromMl, formatPriceRub, tSubscription } from '../../locale/subscriptionLocale';
+import { resolveMonthlyProgress, isTrialProfile } from '../../utils/monthlyProgress';
+import {
+  isActiveSubscriptionProfile,
+  isExpiredSubscriptionProfile,
+  shouldShowRenewalPlans,
+} from '../../utils/subscriptionStatus';
 
 type PayPhase =
   | 'idle'
@@ -34,20 +43,28 @@ type PayPhase =
   | 'done'
   | 'error';
 
-const formatPriceRub = (priceKopecks: number) => Math.round(priceKopecks / 100);
-
 const LoyaltyQrCode = memo(function LoyaltyQrCode({
   value,
   size,
+  label,
 }: {
   value: string;
   size: number;
+  label: string;
 }) {
   if (!value) {
     return null;
   }
-  return <QRCodeSVG value={value} size={size} />;
+  return (
+    <div role="img" aria-label={label}>
+      <QRCodeSVG value={value} size={size} aria-hidden="true" />
+    </div>
+  );
 });
+
+function tierVolumeMl(level: SubscriptionLevelDTO): number {
+  return level.monthlyVolumeMl ?? level.dailyVolumeMl ?? 0;
+}
 
 const SubscriptionPage: FC = () => {
   const dispatch = useAppDispatch();
@@ -55,29 +72,42 @@ const SubscriptionPage: FC = () => {
 
   const isAuthed = hasAuthTokens();
   useClientSubscriptionWs(isAuthed);
-  const isTrial = !client?.tierName && client?.subscriptionEndsAt === null;
-  const isActiveSubscription = Boolean(client?.tierName && client?.subscriptionEndsAt);
-  // Trial has no daily tier: dailyRemainingMl is always 0 — show volumeMl (trial balance).
-  // Subscribed clients show today's remaining daily allowance.
-  const dailyLimitMl = client?.dailyLimitMl ?? 0;
-  const volumeMl =
-    dailyLimitMl > 0
-      ? (client?.dailyRemainingMl ?? client?.volumeMl ?? 0)
-      : (client?.volumeMl ?? 0);
-  const maxVolumeMl = dailyLimitMl > 0 ? dailyLimitMl : volumeMl > 0 ? volumeMl : 0;
-  const isDailyLimitExhausted = Boolean(client?.limitExhausted);
-  const subscriptionEnd = formatDateDDMMYYYY(client?.subscriptionEndsAt ?? null);
-  const qrPayload = client?.qrPayload ?? '';
-  const limitResetHint = client?.limitResetsAt
-    ? `Лимит израсходован, обновится ${formatDateDDMMYYYY(client.limitResetsAt)}`
-    : 'Лимит израсходован, обновится завтра';
 
-  const subscriptionBenefits = [
-    { icon: <IconDoubleDrops className={styles.icon} />, label: 'До 31 литра спортивных напитков' },
-    { icon: <IconSparkles className={styles.icon} />, label: 'Природные витамины' },
-    { icon: <IconBrilliant className={styles.icon} />, label: 'Полезные минералы' },
-    { icon: <IconHeart className={styles.icon} />, label: 'Без сахара и калорий' },
-  ];
+  const monthlyProgress = useMemo(() => resolveMonthlyProgress(client), [client]);
+  const isTrial = isTrialProfile(client);
+  const isActiveSubscription = isActiveSubscriptionProfile(client);
+  const isExpiredSubscription = isExpiredSubscriptionProfile(client);
+  const showRenewalPlans = shouldShowRenewalPlans(client);
+  const subscriptionEnd = formatDateDDMMYYYY(client?.subscriptionEndsAt ?? null) ?? '';
+  const qrPayload = client?.qrPayload ?? '';
+  const favoriteKeys = client?.favoriteTasteKeys ?? [];
+
+  const limitResetHint = client?.limitResetsAt
+    ? tSubscription('limitResetLegacy', {
+        date: formatDateDDMMYYYY(client.limitResetsAt) ?? '',
+      })
+    : tSubscription('limitResetMonthly');
+
+  const statusText = isTrial
+    ? tSubscription('progressTrial')
+    : isExpiredSubscription
+      ? tSubscription('progressExpired', { date: subscriptionEnd })
+      : isActiveSubscription
+        ? tSubscription('progressActive', { tier: client?.tierName ?? '', date: subscriptionEnd })
+        : tSubscription('progressInactive');
+
+  const subscriptionBenefits = useMemo(
+    () => [
+      {
+        icon: <IconDoubleDrops className={styles.icon} />,
+        label: tSubscription('benefitVolume', { liters: '12–18' }),
+      },
+      { icon: <IconSparkles className={styles.icon} />, label: tSubscription('benefitVitamins') },
+      { icon: <IconBrilliant className={styles.icon} />, label: tSubscription('benefitMinerals') },
+      { icon: <IconHeart className={styles.icon} />, label: tSubscription('benefitSugarFree') },
+    ],
+    [],
+  );
 
   const [levels, setLevels] = useState<SubscriptionLevelDTO[]>([]);
   const [selectedLevelId, setSelectedLevelId] = useState<string | null>(null);
@@ -115,7 +145,7 @@ const SubscriptionPage: FC = () => {
       .catch(() => {
         if (!cancelled) {
           setPayPhase('error');
-          setPayError('Не удалось загрузить тарифы');
+          setPayError(tSubscription('planError'));
         }
       });
 
@@ -123,6 +153,21 @@ const SubscriptionPage: FC = () => {
       cancelled = true;
     };
   }, [isAuthed]);
+
+  const handleFavoriteChange = useCallback(
+    async (keys: string[]) => {
+      const response = await api.loyalty.updateFavoriteTastes({ tasteMediaKeys: keys });
+      if (client?.id) {
+        dispatch(
+          patchClientProfile({
+            id: client.id,
+            favoriteTasteKeys: response.favoriteTasteKeys,
+          }),
+        );
+      }
+    },
+    [client?.id, dispatch],
+  );
 
   const handlePurchase = useCallback(async () => {
     if (!selectedLevelId) return;
@@ -144,23 +189,18 @@ const SubscriptionPage: FC = () => {
       setPayPhase('done');
       dispatch(getCurrentClientProfileAction());
     } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : 'Ошибка оплаты';
+      const msg = e instanceof Error ? e.message : tSubscription('planError');
       setPayError(msg);
       setPayPhase('ready');
     }
   }, [selectedLevelId, dispatch]);
 
-  const handleScanModalOpen = () => {
-    setIsScanModalOpen(true);
-  };
-
-  const handleScanModalClose = () => {
-    setIsScanModalOpen(false);
-  };
-
-  const handleDescriptionModalOpen = () => {
+  const openSubscribeModal = useCallback((levelId?: string) => {
+    if (levelId) {
+      setSelectedLevelId(levelId);
+    }
     setIsDescriptionModalOpen(true);
-  };
+  }, []);
 
   const handleDescriptionModalClose = () => {
     setIsDescriptionModalOpen(false);
@@ -169,79 +209,129 @@ const SubscriptionPage: FC = () => {
     setPayPhase('ready');
   };
 
-  const renderScanSubscriptionCard = () => (
-    <ContentCard className={styles.scanSubscriptionCard} onClick={handleScanModalOpen}>
+  const selectedLevel = levels.find((l) => l.id === selectedLevelId);
+  const lowestPriceLevel = levels[0];
+
+  const renderProgressCard = () => (
+    <button
+      type="button"
+      className={styles.progressCard}
+      onClick={() => setIsScanModalOpen(true)}
+      aria-label={tSubscription('scanOpenHint')}
+    >
       <VerticalContainer space="m">
         <HorizontalContainer space={0}>
-          <Text size="xl" weight="semibold">
-            Сканируй абонемент на автомате
+          <Text size="xl" weight="semibold" as="h2">
+            {tSubscription('scanTitle')}
           </Text>
-          <IconArrowRight size="m" />
+          <IconArrowRight size="m" aria-hidden="true" />
         </HorizontalContainer>
-        <HorizontalContainer isAutoWidth isAutoSpace>
-          <VolumeCircle currentVolume={volumeMl} maxVolume={maxVolumeMl} />
+
+        <HorizontalContainer isAutoWidth isAutoSpace className={styles.progressRow}>
+          <VolumeCircle
+            consumedVolume={monthlyProgress.usedMl}
+            limitVolume={monthlyProgress.limitMl}
+            centerValue={monthlyProgress.remainingMl}
+            percent={monthlyProgress.percent}
+            ariaLabel={tSubscription('progressUsed', {
+              used: monthlyProgress.usedMl,
+              limit: monthlyProgress.limitMl,
+            })}
+          />
           <div className={styles.qrWhitePad}>
-            <LoyaltyQrCode value={qrPayload} size={133} />
+            <LoyaltyQrCode value={qrPayload} size={133} label={tSubscription('scanModalTitle')} />
           </div>
         </HorizontalContainer>
-        <VerticalContainer space={0}>
-          {isDailyLimitExhausted && (
-            <Text size="s" weight="medium" align="center">
+
+        <VerticalContainer space="xs">
+          <Text size="s" weight="medium" align="center" view="secondary">
+            {tSubscription('progressUsed', {
+              used: monthlyProgress.usedMl,
+              limit: monthlyProgress.limitMl,
+            })}
+          </Text>
+          <Text size="s" weight="medium" align="center">
+            {tSubscription('progressRemaining', { remaining: monthlyProgress.remainingMl })}
+          </Text>
+          {client?.limitExhausted && (
+            <Text size="s" weight="medium" align="center" view="alert">
               {limitResetHint}
             </Text>
           )}
           <Text size="s" weight="medium" align="center">
-            {isTrial
-              ? 'Пробный абонемент активен'
-              : isActiveSubscription
-                ? `Абонемент «${client?.tierName}» действует до ${subscriptionEnd}`
-                : 'Абонемент не активен'}
+            {statusText}
           </Text>
         </VerticalContainer>
       </VerticalContainer>
-    </ContentCard>
+    </button>
   );
 
-  const renderMakeSubscriptionCard = () => (
-    <ContentCard className={styles.makeSubscriptionCard} onClick={handleDescriptionModalOpen}>
-      <HorizontalContainer space="xs">
-        <VerticalContainer space="l" className={styles.textContainer}>
-          <Text size="xl" weight="semibold">
-            Оформи выгодный абонемент
-          </Text>
-          <Text size="m" weight="medium">
-            До 31 литра спортивных напитков за 499 ₽/мес
-          </Text>
-        </VerticalContainer>
-        <img src={subscriptionImg} alt="Bottle and fruits" className={styles.img} />
-      </HorizontalContainer>
-    </ContentCard>
-  );
+  const renderPlanCards = () => {
+    if (!showRenewalPlans) {
+      return null;
+    }
 
-  const renderScanModalBody = () => (
-    <VerticalContainer space="l" isAutoWidth align="center">
-      <div className={styles.qrWhitePadLarge}>
-        <LoyaltyQrCode value={qrPayload} size={315} />
-      </div>
-      <VerticalContainer space="s">
-        <Text size="xl" weight="medium" align="center">
-          Доступно {volumeMl} мл спортивного напитка
-        </Text>
-        <VerticalContainer space={0}>
-          {isDailyLimitExhausted && (
-            <Text size="s" weight="medium" align="center">
-              {limitResetHint}
-            </Text>
-          )}
-          {!isTrial && isActiveSubscription && (
-            <Text size="s" weight="medium" align="center">
-              Абонемент «{client?.tierName}» действует до {subscriptionEnd}
-            </Text>
-          )}
-        </VerticalContainer>
-      </VerticalContainer>
-    </VerticalContainer>
-  );
+    return (
+      <section className={styles.planSection} aria-labelledby="plan-heading">
+        <div className={styles.planHeader}>
+          <Text id="plan-heading" size="xl" weight="semibold" as="h2">
+            {tSubscription('planTitle')}
+          </Text>
+          <Text size="s" view="secondary">
+            {tSubscription('planSubtitle')}
+          </Text>
+        </div>
+
+        {payPhase === 'loading_levels' && (
+          <Text size="m" view="secondary">
+            {tSubscription('planLoading')}
+          </Text>
+        )}
+
+        {payError && payPhase === 'error' && (
+          <Text size="m" view="alert">
+            {payError}
+          </Text>
+        )}
+
+        {levels.length > 0 && (
+          <div className={styles.planGrid}>
+            {levels.map((level) => (
+              <button
+                key={level.id}
+                type="button"
+                className={styles.planCard}
+                onClick={() => openSubscribeModal(level.id)}
+                aria-label={`${level.name}, ${formatPriceRub(level.priceKopecks)} рублей в месяц`}
+              >
+                <span className={styles.planVolume}>
+                  {tSubscription('planVolume', { liters: formatLitersFromMl(tierVolumeMl(level)) })}
+                </span>
+                <span className={styles.planName}>{level.name}</span>
+                <span className={styles.planPrice}>
+                  {tSubscription('planPerMonth', { price: formatPriceRub(level.priceKopecks) })}
+                </span>
+              </button>
+            ))}
+          </div>
+        )}
+
+        {levels.length === 0 && payPhase === 'ready' && (
+          <Text size="m" view="secondary">
+            {tSubscription('planEmpty')}
+          </Text>
+        )}
+
+        {lowestPriceLevel && (
+          <Button
+            size="l"
+            label={tSubscription('subscribeCta')}
+            onClick={() => openSubscribeModal(lowestPriceLevel.id)}
+          />
+        )}
+      </section>
+    );
+  };
 
   const renderModalInfo = (icon: JSX.Element, label: string) => (
     <HorizontalContainer space="m">
@@ -252,8 +342,6 @@ const SubscriptionPage: FC = () => {
     </HorizontalContainer>
   );
 
-  const selectedLevel = levels.find((l) => l.id === selectedLevelId);
-
   const renderDescriptionModalBody = () => (
     <VerticalContainer space="l">
       <VerticalContainer space="s">
@@ -262,16 +350,16 @@ const SubscriptionPage: FC = () => {
 
       <VerticalContainer space="s">
         <Text size="m" weight="semibold">
-          Выберите тариф
+          {tSubscription('planSelect')}
         </Text>
         {payPhase === 'loading_levels' && (
           <Text size="m" view="secondary">
-            Загрузка…
+            {tSubscription('planLoading')}
           </Text>
         )}
         {levels.length === 0 && payPhase === 'ready' && (
           <Text size="m" view="secondary">
-            Нет доступных тарифов
+            {tSubscription('planEmpty')}
           </Text>
         )}
         {levels.map((lvl) => (
@@ -283,7 +371,10 @@ const SubscriptionPage: FC = () => {
               onChange={() => setSelectedLevelId(lvl.id)}
             />
             <Text size="m" weight="medium">
-              {lvl.name} — {formatPriceRub(lvl.priceKopecks)} ₽ / мес
+              {lvl.name} —{' '}
+              {tSubscription('planPerMonth', { price: formatPriceRub(lvl.priceKopecks) })}
+              {' · '}
+              {tSubscription('planVolume', { liters: formatLitersFromMl(tierVolumeMl(lvl)) })}
             </Text>
           </label>
         ))}
@@ -292,13 +383,13 @@ const SubscriptionPage: FC = () => {
       {paymentUrl && (
         <VerticalContainer space="m" align="center">
           <Text size="m" weight="medium" align="center">
-            Оплата СБП
+            {tSubscription('subscribeSbp')}
           </Text>
           <div className={styles.qrWhitePad}>
-            <QRCodeSVG value={paymentUrl} size={200} />
+            <QRCodeSVG value={paymentUrl} size={200} aria-label={tSubscription('subscribeSbp')} />
           </div>
           <a href={paymentUrl} target="_blank" rel="noopener noreferrer" className={styles.payLink}>
-            Открыть оплату в банке
+            {tSubscription('subscribeOpenBank')}
           </a>
         </VerticalContainer>
       )}
@@ -308,8 +399,8 @@ const SubscriptionPage: FC = () => {
           size="l"
           label={
             payPhase === 'init' || payPhase === 'await_payment' || payPhase === 'await_subscription'
-              ? 'Подождите…'
-              : 'Оформить'
+              ? tSubscription('subscribeWait')
+              : tSubscription('subscribePay')
           }
           disabled={
             !selectedLevelId ||
@@ -322,71 +413,103 @@ const SubscriptionPage: FC = () => {
         />
         {payPhase === 'await_payment' && (
           <Text size="s" weight="medium" align="center" view="secondary">
-            Ожидаем оплату…
+            {tSubscription('subscribeAwaitPayment')}
           </Text>
         )}
         {payPhase === 'await_subscription' ? (
           <Text size="s" weight="medium" align="center" view="secondary">
-            Оплата прошла, подтверждаем абонемент…
+            {tSubscription('subscribeAwaitActivation')}
           </Text>
         ) : null}
         {payPhase === 'done' && (
           <Text size="m" weight="medium" align="center">
-            Абонемент активирован
+            {tSubscription('subscribeDone')}
           </Text>
         )}
-        {payError && (
+        {payError && payPhase !== 'error' && (
           <Text size="m" weight="medium" align="center" view="alert">
             {payError}
           </Text>
         )}
-        <VerticalContainer space="3xs" align="center">
-          <Text size="m" weight="medium" view="secondary">
-            Лимит обновляется ежедневно (МСК)
+        {selectedLevel && (
+          <Text size="s" weight="medium" align="center" view="secondary">
+            {selectedLevel.name},{' '}
+            {tSubscription('planPerMonth', { price: formatPriceRub(selectedLevel.priceKopecks) })}
           </Text>
-          {selectedLevel && (
-            <Text size="s" weight="medium" align="center" view="secondary">
-              Выбрано: {selectedLevel.name}, {formatPriceRub(selectedLevel.priceKopecks)} ₽/мес
-            </Text>
-          )}
-        </VerticalContainer>
+        )}
       </VerticalContainer>
     </VerticalContainer>
   );
 
-  const renderScanModal = () => (
-    <BottomSheetModal
-      isOpen={isScanModalOpen}
-      className={styles.ScanSheetModal}
-      modalTitle="Сканируй абонемент на автомате"
-      onClose={handleScanModalClose}
-    >
-      {renderScanModalBody()}
-    </BottomSheetModal>
-  );
-
-  const renderDescriptionModal = () => (
-    <BottomSheetModal
-      isOpen={isDescriptionModalOpen}
-      className={styles.DescriptionSheetModal}
-      modalTitle="Получи заряд силы и энергии во время тренировки"
-      onClose={handleDescriptionModalClose}
-    >
-      {renderDescriptionModalBody()}
-    </BottomSheetModal>
+  const renderScanModalBody = () => (
+    <VerticalContainer space="l" isAutoWidth align="center">
+      <div className={styles.qrWhitePadLarge}>
+        <LoyaltyQrCode value={qrPayload} size={315} label={tSubscription('scanModalTitle')} />
+      </div>
+      <VerticalContainer space="s">
+        <Text size="xl" weight="medium" align="center">
+          {tSubscription('progressRemaining', { remaining: monthlyProgress.remainingMl })}
+        </Text>
+        <Text size="s" weight="medium" align="center" view="secondary">
+          {tSubscription('progressUsed', {
+            used: monthlyProgress.usedMl,
+            limit: monthlyProgress.limitMl,
+          })}
+        </Text>
+        {!isTrial && (isActiveSubscription || isExpiredSubscription) && (
+          <Text size="s" weight="medium" align="center">
+            {statusText}
+          </Text>
+        )}
+      </VerticalContainer>
+    </VerticalContainer>
   );
 
   if (isReject && !isAuthed) {
-    return <Navigate to="../auth" replace />;
+    return <Navigate to="/auth" replace />;
   }
 
   return (
-    <VerticalContainer space="m" className={styles.SubscriptionPage}>
-      {renderScanSubscriptionCard()}
-      {renderMakeSubscriptionCard()}
-      {renderScanModal()}
-      {renderDescriptionModal()}
-    </VerticalContainer>
+    <div className={styles.pageShell}>
+      <VerticalContainer space="m" className={styles.SubscriptionPage}>
+        <header className={styles.brandHeader}>
+          <ViwaBrandLogo size="lg" />
+          <Text size="s" view="secondary">
+            {tSubscription('progressTitle')}
+          </Text>
+        </header>
+
+        {renderProgressCard()}
+
+        <FavoriteFlavorsSection
+          selectedKeys={favoriteKeys}
+          onSelectionChange={handleFavoriteChange}
+          disabled={!isAuthed || !client?.id}
+        />
+
+        {renderPlanCards()}
+      </VerticalContainer>
+
+      <BottomNav />
+
+      <BottomSheetModal
+        isOpen={isScanModalOpen}
+        className={styles.ScanSheetModal}
+        modalTitle={tSubscription('scanModalTitle')}
+        onClose={() => setIsScanModalOpen(false)}
+      >
+        {renderScanModalBody()}
+      </BottomSheetModal>
+
+      <BottomSheetModal
+        isOpen={isDescriptionModalOpen}
+        className={styles.DescriptionSheetModal}
+        modalTitle={tSubscription('subscribeModalTitle')}
+        onClose={handleDescriptionModalClose}
+      >
+        {renderDescriptionModalBody()}
+      </BottomSheetModal>
+    </div>
   );
 };
 

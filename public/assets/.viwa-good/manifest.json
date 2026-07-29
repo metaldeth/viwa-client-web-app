@@ -1,0 +1,332 @@
+{
+  "version": "1.0.0",
+  "conceptRef": "concept-16-editorial-fruit-lab",
+  "generatedAt": "2026-07-29T13:43:45Z",
+  "assets": [
+    {
+      "id": "hero-bottle",
+      "category": "hero",
+      "files": {
+        "webp": {
+          "path": "hero/hero-bottle.webp",
+          "width": 1200,
+          "height": 1600
+        },
+        "png": {
+          "path": "hero/hero-bottle.png",
+          "width": 1200,
+          "height": 1600
+        }
+      },
+      "altRu": "Бутылка VIWA editorial fruit lab"
+    },
+    {
+      "id": "hero-station",
+      "category": "hero",
+      "files": {
+        "webp": {
+          "path": "hero/hero-station.webp",
+          "width": 1920,
+          "height": 1080
+        },
+        "png": {
+          "path": "hero/hero-station.png",
+          "width": 1920,
+          "height": 1080
+        }
+      },
+      "altRu": "Питьевая станция VIWA в фитнес-клубе"
+    },
+    {
+      "id": "taste-cherry",
+      "category": "taste",
+      "files": {
+        "webp": {
+          "path": "tastes/cherry.webp",
+          "width": 800,
+          "height": 1000
+        },
+        "png": {
+          "path": "tastes/cherry.png",
+          "width": 800,
+          "height": 1000
+        }
+      },
+      "altRu": "Чёрная вишня — фруктовый разрез и бутылка",
+      "tasteMediaKey": "cherry"
+    },
+    {
+      "id": "taste-blackberry-lime",
+      "category": "taste",
+      "files": {
+        "webp": {
+          "path": "tastes/blackberry-lime.webp",
+          "width": 800,
+          "height": 1000
+        },
+        "png": {
+          "path": "tastes/blackberry-lime.png",
+          "width": 800,
+          "height": 1000
+        }
+      },
+      "altRu": "Ежевика-лайм — фруктовый разрез и бутылка",
+      "tasteMediaKey": "blackberry-lime"
+    },
+    {
+      "id": "taste-coconut",
+      "category": "taste",
+      "files": {
+        "webp": {
+          "path": "tastes/coconut.webp",
+          "width": 800,
+          "height": 1000
+        },
+        "png": {
+          "path": "tastes/coconut.png",
+          "width": 800,
+          "height": 1000
+        }
+      },
+      "altRu": "Кокос — фруктовый разрез и бутылка",
+      "tasteMediaKey": "coconut"
+    },
+    {
+      "id": "taste-cucumber",
+      "category": "taste",
+      "files": {
+        "webp": {
+          "path": "tastes/cucumber.webp",
+          "width": 800,
+          "height": 1000
+        },
+        "png": {
+          "path": "tastes/cucumber.png",
+          "width": 800,
+          "height": 1000
+        }
+      },
+      "altRu": "Огурец — фруктовый разрез и бутылка",
+      "tasteMediaKey": "cucumber"
+    },
+    {
+      "id": "taste-grapefruit",
+      "category": "taste",
+      "files": {
+        "webp": {
+          "path": "tastes/grapefruit.webp",
+          "width": 800,
+          "height": 1000
+        },
+        "png": {
+          "path": "tastes/grapefruit.png",
+          "width": 800,
+          "height": 1000
+        }
+      },
+      "altRu": "Грейпфрут — фруктовый разрез и бутылка",
+      "tasteMediaKey": "grapefruit"
+    },
+    {
+      "id": "taste-lemon",
+      "category": "taste",
+      "files": {
+        "webp": {
+          "path": "tastes/lemon.webp",
+          "width": 800,
+          "height": 1000
+        },
+        "png": {
+          "path": "tastes/lemon.png",
+          "width": 800,
+          "height": 1000
+        }
+      },
+      "altRu": "Лимон — фруктовый разрез и бутылка",
+      "tasteMediaKey": "lemon"
+    },
+    {
+      "id": "taste-lime",
+      "category": "taste",
+      "files": {
+        "webp": {
+          "path": "tastes/lime.webp",
+          "width": 800,
+          "height": 1000
+        },
+        "png": {
+          "path": "tastes/lime.png",
+          "width": 800,
+          "height": 1000
+        }
+      },
+      "altRu": "Лайм — фруктовый разрез и бутылка",
+      "tasteMediaKey": "lime"
+    },
+    {
+      "id": "taste-lime-mint",
+      "category": "taste",
+      "files": {
+        "webp": {
+          "path": "tastes/lime-mint.webp",
+          "width": 800,
+          "height": 1000
+        },
+        "png": {
+          "path": "tastes/lime-mint.png",
+          "width": 800,
+          "height": 1000
+        }
+      },
+      "altRu": "Лайм-мята — фруктовый разрез и бутылка",
+      "tasteMediaKey": "lime-mint"
+    },
+    {
+      "id": "taste-orange",
+      "category": "taste",
+      "files": {
+        "webp": {
+          "path": "tastes/orange.webp",
+          "width": 800,
+          "height": 1000
+        },
+        "png": {
+          "path": "tastes/orange.png",
+          "width": 800,
+          "height": 1000
+        }
+      },
+      "altRu": "Апельсин — фруктовый разрез и бутылка",
+      "tasteMediaKey": "orange"
+    },
+    {
+      "id": "taste-peach-mango",
+      "category": "taste",
+      "files": {
+        "webp": {
+          "path": "tastes/peach-mango.webp",
+          "width": 800,
+          "height": 1000
+        },
+        "png": {
+          "path": "tastes/peach-mango.png",
+          "width": 800,
+          "height": 1000
+        }
+      },
+      "altRu": "Манго-персик — фруктовый разрез и бутылка",
+      "tasteMediaKey": "peach-mango"
+    },
+    {
+      "id": "taste-pomegranate-blueberry",
+      "category": "taste",
+      "files": {
+        "webp": {
+          "path": "tastes/pomegranate-blueberry.webp",
+          "width": 800,
+          "height": 1000
+        },
+        "png": {
+          "path": "tastes/pomegranate-blueberry.png",
+          "width": 800,
+          "height": 1000
+        }
+      },
+      "altRu": "Гранат-черника — фруктовый разрез и бутылка",
+      "tasteMediaKey": "pomegranate-blueberry"
+    },
+    {
+      "id": "taste-raspberry",
+      "category": "taste",
+      "files": {
+        "webp": {
+          "path": "tastes/raspberry.webp",
+          "width": 800,
+          "height": 1000
+        },
+        "png": {
+          "path": "tastes/raspberry.png",
+          "width": 800,
+          "height": 1000
+        }
+      },
+      "altRu": "Малина — фруктовый разрез и бутылка",
+      "tasteMediaKey": "raspberry"
+    },
+    {
+      "id": "taste-strawberry-lemongrass",
+      "category": "taste",
+      "files": {
+        "webp": {
+          "path": "tastes/strawberry-lemongrass.webp",
+          "width": 800,
+          "height": 1000
+        },
+        "png": {
+          "path": "tastes/strawberry-lemongrass.png",
+          "width": 800,
+          "height": 1000
+        }
+      },
+      "altRu": "Клубника-лемонграсс — фруктовый разрез и бутылка",
+      "tasteMediaKey": "strawberry-lemongrass"
+    },
+    {
+      "id": "taste-watermelon",
+      "category": "taste",
+      "files": {
+        "webp": {
+          "path": "tastes/watermelon.webp",
+          "width": 800,
+          "height": 1000
+        },
+        "png": {
+          "path": "tastes/watermelon.png",
+          "width": 800,
+          "height": 1000
+        }
+      },
+      "altRu": "Арбуз — фруктовый разрез и бутылка",
+      "tasteMediaKey": "watermelon"
+    },
+    {
+      "id": "cabinet-mock-preview",
+      "category": "cabinet",
+      "files": {
+        "webp": {
+          "path": "cabinet-mock-preview.webp",
+          "width": 1170,
+          "height": 2535
+        },
+        "png": {
+          "path": "cabinet-mock-preview.png",
+          "width": 1170,
+          "height": 2535
+        }
+      },
+      "altRu": "Предпросмотр экрана подписки VIWA"
+    },
+    {
+      "id": "logo-viwa-mark",
+      "category": "logo",
+      "files": {
+        "webp": {
+          "path": "logo/logo-viwa-mark.webp",
+          "width": 277,
+          "height": 243
+        },
+        "png": {
+          "path": "logo/logo-viwa-mark.png",
+          "width": 277,
+          "height": 243
+        },
+        "svg": {
+          "path": "logo/logo-viwa-mark.svg",
+          "width": 277,
+          "height": 243
+        }
+      },
+      "altRu": "VIWA"
+    }
+  ]
+}
