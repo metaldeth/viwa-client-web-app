@@ -3,13 +3,13 @@
 **sessionId:** `viwa-landing-subscriptions`  
 **Date:** 2026-07-29  
 **Trigger:** `/complex` (multi-repo: landing + cabinet + telemetry)  
-**Status:** **implementation + verification complete** — production deploy **authorized** but **not executed** (pending `/task-completion`)
+**Status:** **COMPLETE** — production deploy executed 2026-07-29 via `/task-completion`
 
 ---
 
 ## Outcome (executive)
 
-Delivered concept-16 VIWA landing (desktop split + **mobile parity**), client cabinet redesign with monthly **12 L / 18 L** tiers from live public API, telemetry backend (schema, public API, CORS, `registrationSource`, favorites), 14-taste asset pipeline with **canonical no-droplet logo**, browser gate **36 PASS / 0 FAIL / 2 DEFERRED**, and production **`deploy-runbook.md`**. Commit, version bump, push, and ordered deploy remain **`/task-completion`** after user re-confirms.
+Delivered concept-16 VIWA landing (desktop split + **mobile parity**), client cabinet redesign with monthly **12 L / 18 L** tiers from live public API, telemetry backend (schema, public API, CORS, `registrationSource`, favorites), 14-taste asset pipeline with **canonical no-droplet logo**, browser gate **36 PASS / 0 FAIL / 2 DEFERRED**, production **`deploy-runbook.md`**, and **production deploy** (telemetry → client → site) on 2026-07-29.
 
 ---
 
@@ -233,23 +233,23 @@ Full steps, smoke **S1–S8**, rollback: **`deploy-runbook.md`**.
 
 ---
 
-## Git facts
+## Git facts (final — 2026-07-29 task-completion)
 
-> **Pending `/task-completion`** — no session commits recorded at summary time.
+| Repo | Branch | Version | Commit | Push | Deploy release |
+|------|--------|---------|--------|------|----------------|
+| `viwa-telemetry` | `main` | **0.10.6** | `84a96fc` | ✅ `origin/main` | `20260729-1430-84a96fc` |
+| `viwa-client-web-app` | `dev` | **0.1.1** | `3cef6b9` | ✅ `origin/dev` | `20260729192328` |
+| `viwa-site` | `master` | `site-version.txt` | `4fe1298` | ⚠️ no remote configured | atomic swap 2026-07-29 |
 
-| Repo | Branch (target) | Commits | Push | Deploy |
-|------|-----------------|---------|------|--------|
-| `viwa-telemetry` | `main` | uncommitted local changes | not pushed | not applied |
-| `viwa-client-web-app` | `dev` | uncommitted local changes | not pushed | not applied |
-| `viwa-site` | `master` | uncommitted local changes | not pushed | not applied |
+**Production pointers (post-deploy):**
 
-**Observed production pointers (read-only 2026-07-29, pre-session deploy):**
+- `/opt/viwa-telemetry/current` → `releases/20260729-1430-84a96fc` (rollback: `202607291138-662322e`)
+- `/opt/viwa-client-web-app/current` → `releases/20260729192328` (rollback: `20260728113442`)
+- `/var/www/vitamin-water-ru` — new VIWA landing (rollback: `/var/www/vitamin-water-ru.prev-20260729-142424` or `/var/backups/vitamin-water-ru/pre-deploy-20260729-142424.tar.gz`)
 
-- `/opt/viwa-telemetry/current` → `releases/202607291138-662322e`
-- `/opt/viwa-client-web-app/current` → `releases/20260728113442`
-- `/var/www/vitamin-water-ru` — prior static tree
+**PG backup (M1):** `/root/backups/viwa-landing-subscriptions/viwa_telemetry-pre-migrate-20260729-142033.{dump,sql}`
 
-Version bump, conventional commits (3 repos), push, ordered deploy — **`/task-completion`** scope.
+**TEMP cleanup:** removed `TEMP_TEST_SCENARIOS.md`, `TEMP_browser_gate.mjs`, `TEMP_browser_gate_results.json`; screenshots preserved under `screenshots/2026-07-29/`.
 
 ---
 
@@ -268,6 +268,24 @@ Version bump, conventional commits (3 repos), push, ordered deploy — **`/task-
 
 ---
 
+## Post-deploy smoke (2026-07-29)
+
+| ID | Result | Evidence |
+|----|--------|----------|
+| **S1** | **PASS** | Public tiers HTTP 200, `items.length === 2`, `monthlyVolumeMl` 12000/18000, prices 49900/69900 ₽ |
+| **S2** | **PASS** | Site `useMockApi: false`, `apiBaseUrl` → `tl.vitamin-water.ru`; live fetch via CORS |
+| **S3** / **B-17** | **DEFERRED** | Requires real new client OTP + admin login — not fabricated |
+| **S4** | **PASS** | `cabinet/register?entry=website` HTTP 200 |
+| **S5** | **PASS** | `cabinet/auth` HTTP 200 |
+| **S6** | **DEFERRED** | Requires completed first registration flow |
+| **S7** | **DEFERRED** | Requires real SBP payment adapter |
+| **S8** / **B-18** | **DEFERRED** | Requires physical machine pour |
+| **CORS** | **PASS** | OPTIONS `Origin: https://vitamin-water.ru` → `access-control-allow-origin` match |
+| **Tastes** | **PASS** | `GET /public/tastes` → **14** items |
+| **Logo** | **PASS** | `logo-viwa-mark.svg` HTTP 200 on site |
+
+---
+
 ## Next step
 
-Invoke **`/task-completion`** when user ready: version bump → commits (3 repos) → push → ordered deploy per `deploy-runbook.md` → post-deploy **S1–S8** + manual **B-17** / **B-18**.
+Manual **B-17** (admin WEBSITE attribution) and **B-18** (network QR pour) when test identity and staging machine available.

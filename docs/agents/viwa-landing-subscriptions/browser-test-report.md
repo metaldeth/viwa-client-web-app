@@ -54,9 +54,8 @@
 
 ## Artifacts
 
-- Raw JSON: `docs/agents/viwa-landing-subscriptions/TEMP_browser_gate_results.json`
-- Runner: `docs/agents/viwa-landing-subscriptions/TEMP_browser_gate.mjs`
 - Screenshots: `docs/agents/viwa-landing-subscriptions/screenshots/2026-07-29/`
+- Report: `browser-test-report.md` (this file)
 
 ## Product code
 

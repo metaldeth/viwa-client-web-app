@@ -667,3 +667,17 @@
 - **Git facts:** commits/push/deploy — **pending task-completion** (uncommitted changes in 3 repos at summary time)
 - **blockingQuestions:** [] — none for summary; B-17/B-18 require real admin DB + physical machine post-deploy
 - **Следующий шаг:** `/task-completion` on user request
+
+## [task-completion-complex] final — 2026-07-29
+
+- **Commits:** telemetry `84a96fc` (main, v0.10.6); client `3cef6b9` (dev, v0.1.1); site `4fe1298` (master, local only — no git remote)
+- **Push:** telemetry ✅ main; client ✅ dev; site ⚠️ no origin
+- **TEMP removed:** `TEMP_TEST_SCENARIOS.md`, `TEMP_browser_gate.mjs`, `TEMP_browser_gate_results.json`
+- **Checks (final):** telemetry lint/typecheck/build 0; client lint/locale/build 0; site static-regression PASS
+- **Deploy order:** telemetry → client → site
+- **Telemetry release:** `20260729-1430-84a96fc`; PG backup `20260729-142033`; migration `20260729120000_monthly_subscription_and_registration_source` applied; rollback `202607291138-662322e`
+- **Client release:** `20260729192328`; rollback `20260728113442`; routes / /register /auth → 200
+- **Site:** backup `/var/backups/vitamin-water-ru/pre-deploy-20260729-142424.tar.gz`; prev docroot `.prev-20260729-142424`; root + logo SVG → 200
+- **Post-deploy smoke:** S1/S2/S4/S5/CORS/tastes(14)/logo PASS; S3/S6/S7/S8 and B-17/B-18 DEFERRED (no fabricated OTP/machine)
+- **Disk cleanup:** removed telemetry release `202607291220-a51fa6c`; disk ~23% used
+- **Docs commit pending:** summary, orchestrator-log, session log, browser-test-report TEMP refs
