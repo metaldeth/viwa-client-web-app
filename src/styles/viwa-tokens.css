@@ -23,6 +23,7 @@
 
   --viwa-font-ui: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --viwa-font-display: 'Montserrat', var(--viwa-font-ui);
+  --viwa-font-condensed: 'Oswald', 'Arial Narrow', 'Helvetica Neue Condensed', 'Franklin Gothic Medium', Arial, sans-serif;
 
   --viwa-radius-sm: 8px;
   --viwa-radius-md: 12px;
@@ -38,6 +39,7 @@
   --viwa-touch-min: 44px;
   --viwa-max-content: 480px;
   --viwa-desktop-max: 720px;
+  --viwa-cabinet-max: 430px;
   --viwa-split-breakpoint: 1024px;
   --viwa-mobile-breakpoint: 768px;
 

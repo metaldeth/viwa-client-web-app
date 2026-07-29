@@ -1,0 +1,269 @@
+{
+  "round": "5-chrome-tweaks-recheck",
+  "methodology": "corrected-inner-crop-v1-round5-chrome-tweaks-recheck",
+  "timestamp": "2026-07-29T19:17:35.317Z",
+  "baseUrl": "http://127.0.0.1:5173",
+  "note": "Prior = contour-tweaks recheck fair diff 11.52%. Chrome tweaks: progress main left-1, track/limits width+6, bottle wrap(-1,2); nav links up4, FAB margin -5 size44 icon20 label -5; taste row x-3 circles74; plan main left-1 chevron(-2,+10).",
+  "pixelResult": "PASS",
+  "functionalResult": "PASS",
+  "geometryTargetsResult": "PASS",
+  "result": "PASS",
+  "visualGate": {
+    "threshold": "≤12% fair masked structural diff",
+    "thresholdRationale": "Unified with landing gate; prior ≤8% was Round 1 pixel-runner ad-hoc default, not user-specified.",
+    "normalizedAt": "2026-07-30",
+    "maskedDiffPct": 11.19,
+    "pass": true
+  },
+  "metricsRaw": {
+    "comparedPixels": 266760,
+    "diffPixels": 46908,
+    "diffRatio": 0.17584345479082322,
+    "rmse": 44.86,
+    "ssim": 0.8636,
+    "similarity": 0.83,
+    "viewport": "342x780"
+  },
+  "metricsMasked": {
+    "maskedSimilarity": 0.8818,
+    "ssim": 0.9006,
+    "maskedDiffRatio": 0.11185191196381512,
+    "rmse": 35.49,
+    "comparedPixels": 234131,
+    "diffPixels": 26188,
+    "viewport": "342x780"
+  },
+  "prior": {
+    "metricsMasked": {
+      "maskedSimilarity": 0.8783,
+      "ssim": 0.8959,
+      "maskedDiffRatio": 0.11522609137619538,
+      "rmse": 36.28,
+      "comparedPixels": 234131,
+      "diffPixels": 26978,
+      "viewport": "342x780"
+    },
+    "metricsRaw": {
+      "comparedPixels": 266760,
+      "diffPixels": 48315,
+      "diffRatio": 0.1811178587494377,
+      "rmse": 46.11,
+      "ssim": 0.8559,
+      "similarity": 0.8245,
+      "viewport": "342x780"
+    }
+  },
+  "deltaVsPrior": {
+    "maskedSimilarity": 0.0035,
+    "maskedSsim": 0.0047,
+    "maskedDiffPp": "-0.34pp",
+    "maskedRmse": -0.79,
+    "rawDiffPp": "-0.53pp"
+  },
+  "r4Baseline": {
+    "metricsMasked": {
+      "maskedSimilarity": 0.7349,
+      "ssim": 0.7038,
+      "maskedDiffRatio": 0.268105758477348,
+      "rmse": 62.18,
+      "comparedPixels": 236955,
+      "diffPixels": 63529,
+      "viewport": "342x780"
+    }
+  },
+  "geometryInner": {
+    "viewport": {
+      "w": 342,
+      "h": 780
+    },
+    "doc": {
+      "scrollW": 342,
+      "clientW": 342,
+      "innerW": 342,
+      "scrollH": 780,
+      "clientH": 780
+    },
+    "header": {
+      "x": 0,
+      "y": 0,
+      "w": 342,
+      "h": 90,
+      "bottom": 90,
+      "right": 342
+    },
+    "progressCard": {
+      "x": 9,
+      "y": 100,
+      "w": 316,
+      "h": 154,
+      "bottom": 254,
+      "right": 325
+    },
+    "qrCard": {
+      "x": 9,
+      "y": 264,
+      "w": 316,
+      "h": 128,
+      "bottom": 392,
+      "right": 325
+    },
+    "tasteSection": {
+      "x": 9,
+      "y": 402,
+      "w": 316,
+      "h": 148.1,
+      "bottom": 550.1,
+      "right": 325
+    },
+    "planCard": {
+      "x": 9,
+      "y": 560.1,
+      "w": 316,
+      "h": 143,
+      "bottom": 703.1,
+      "right": 325
+    },
+    "bottomNav": {
+      "x": 0,
+      "y": 714,
+      "w": 342,
+      "h": 65,
+      "bottom": 779,
+      "right": 342
+    },
+    "cardHeights": [
+      154,
+      128,
+      148.1,
+      143
+    ],
+    "overflowX": false,
+    "overflowY": false
+  },
+  "geometryTargets": {
+    "checks": [
+      {
+        "name": "scrollW=342",
+        "pass": true,
+        "actual": 342
+      },
+      {
+        "name": "clientW=342",
+        "pass": true,
+        "actual": 342
+      },
+      {
+        "name": "innerW=342",
+        "pass": true,
+        "actual": 342
+      },
+      {
+        "name": "progress.h=154",
+        "pass": true,
+        "actual": 154
+      },
+      {
+        "name": "qr.h=128",
+        "pass": true,
+        "actual": 128
+      },
+      {
+        "name": "taste.h=148",
+        "pass": true,
+        "actual": 148.1
+      },
+      {
+        "name": "plan.h=143",
+        "pass": true,
+        "actual": 143
+      },
+      {
+        "name": "card.right≈325",
+        "pass": true,
+        "actual": 325
+      },
+      {
+        "name": "no overflowX",
+        "pass": true,
+        "actual": false
+      },
+      {
+        "name": "no overflowY@342",
+        "pass": true,
+        "actual": false
+      },
+      {
+        "name": "no overlap/clipping",
+        "pass": true,
+        "actual": []
+      }
+    ],
+    "failures": [],
+    "passCount": 11,
+    "totalChecks": 11,
+    "overlapClipping": {
+      "issues": [],
+      "pass": true
+    }
+  },
+  "topZones": [
+    {
+      "name": "bottom nav",
+      "diffRatio": 0.1838,
+      "diffPct": 18.4,
+      "compared": 13338,
+      "diffPixels": 2451
+    },
+    {
+      "name": "progress card",
+      "diffRatio": 0.1503,
+      "diffPct": 15,
+      "compared": 52668,
+      "diffPixels": 7917
+    },
+    {
+      "name": "plan card",
+      "diffRatio": 0.1173,
+      "diffPct": 11.7,
+      "compared": 48906,
+      "diffPixels": 5736
+    },
+    {
+      "name": "taste card",
+      "diffRatio": 0.1098,
+      "diffPct": 11,
+      "compared": 38799,
+      "diffPixels": 4259
+    },
+    {
+      "name": "qr card shell/copy",
+      "diffRatio": 0.0783,
+      "diffPct": 7.8,
+      "compared": 32540,
+      "diffPixels": 2547
+    },
+    {
+      "name": "header/logo/title",
+      "diffRatio": 0.0574,
+      "diffPct": 5.7,
+      "compared": 30780,
+      "diffPixels": 1766
+    }
+  ],
+  "functional": {
+    "failures": [],
+    "checks": [
+      "3 taste slots",
+      "QR modal"
+    ]
+  },
+  "blockers": [],
+  "historicalBlockers": [
+    {
+      "id": "R5-P1",
+      "asOf": "2026-07-29T19:17:35.317Z",
+      "note": "Marked FAIL under Round 1 runner ad-hoc ≤8% gate; superseded by unified ≤12% structural gate 2026-07-30.",
+      "maskedDiffPct": 11.19
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "outer": {
+    "width": 390,
+    "height": 832
+  },
+  "crop": {
+    "x0": 24,
+    "y0": 20,
+    "x1": 365,
+    "y1": 799,
+    "width": 342,
+    "height": 780
+  },
+  "detection": {
+    "screenLeft": 0,
+    "screenRight": 389,
+    "targetInnerH": 780
+  },
+  "rationale": [
+    "Outer PNG is 390×832 (includes physical phone bezel; prior runs wrongly used 390×832 as CSS viewport).",
+    "Left/right screen edge from column median luminance in y=120..700: raw 0..389, refined 24..365.",
+    "Right bezel begins ~x=390 where column median jumps (e.g. x=375 med≈125 on this asset).",
+    "Top inset y=20 skips status bar / Dynamic Island chrome.",
+    "Bottom y=799 is last content row before home-indicator grey lift (~y=807). Inner height clamped to 780px.",
+    "CSS viewport for capture must match crop 342×780, not outer 390×832.",
+    "Round 4/5 uses established canonical inner crop x=24..365, y=20..799 → 342×780 (overrides auto-detect if drift)."
+  ],
+  "hypothesis": {
+    "note": "Starting hypothesis x=20..379 (359w) on 399 outer; this asset is 390w so x1=369 (350w). Height ~780.",
+    "matched": false
+  },
+  "canonicalOverride": true
+}

@@ -1,0 +1,215 @@
+{
+  "round": 1,
+  "timestamp": "2026-07-29T17:43:03.729Z",
+  "baseUrl": "http://127.0.0.1:5173",
+  "viewportPrimary": "399x832",
+  "result": "FAIL",
+  "metrics": {
+    "maskedSimilarity": 0.6517,
+    "maskedDiffRatio": 0.3530513945212282,
+    "rmse": 86.57,
+    "comparedPixels": 302075,
+    "diffPixels": 106648
+  },
+  "geometry399": {
+    "viewport": {
+      "w": 399,
+      "h": 832
+    },
+    "doc": {
+      "scrollW": 399,
+      "clientW": 399,
+      "scrollH": 832,
+      "clientH": 832
+    },
+    "safeArea": {
+      "top": "0px",
+      "bottom": "0px"
+    },
+    "pageShell": {
+      "x": 0,
+      "y": 0,
+      "w": 399,
+      "h": 832,
+      "r": 0
+    },
+    "header": {
+      "x": 0,
+      "y": 0,
+      "w": 399,
+      "h": 68,
+      "r": 0
+    },
+    "main": {
+      "x": 0,
+      "y": 68,
+      "w": 399,
+      "h": 691,
+      "r": 0
+    },
+    "cards": [
+      {
+        "index": 0,
+        "tag": "SECTION",
+        "x": 16,
+        "y": 68,
+        "w": 367,
+        "h": 138,
+        "r": 20
+      },
+      {
+        "index": 1,
+        "tag": "BUTTON",
+        "x": 16,
+        "y": 222,
+        "w": 367,
+        "h": 160,
+        "r": 20
+      },
+      {
+        "index": 2,
+        "tag": "SECTION",
+        "x": 16,
+        "y": 398,
+        "w": 367,
+        "h": 158.8,
+        "r": 0
+      },
+      {
+        "index": 3,
+        "tag": "BUTTON",
+        "x": 16,
+        "y": 572.8,
+        "w": 367,
+        "h": 170.9,
+        "r": 20
+      }
+    ],
+    "progressBar": {
+      "x": 33,
+      "y": 160,
+      "w": 273,
+      "h": 8,
+      "r": 999,
+      "valueNow": "780",
+      "valueMax": "1000"
+    },
+    "qrCard": {
+      "x": 16,
+      "y": 222,
+      "w": 367,
+      "h": 160,
+      "r": 20
+    },
+    "tasteCircles": [
+      {
+        "x": 28.3,
+        "y": 429,
+        "w": 89.8,
+        "h": 89.8,
+        "r": 50
+      },
+      {
+        "x": 154.6,
+        "y": 429,
+        "w": 89.8,
+        "h": 89.8,
+        "r": 50
+      },
+      {
+        "x": 280.9,
+        "y": 429,
+        "w": 89.8,
+        "h": 89.8,
+        "r": 50
+      }
+    ],
+    "planCard": {
+      "x": 16,
+      "y": 572.8,
+      "w": 367,
+      "h": 170.9,
+      "r": 20
+    },
+    "bottomNav": {
+      "x": 0,
+      "y": 759,
+      "w": 399,
+      "h": 73,
+      "r": 0
+    },
+    "sideInsetLeft": 16,
+    "sideInsetRight": 16,
+    "cardGaps": [
+      16,
+      16,
+      16
+    ],
+    "hasFlowHeader": false,
+    "flowHeaderEl": false
+  },
+  "responsiveChecks": [
+    {
+      "file": "responsive-360x800.png",
+      "horizontalOverflow": false,
+      "sideInsetLeft": 16,
+      "sideInsetRight": 16,
+      "cards": 4
+    },
+    {
+      "file": "responsive-390x844.png",
+      "horizontalOverflow": false,
+      "sideInsetLeft": 16,
+      "sideInsetRight": 16,
+      "cards": 4
+    },
+    {
+      "file": "responsive-430x932.png",
+      "horizontalOverflow": false,
+      "sideInsetLeft": 16,
+      "sideInsetRight": 16,
+      "cards": 4
+    },
+    {
+      "file": "desktop-1440-centered-phone.png",
+      "horizontalOverflow": false,
+      "sideInsetLeft": 521,
+      "sideInsetRight": 521,
+      "cards": 4
+    }
+  ],
+  "functional": {
+    "failures": [
+      "Expected 3 taste slots, got 6"
+    ],
+    "checks": [
+      "No FLOW header",
+      "No horizontal scroll",
+      "Placeholder case (1 favorite → 2 placeholders)",
+      "No favorite PUT",
+      "QR modal opens",
+      "Plan opens billing modal",
+      "Bottom nav stays on /home (SPA)",
+      "Keyboard focus: A"
+    ]
+  },
+  "topDeviations": [
+    {
+      "rank": 1,
+      "area": "global pixel layout (masked QR)",
+      "deltaPx": 35,
+      "expected": "≤8% masked diff",
+      "actual": "35.3% diff (106648/302075px)",
+      "fix": "Review section spacing, typography scale, header grid, bottom nav FAB offset vs reference"
+    }
+  ],
+  "artifacts": [
+    "actual-399x832.png",
+    "responsive-360x800.png",
+    "responsive-390x844.png",
+    "responsive-430x932.png",
+    "desktop-1440-centered-phone.png",
+    "diff-399x832-masked.png",
+    "pixel-reference.png"
+  ]
+}

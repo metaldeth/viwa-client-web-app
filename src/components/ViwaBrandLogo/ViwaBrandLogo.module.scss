@@ -7,9 +7,10 @@
 
 .logoImg {
   display: block;
-  width: auto;
+  width: 100%;
   height: 100%;
   max-width: 100%;
+  object-fit: fill;
 }
 
 .sizeSm {
@@ -22,6 +23,18 @@
 
 .sizeLg {
   height: 3rem;
+}
+
+.sizeHeader {
+  width: 67px;
+  height: 38px;
+}
+
+.sizeHeader .logoImg {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  object-fit: contain;
 }
 
 .textFallback {
@@ -43,4 +56,8 @@
 
 .sizeLg.textFallback {
   font-size: 1.5rem;
+}
+
+.sizeHeader.textFallback {
+  font-size: 1rem;
 }

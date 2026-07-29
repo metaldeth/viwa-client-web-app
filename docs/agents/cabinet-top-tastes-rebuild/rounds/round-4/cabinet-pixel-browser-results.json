@@ -1,0 +1,576 @@
+{
+  "round": 4,
+  "methodology": "corrected-inner-crop-v1-round4",
+  "timestamp": "2026-07-29T18:25:22.370Z",
+  "baseUrl": "http://127.0.0.1:5173",
+  "crop": {
+    "outer": {
+      "width": 390,
+      "height": 832
+    },
+    "crop": {
+      "x0": 24,
+      "y0": 20,
+      "x1": 365,
+      "y1": 799,
+      "width": 342,
+      "height": 780
+    },
+    "detection": {
+      "screenLeft": 0,
+      "screenRight": 389,
+      "targetInnerH": 780
+    },
+    "rationale": [
+      "Outer PNG is 390×832 (includes physical phone bezel; prior runs wrongly used 390×832 as CSS viewport).",
+      "Left/right screen edge from column median luminance in y=120..700: raw 0..389, refined 24..365.",
+      "Right bezel begins ~x=390 where column median jumps (e.g. x=375 med≈125 on this asset).",
+      "Top inset y=20 skips status bar / Dynamic Island chrome.",
+      "Bottom y=799 is last content row before home-indicator grey lift (~y=807). Inner height clamped to 780px.",
+      "CSS viewport for capture must match crop 342×780, not outer 390×832.",
+      "Round 4/5 uses established canonical inner crop x=24..365, y=20..799 → 342×780 (overrides auto-detect if drift)."
+    ],
+    "hypothesis": {
+      "note": "Starting hypothesis x=20..379 (359w) on 399 outer; this asset is 390w so x1=369 (350w). Height ~780.",
+      "matched": false
+    },
+    "canonicalOverride": true
+  },
+  "referenceGeometry": {
+    "headerTop": 0,
+    "qrTop": 31,
+    "qrBottom": 68,
+    "navTop": 763,
+    "planBottom": 627,
+    "gapPlanNav": 136,
+    "cardRadius": 19,
+    "cropMeta": {
+      "outer": {
+        "width": 390,
+        "height": 832
+      },
+      "crop": {
+        "x0": 24,
+        "y0": 20,
+        "x1": 365,
+        "y1": 799,
+        "width": 342,
+        "height": 780
+      },
+      "detection": {
+        "screenLeft": 0,
+        "screenRight": 389,
+        "targetInnerH": 780
+      },
+      "rationale": [
+        "Outer PNG is 390×832 (includes physical phone bezel; prior runs wrongly used 390×832 as CSS viewport).",
+        "Left/right screen edge from column median luminance in y=120..700: raw 0..389, refined 24..365.",
+        "Right bezel begins ~x=390 where column median jumps (e.g. x=375 med≈125 on this asset).",
+        "Top inset y=20 skips status bar / Dynamic Island chrome.",
+        "Bottom y=799 is last content row before home-indicator grey lift (~y=807). Inner height clamped to 780px.",
+        "CSS viewport for capture must match crop 342×780, not outer 390×832.",
+        "Round 4/5 uses established canonical inner crop x=24..365, y=20..799 → 342×780 (overrides auto-detect if drift)."
+      ],
+      "hypothesis": {
+        "note": "Starting hypothesis x=20..379 (359w) on 399 outer; this asset is 390w so x1=369 (350w). Height ~780.",
+        "matched": false
+      },
+      "canonicalOverride": true
+    }
+  },
+  "pixelResult": "FAIL",
+  "functionalResult": "PASS",
+  "geometryTargetsResult": "PASS",
+  "result": "FAIL",
+  "metricsRaw": {
+    "similarity": 0.6847,
+    "ssim": 0.697,
+    "diffRatio": 0.34055705503073924,
+    "rmse": 70.13,
+    "comparedPixels": 266760,
+    "diffPixels": 90847,
+    "viewport": "342x780"
+  },
+  "metricsMasked": {
+    "maskedSimilarity": 0.7349,
+    "ssim": 0.7038,
+    "maskedDiffRatio": 0.268105758477348,
+    "rmse": 62.18,
+    "comparedPixels": 236955,
+    "diffPixels": 63529,
+    "viewport": "342x780"
+  },
+  "r3Baseline": {
+    "maskedSimilarity": 0.6339,
+    "ssim": 0.4181,
+    "maskedDiffRatio": 0.319176367979978,
+    "rmse": 87.8,
+    "comparedPixels": 237339,
+    "diffPixels": 75753,
+    "viewport": "342x780"
+  },
+  "deltaVsR3": {
+    "similarity": 0.101,
+    "ssim": 0.2857,
+    "maskedDiffRatioPp": -5.11,
+    "rmse": -25.62
+  },
+  "geometryInner": {
+    "viewport": {
+      "w": 342,
+      "h": 780
+    },
+    "doc": {
+      "scrollW": 342,
+      "clientW": 342,
+      "scrollH": 780,
+      "clientH": 780
+    },
+    "fontsReady": "loaded",
+    "header": {
+      "x": 0,
+      "y": 0,
+      "w": 342,
+      "h": 90,
+      "r": 0,
+      "bottom": 90
+    },
+    "logo": {
+      "x": 16,
+      "y": 8,
+      "w": 72,
+      "h": 38,
+      "r": 0,
+      "bottom": 46
+    },
+    "title": {
+      "fontSize": "10px",
+      "fontWeight": "400",
+      "lineHeight": "normal",
+      "height": 14
+    },
+    "progressCard": {
+      "x": 16,
+      "y": 98,
+      "w": 310,
+      "h": 154,
+      "r": 12,
+      "bottom": 252
+    },
+    "qrCard": {
+      "x": 16,
+      "y": 262,
+      "w": 310,
+      "h": 128,
+      "r": 12,
+      "bottom": 390
+    },
+    "cards": [
+      {
+        "index": 0,
+        "tag": "SECTION",
+        "x": 16,
+        "y": 98,
+        "w": 310,
+        "h": 154,
+        "r": 12,
+        "bottom": 252
+      },
+      {
+        "index": 1,
+        "tag": "BUTTON",
+        "x": 16,
+        "y": 262,
+        "w": 310,
+        "h": 128,
+        "r": 12,
+        "bottom": 390
+      },
+      {
+        "index": 2,
+        "tag": "SECTION",
+        "x": 16,
+        "y": 400,
+        "w": 310,
+        "h": 148,
+        "r": 12,
+        "bottom": 548
+      },
+      {
+        "index": 3,
+        "tag": "BUTTON",
+        "x": 16,
+        "y": 558,
+        "w": 310,
+        "h": 143,
+        "r": 12,
+        "bottom": 701
+      }
+    ],
+    "tasteSection": {
+      "x": 16,
+      "y": 400,
+      "w": 310,
+      "h": 148,
+      "r": 12,
+      "bottom": 548
+    },
+    "progressBar": {
+      "x": 27,
+      "y": 201.8,
+      "w": 240,
+      "h": 8,
+      "r": 999,
+      "bottom": 209.8,
+      "valueNow": "780",
+      "valueMax": "1000"
+    },
+    "tasteCircles": [
+      {
+        "x": 35.1,
+        "y": 432,
+        "w": 75.9,
+        "h": 75.9,
+        "r": 50,
+        "bottom": 507.9
+      },
+      {
+        "x": 133.1,
+        "y": 432,
+        "w": 75.9,
+        "h": 75.9,
+        "r": 50,
+        "bottom": 507.9
+      },
+      {
+        "x": 231.1,
+        "y": 432,
+        "w": 75.9,
+        "h": 75.9,
+        "r": 50,
+        "bottom": 507.9
+      }
+    ],
+    "planCard": {
+      "x": 16,
+      "y": 558,
+      "w": 310,
+      "h": 143,
+      "r": 12,
+      "bottom": 701
+    },
+    "bottomNav": {
+      "x": 0,
+      "y": 715,
+      "w": 342,
+      "h": 65,
+      "r": 0,
+      "bottom": 780
+    },
+    "gapPlanNav": 14,
+    "sideInsetLeft": 16,
+    "cardGaps": [
+      10,
+      10,
+      10
+    ],
+    "metricValue": {
+      "fontSize": "59.85px",
+      "fontWeight": "800",
+      "lineHeight": "59.85px",
+      "height": 59.8
+    },
+    "priceLine": {
+      "fontSize": "35.91px",
+      "fontWeight": "800",
+      "lineHeight": "37.7055px",
+      "height": 37.7
+    },
+    "qrVisual": {
+      "x": 226,
+      "y": 281,
+      "w": 90,
+      "h": 90,
+      "r": 8,
+      "bottom": 371
+    },
+    "cardRadii": [
+      12,
+      12,
+      12,
+      12
+    ],
+    "activeNavCount": 1,
+    "flowHeader": false
+  },
+  "geometryTargets": {
+    "checks": [
+      {
+        "name": "progress.y",
+        "pass": true,
+        "actual": 98,
+        "target": 98
+      },
+      {
+        "name": "progress.h",
+        "pass": true,
+        "actual": 154,
+        "target": 154
+      },
+      {
+        "name": "qr.y",
+        "pass": true,
+        "actual": 262,
+        "target": 262
+      },
+      {
+        "name": "qr.h",
+        "pass": true,
+        "actual": 128,
+        "target": 128
+      },
+      {
+        "name": "taste.y",
+        "pass": true,
+        "actual": 400,
+        "target": 400
+      },
+      {
+        "name": "taste.h",
+        "pass": true,
+        "actual": 148,
+        "target": 148
+      },
+      {
+        "name": "plan.y",
+        "pass": true,
+        "actual": 558,
+        "target": 558
+      },
+      {
+        "name": "plan.h",
+        "pass": true,
+        "actual": 143,
+        "target": 143
+      },
+      {
+        "name": "plan.bottom",
+        "pass": true,
+        "actual": 701,
+        "target": 701
+      },
+      {
+        "name": "nav.y",
+        "pass": true,
+        "actual": 715,
+        "target": 715
+      },
+      {
+        "name": "gapPlanNav",
+        "pass": true,
+        "actual": 14,
+        "target": 14
+      },
+      {
+        "name": "cardGap[0]",
+        "pass": true,
+        "actual": 10,
+        "target": 10
+      },
+      {
+        "name": "cardGap[1]",
+        "pass": true,
+        "actual": 10,
+        "target": 10
+      },
+      {
+        "name": "cardGap[2]",
+        "pass": true,
+        "actual": 10,
+        "target": 10
+      },
+      {
+        "name": "metric≈60px",
+        "pass": true,
+        "actual": 59.85,
+        "target": 60
+      },
+      {
+        "name": "price≈36px",
+        "pass": true,
+        "actual": 35.91,
+        "target": 36
+      },
+      {
+        "name": "qrVisual≈90px",
+        "pass": true,
+        "actual": 90,
+        "target": 90
+      },
+      {
+        "name": "tasteCircle≈76px",
+        "pass": true,
+        "actual": [
+          75.9,
+          75.9,
+          75.9
+        ],
+        "target": 76
+      },
+      {
+        "name": "cardRadius=12",
+        "pass": true,
+        "actual": [
+          12,
+          12,
+          12,
+          12
+        ],
+        "target": 12
+      },
+      {
+        "name": "title≈10px/400",
+        "pass": true,
+        "actual": {
+          "fontSize": "10px",
+          "fontWeight": "400",
+          "lineHeight": "normal",
+          "height": 14
+        },
+        "target": "10px/400"
+      },
+      {
+        "name": "no overflow @342",
+        "pass": true,
+        "actual": false,
+        "target": false
+      }
+    ],
+    "failures": [],
+    "passCount": 21,
+    "totalChecks": 21
+  },
+  "geometryValidation": {
+    "failures": [],
+    "checks": [
+      "Side inset L: 16px",
+      "Header height ~90px: 90px",
+      "Progress bar 780/1000",
+      "3 taste circle slots measured",
+      "Plan card bottom (701px) above nav top (715px)",
+      "Plan–nav gap 14px (content-normalized inner viewport)",
+      "Nav top y≈715 on 780h viewport (expected ~715 on 780h)",
+      "No horizontal overflow",
+      "Taste card radius 12px (Δ12=0, Δ20=8; ref inner≈19)"
+    ]
+  },
+  "responsiveChecks": [
+    {
+      "viewport": "399x832",
+      "file": "cabinet-functional-399x832.png",
+      "horizontalOverflow": false,
+      "sideInsetLeft": 16,
+      "cards": 4,
+      "gapPlanNav": 62.6,
+      "note": "functional screenshot only — not pixel target"
+    },
+    {
+      "viewport": "360x800",
+      "file": "cabinet-responsive-360x800.png",
+      "horizontalOverflow": false,
+      "sideInsetLeft": 16,
+      "cards": 4,
+      "gapPlanNav": 34,
+      "note": "functional screenshot only — not pixel target"
+    },
+    {
+      "viewport": "390x844",
+      "file": "cabinet-responsive-390x844.png",
+      "horizontalOverflow": false,
+      "sideInsetLeft": 16,
+      "cards": 4,
+      "gapPlanNav": 74.6,
+      "note": "functional screenshot only — not pixel target"
+    },
+    {
+      "viewport": "430x932",
+      "file": "cabinet-responsive-430x932.png",
+      "horizontalOverflow": false,
+      "sideInsetLeft": 16,
+      "cards": 4,
+      "gapPlanNav": 162.6,
+      "note": "functional screenshot only — not pixel target"
+    }
+  ],
+  "functional": {
+    "failures": [],
+    "checks": [
+      "Catalog loading: 3 slots visible before catalog resolves",
+      "Catalog success: exactly 3 taste slots",
+      "Catalog error: 3 slots still visible",
+      "Catalog error: status message shown",
+      "Placeholder case (1 favorite → 2 placeholders)",
+      "No favorite PUT",
+      "No FLOW header",
+      "No horizontal scroll",
+      "Single active bottom-nav item on /home (aria-current=page)",
+      "QR modal opens",
+      "Plan opens billing modal",
+      "Bottom nav SPA (no reload)",
+      "Keyboard focus: BUTTON",
+      "Machine path /m/VIWA-TEST-001/home: single aria-current=page",
+      "Machine path: 3 taste slots",
+      "Safe-area CSS on header/nav",
+      "Medallion assets: 14/14 webp load",
+      "Medallion unknown-key status: 200",
+      "Third taste slot: peach-mango medallion (canonical; ref shows apricot — asset diff expected)"
+    ]
+  },
+  "topDeviations": [
+    {
+      "area": "global layout (fair masked: QR center + fruit only)",
+      "expected": "≤8% masked diff",
+      "actual": "26.8%",
+      "fix": "Typography/QR copy line-breaks, header logo/title positions, progress card copy rhythm",
+      "rank": 1
+    },
+    {
+      "area": "raw content (full inner crop)",
+      "expected": "≤12% raw diff",
+      "actual": "34.1%",
+      "fix": "Card shells, header stack, nav chrome, typography colors vs reference",
+      "rank": 2
+    },
+    {
+      "area": "third taste asset (canonical vs reference)",
+      "expected": "Reference mockup slot 3 ≈ apricot fruit photo",
+      "actual": "App uses peach-mango medallion (product-correct; masked in fair metric)",
+      "fix": "Report separately — not a regression; reference asset outdated for slot 3",
+      "rank": 3
+    }
+  ],
+  "assetDifference": {
+    "slot3Reference": "apricot (reference mockup fruit photo)",
+    "slot3Canonical": "peach-mango medallion",
+    "note": "Expected pixel delta in slot 3; masked in fair metric (B)"
+  },
+  "artifacts": [
+    "reference-inner-crop.json",
+    "cabinet-pixel-reference-inner-crop.png",
+    "cabinet-actual-inner-342x780.png",
+    "cabinet-diff-inner-342x780-fair-masked.png",
+    "cabinet-diff-inner-342x780-raw.png",
+    "cabinet-overlay-inner-342x780.png",
+    "cabinet-pixel-browser-report.md",
+    "cabinet-pixel-browser-results.json",
+    "cabinet-functional-342x780.png",
+    "cabinet-functional-399x832.png",
+    "cabinet-responsive-360x800.png",
+    "cabinet-responsive-390x844.png",
+    "cabinet-responsive-430x932.png"
+  ],
+  "nextFixes": [
+    "Typography/QR copy line-breaks, header logo/title positions, progress card copy rhythm",
+    "Card shells, header stack, nav chrome, typography colors vs reference"
+  ]
+}

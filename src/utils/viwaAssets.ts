@@ -10,6 +10,7 @@ export type TasteImagePaths = {
 
 export type LogoImagePaths = {
   svg: string;
+  webp?: string;
   png: string;
   altRu: string;
   width: number;
@@ -18,6 +19,8 @@ export type LogoImagePaths = {
 
 type ManifestAsset = {
   id: string;
+  category?: string;
+  cabinetRole?: string;
   tasteMediaKey?: string;
   altRu: string;
   files: {
@@ -27,20 +30,33 @@ type ManifestAsset = {
   };
 };
 
-const tasteAssetsByKey = new Map<string, ManifestAsset>();
+const tasteBottleAssetsByKey = new Map<string, ManifestAsset>();
+const tasteMedallionAssetsByKey = new Map<string, ManifestAsset>();
 let logoAsset: ManifestAsset | undefined;
+let cabinetHeaderLogoAsset: ManifestAsset | undefined;
 
 for (const asset of manifest.assets as ManifestAsset[]) {
   if (asset.tasteMediaKey) {
-    tasteAssetsByKey.set(asset.tasteMediaKey, asset);
+    if (asset.category === 'taste-medallion') {
+      tasteMedallionAssetsByKey.set(asset.tasteMediaKey, asset);
+    } else if (asset.category === 'taste') {
+      tasteBottleAssetsByKey.set(asset.tasteMediaKey, asset);
+    }
   }
   if (asset.id === 'logo-viwa-mark') {
     logoAsset = asset;
   }
+  if (asset.id === 'logo-viwa-mark-cabinet-header') {
+    cabinetHeaderLogoAsset = asset;
+  }
 }
 
-export function getTasteImagePaths(mediaKey: string, nameRu: string): TasteImagePaths {
-  const asset = tasteAssetsByKey.get(mediaKey);
+function resolveTasteAssetPaths(
+  asset: ManifestAsset | undefined,
+  fallbackWebp: string,
+  fallbackPng: string,
+  fallbackAltRu: string,
+): TasteImagePaths {
   if (asset?.files.webp?.path && asset.files.png?.path) {
     return {
       webp: `${VIWA_ASSETS_BASE}/${asset.files.webp.path}`,
@@ -50,10 +66,30 @@ export function getTasteImagePaths(mediaKey: string, nameRu: string): TasteImage
   }
 
   return {
-    webp: `${VIWA_ASSETS_BASE}/tastes/${mediaKey}.webp`,
-    png: `${VIWA_ASSETS_BASE}/tastes/${mediaKey}.png`,
-    altRu: nameRu,
+    webp: fallbackWebp,
+    png: fallbackPng,
+    altRu: fallbackAltRu,
   };
+}
+
+/** Landing grid and editorial bottle imagery (800×1000). */
+export function getTasteImagePaths(mediaKey: string, nameRu: string): TasteImagePaths {
+  return resolveTasteAssetPaths(
+    tasteBottleAssetsByKey.get(mediaKey),
+    `${VIWA_ASSETS_BASE}/tastes/${mediaKey}.webp`,
+    `${VIWA_ASSETS_BASE}/tastes/${mediaKey}.png`,
+    nameRu,
+  );
+}
+
+/** Cabinet favorite-circle medallions (180×180, circular CSS crop). */
+export function getTasteMedallionImagePaths(mediaKey: string, nameRu: string): TasteImagePaths {
+  return resolveTasteAssetPaths(
+    tasteMedallionAssetsByKey.get(mediaKey),
+    `${VIWA_ASSETS_BASE}/tastes/medallions/${mediaKey}.webp`,
+    `${VIWA_ASSETS_BASE}/tastes/medallions/${mediaKey}.png`,
+    nameRu,
+  );
 }
 
 export function getTastePlaceholderLabel(nameRu: string): string {
@@ -78,6 +114,31 @@ export function getLogoImagePaths(): LogoImagePaths {
     altRu: 'VIWA',
     width: 277,
     height: 243,
+  };
+}
+
+/** Cabinet header mark — canonical inner-crop raster (67×38), SVG fallback unchanged. */
+export function getCabinetHeaderLogoImagePaths(): LogoImagePaths {
+  const canonical = getLogoImagePaths();
+
+  if (cabinetHeaderLogoAsset?.files.webp?.path && cabinetHeaderLogoAsset.files.png?.path) {
+    return {
+      svg: canonical.svg,
+      webp: `${VIWA_ASSETS_BASE}/${cabinetHeaderLogoAsset.files.webp.path}`,
+      png: `${VIWA_ASSETS_BASE}/${cabinetHeaderLogoAsset.files.png.path}`,
+      altRu: cabinetHeaderLogoAsset.altRu,
+      width: cabinetHeaderLogoAsset.files.png.width ?? 67,
+      height: cabinetHeaderLogoAsset.files.png.height ?? 38,
+    };
+  }
+
+  return {
+    svg: canonical.svg,
+    webp: `${VIWA_ASSETS_BASE}/logo/logo-viwa-mark-cabinet-header.webp`,
+    png: `${VIWA_ASSETS_BASE}/logo/logo-viwa-mark-cabinet-header.png`,
+    altRu: canonical.altRu,
+    width: 67,
+    height: 38,
   };
 }
 

@@ -1,0 +1,717 @@
+{
+  "timestamp": "2026-07-29T18:54:04.656Z",
+  "round": "5-remediation-recheck-quant-analysis",
+  "gate": {
+    "viewport": "342x780",
+    "diffThresholdPerChannel": 18,
+    "diffRule": "pixel counts as diff if any of |dr|,|dg|,|db| > 18",
+    "fairMask": {
+      "bottomHomeIndicator": "y > height - 28 (752..779)",
+      "qrBitmapRect": "x 213..318, y 273..378",
+      "tasteFruitCircles": "centers (64,470), (164,470), (265,470) r=36",
+      "maskedOutPixels": 32629,
+      "comparedPixels": 234131,
+      "gateTargetMaskedDiffRatio": 0.08
+    },
+    "officialResults": {
+      "maskedSimilarity": 0.7946,
+      "ssim": 0.8527,
+      "maskedDiffRatio": 0.2375422306315695,
+      "rmse": 44.72,
+      "comparedPixels": 234131,
+      "diffPixels": 55616,
+      "viewport": "342x780"
+    }
+  },
+  "reproduced": {
+    "maskedCompared": 234131,
+    "maskedDiff": 55601,
+    "maskedDiffRatio": 0.237478,
+    "maskedDiffPct": 23.75,
+    "ssim": 0.855,
+    "rmse": 44.39,
+    "similarity": 0.7954,
+    "rawCompared": 266760,
+    "rawDiff": 79624,
+    "rawDiffPct": 29.85,
+    "matchesOfficial": false
+  },
+  "gateGap": {
+    "currentMaskedDiffPct": 23.75,
+    "targetMaskedDiffPct": 8,
+    "maxDiffPixelsAtGate": 18730,
+    "excessDiffPixels": 36871,
+    "reductionNeededPctPoints": 15.75
+  },
+  "regionBreakdown": [
+    {
+      "region": "qrCopy",
+      "compared": 15200,
+      "diff": 14848,
+      "diffPct": 97.68,
+      "maskedCompared": 15200,
+      "maskedDiff": 14848,
+      "maskedDiffPct": 97.68,
+      "shareOfMaskedDiff": 26.7
+    },
+    {
+      "region": "qrBackground",
+      "compared": 14012,
+      "diff": 13762,
+      "diffPct": 98.22,
+      "maskedCompared": 14012,
+      "maskedDiff": 13762,
+      "maskedDiffPct": 98.22,
+      "shareOfMaskedDiff": 24.75
+    },
+    {
+      "region": "progressMetric",
+      "compared": 6360,
+      "diff": 3812,
+      "diffPct": 59.94,
+      "maskedCompared": 6360,
+      "maskedDiff": 3812,
+      "maskedDiffPct": 59.94,
+      "shareOfMaskedDiff": 6.86
+    },
+    {
+      "region": "bottomNav",
+      "compared": 22230,
+      "diff": 5147,
+      "diffPct": 23.15,
+      "maskedCompared": 12996,
+      "maskedDiff": 2782,
+      "maskedDiffPct": 21.41,
+      "shareOfMaskedDiff": 5
+    },
+    {
+      "region": "planBenefits",
+      "compared": 13520,
+      "diff": 2622,
+      "diffPct": 19.39,
+      "maskedCompared": 13520,
+      "maskedDiff": 2622,
+      "maskedDiffPct": 19.39,
+      "shareOfMaskedDiff": 4.72
+    },
+    {
+      "region": "tasteShell",
+      "compared": 25946,
+      "diff": 2621,
+      "diffPct": 10.1,
+      "maskedCompared": 25946,
+      "maskedDiff": 2621,
+      "maskedDiffPct": 10.1,
+      "shareOfMaskedDiff": 4.71
+    },
+    {
+      "region": "progressBar",
+      "compared": 3016,
+      "diff": 2379,
+      "diffPct": 78.88,
+      "maskedCompared": 3016,
+      "maskedDiff": 2379,
+      "maskedDiffPct": 78.88,
+      "shareOfMaskedDiff": 4.28
+    },
+    {
+      "region": "logo",
+      "compared": 2546,
+      "diff": 2194,
+      "diffPct": 86.17,
+      "maskedCompared": 2546,
+      "maskedDiff": 2194,
+      "maskedDiffPct": 86.17,
+      "shareOfMaskedDiff": 3.95
+    },
+    {
+      "region": "planPrice",
+      "compared": 7560,
+      "diff": 1677,
+      "diffPct": 22.18,
+      "maskedCompared": 7560,
+      "maskedDiff": 1677,
+      "maskedDiffPct": 22.18,
+      "shareOfMaskedDiff": 3.02
+    },
+    {
+      "region": "gapBetweenCards",
+      "compared": 13272,
+      "diff": 1530,
+      "diffPct": 11.53,
+      "maskedCompared": 13272,
+      "maskedDiff": 1530,
+      "maskedDiffPct": 11.53,
+      "shareOfMaskedDiff": 2.75
+    },
+    {
+      "region": "tasteFruitMasked",
+      "compared": 13644,
+      "diff": 13378,
+      "diffPct": 98.05,
+      "maskedCompared": 1485,
+      "maskedDiff": 1461,
+      "maskedDiffPct": 98.38,
+      "shareOfMaskedDiff": 2.63
+    },
+    {
+      "region": "progressBottle",
+      "compared": 3486,
+      "diff": 1044,
+      "diffPct": 29.95,
+      "maskedCompared": 3486,
+      "maskedDiff": 1044,
+      "maskedDiffPct": 29.95,
+      "shareOfMaskedDiff": 1.88
+    },
+    {
+      "region": "titleMenuBell",
+      "compared": 4476,
+      "diff": 1032,
+      "diffPct": 23.06,
+      "maskedCompared": 4476,
+      "maskedDiff": 1032,
+      "maskedDiffPct": 23.06,
+      "shareOfMaskedDiff": 1.86
+    },
+    {
+      "region": "progressTitle",
+      "compared": 4400,
+      "diff": 707,
+      "diffPct": 16.07,
+      "maskedCompared": 4400,
+      "maskedDiff": 707,
+      "maskedDiffPct": 16.07,
+      "shareOfMaskedDiff": 1.27
+    },
+    {
+      "region": "planShell",
+      "compared": 18652,
+      "diff": 693,
+      "diffPct": 3.72,
+      "maskedCompared": 18652,
+      "maskedDiff": 693,
+      "maskedDiffPct": 3.72,
+      "shareOfMaskedDiff": 1.25
+    },
+    {
+      "region": "planTitle",
+      "compared": 4400,
+      "diff": 636,
+      "diffPct": 14.45,
+      "maskedCompared": 4400,
+      "maskedDiff": 636,
+      "maskedDiffPct": 14.45,
+      "shareOfMaskedDiff": 1.14
+    },
+    {
+      "region": "tasteText",
+      "compared": 7178,
+      "diff": 580,
+      "diffPct": 8.08,
+      "maskedCompared": 7178,
+      "maskedDiff": 580,
+      "maskedDiffPct": 8.08,
+      "shareOfMaskedDiff": 1.04
+    },
+    {
+      "region": "progressShell",
+      "compared": 28778,
+      "diff": 502,
+      "diffPct": 1.74,
+      "maskedCompared": 28778,
+      "maskedDiff": 502,
+      "maskedDiffPct": 1.74,
+      "shareOfMaskedDiff": 0.9
+    },
+    {
+      "region": "deviceChrome",
+      "compared": 24438,
+      "diff": 304,
+      "diffPct": 1.24,
+      "maskedCompared": 24438,
+      "maskedDiff": 304,
+      "maskedDiffPct": 1.24,
+      "shareOfMaskedDiff": 0.55
+    },
+    {
+      "region": "progressUnit",
+      "compared": 2400,
+      "diff": 214,
+      "diffPct": 8.92,
+      "maskedCompared": 2400,
+      "maskedDiff": 214,
+      "maskedDiffPct": 8.92,
+      "shareOfMaskedDiff": 0.38
+    },
+    {
+      "region": "planChevron",
+      "compared": 1056,
+      "diff": 139,
+      "diffPct": 13.16,
+      "maskedCompared": 1056,
+      "maskedDiff": 139,
+      "maskedDiffPct": 13.16,
+      "shareOfMaskedDiff": 0.25
+    },
+    {
+      "region": "unassigned",
+      "compared": 18954,
+      "diff": 62,
+      "diffPct": 0.33,
+      "maskedCompared": 18954,
+      "maskedDiff": 62,
+      "maskedDiffPct": 0.33,
+      "shareOfMaskedDiff": 0.11
+    },
+    {
+      "region": "qrShell",
+      "compared": 0,
+      "diff": 0,
+      "diffPct": 0,
+      "maskedCompared": 0,
+      "maskedDiff": 0,
+      "maskedDiffPct": 0,
+      "shareOfMaskedDiff": 0
+    },
+    {
+      "region": "qrMasked",
+      "compared": 11236,
+      "diff": 9741,
+      "diffPct": 86.69,
+      "maskedCompared": 0,
+      "maskedDiff": 0,
+      "maskedDiffPct": 0,
+      "shareOfMaskedDiff": 0
+    }
+  ],
+  "requestedRegionBreakdown": [
+    {
+      "region": "deviceChrome",
+      "compared": 24438,
+      "diff": 304,
+      "diffPct": 1.24,
+      "maskedCompared": 24438,
+      "maskedDiff": 304,
+      "maskedDiffPct": 1.24,
+      "shareOfMaskedDiff": 0.55
+    },
+    {
+      "region": "logo",
+      "compared": 2546,
+      "diff": 2194,
+      "diffPct": 86.17,
+      "maskedCompared": 2546,
+      "maskedDiff": 2194,
+      "maskedDiffPct": 86.17,
+      "shareOfMaskedDiff": 3.95
+    },
+    {
+      "region": "titleMenuBell",
+      "compared": 4476,
+      "diff": 1032,
+      "diffPct": 23.06,
+      "maskedCompared": 4476,
+      "maskedDiff": 1032,
+      "maskedDiffPct": 23.06,
+      "shareOfMaskedDiff": 1.86
+    },
+    {
+      "region": "progressShell",
+      "compared": 28778,
+      "diff": 502,
+      "diffPct": 1.74,
+      "maskedCompared": 28778,
+      "maskedDiff": 502,
+      "maskedDiffPct": 1.74,
+      "shareOfMaskedDiff": 0.9
+    },
+    {
+      "region": "progressTitle",
+      "compared": 4400,
+      "diff": 707,
+      "diffPct": 16.07,
+      "maskedCompared": 4400,
+      "maskedDiff": 707,
+      "maskedDiffPct": 16.07,
+      "shareOfMaskedDiff": 1.27
+    },
+    {
+      "region": "progressMetric",
+      "compared": 6360,
+      "diff": 3812,
+      "diffPct": 59.94,
+      "maskedCompared": 6360,
+      "maskedDiff": 3812,
+      "maskedDiffPct": 59.94,
+      "shareOfMaskedDiff": 6.86
+    },
+    {
+      "region": "progressUnit",
+      "compared": 2400,
+      "diff": 214,
+      "diffPct": 8.92,
+      "maskedCompared": 2400,
+      "maskedDiff": 214,
+      "maskedDiffPct": 8.92,
+      "shareOfMaskedDiff": 0.38
+    },
+    {
+      "region": "progressBar",
+      "compared": 3016,
+      "diff": 2379,
+      "diffPct": 78.88,
+      "maskedCompared": 3016,
+      "maskedDiff": 2379,
+      "maskedDiffPct": 78.88,
+      "shareOfMaskedDiff": 4.28
+    },
+    {
+      "region": "progressBottle",
+      "compared": 3486,
+      "diff": 1044,
+      "diffPct": 29.95,
+      "maskedCompared": 3486,
+      "maskedDiff": 1044,
+      "maskedDiffPct": 29.95,
+      "shareOfMaskedDiff": 1.88
+    },
+    {
+      "region": "qrBackground",
+      "compared": 14012,
+      "diff": 13762,
+      "diffPct": 98.22,
+      "maskedCompared": 14012,
+      "maskedDiff": 13762,
+      "maskedDiffPct": 98.22,
+      "shareOfMaskedDiff": 24.75
+    },
+    {
+      "region": "qrMasked",
+      "compared": 11236,
+      "diff": 9741,
+      "diffPct": 86.69,
+      "maskedCompared": 0,
+      "maskedDiff": 0,
+      "maskedDiffPct": 0,
+      "shareOfMaskedDiff": 0
+    },
+    {
+      "region": "qrCopy",
+      "compared": 15200,
+      "diff": 14848,
+      "diffPct": 97.68,
+      "maskedCompared": 15200,
+      "maskedDiff": 14848,
+      "maskedDiffPct": 97.68,
+      "shareOfMaskedDiff": 26.7
+    },
+    {
+      "region": "tasteShell",
+      "compared": 25946,
+      "diff": 2621,
+      "diffPct": 10.1,
+      "maskedCompared": 25946,
+      "maskedDiff": 2621,
+      "maskedDiffPct": 10.1,
+      "shareOfMaskedDiff": 4.71
+    },
+    {
+      "region": "tasteText",
+      "compared": 7178,
+      "diff": 580,
+      "diffPct": 8.08,
+      "maskedCompared": 7178,
+      "maskedDiff": 580,
+      "maskedDiffPct": 8.08,
+      "shareOfMaskedDiff": 1.04
+    },
+    {
+      "region": "tasteFruitMasked",
+      "compared": 13644,
+      "diff": 13378,
+      "diffPct": 98.05,
+      "maskedCompared": 1485,
+      "maskedDiff": 1461,
+      "maskedDiffPct": 98.38,
+      "shareOfMaskedDiff": 2.63
+    },
+    {
+      "region": "planShell",
+      "compared": 18652,
+      "diff": 693,
+      "diffPct": 3.72,
+      "maskedCompared": 18652,
+      "maskedDiff": 693,
+      "maskedDiffPct": 3.72,
+      "shareOfMaskedDiff": 1.25
+    },
+    {
+      "region": "planTitle",
+      "compared": 4400,
+      "diff": 636,
+      "diffPct": 14.45,
+      "maskedCompared": 4400,
+      "maskedDiff": 636,
+      "maskedDiffPct": 14.45,
+      "shareOfMaskedDiff": 1.14
+    },
+    {
+      "region": "planPrice",
+      "compared": 7560,
+      "diff": 1677,
+      "diffPct": 22.18,
+      "maskedCompared": 7560,
+      "maskedDiff": 1677,
+      "maskedDiffPct": 22.18,
+      "shareOfMaskedDiff": 3.02
+    },
+    {
+      "region": "planBenefits",
+      "compared": 13520,
+      "diff": 2622,
+      "diffPct": 19.39,
+      "maskedCompared": 13520,
+      "maskedDiff": 2622,
+      "maskedDiffPct": 19.39,
+      "shareOfMaskedDiff": 4.72
+    },
+    {
+      "region": "planChevron",
+      "compared": 1056,
+      "diff": 139,
+      "diffPct": 13.16,
+      "maskedCompared": 1056,
+      "maskedDiff": 139,
+      "maskedDiffPct": 13.16,
+      "shareOfMaskedDiff": 0.25
+    },
+    {
+      "region": "bottomNav",
+      "compared": 22230,
+      "diff": 5147,
+      "diffPct": 23.15,
+      "maskedCompared": 12996,
+      "maskedDiff": 2782,
+      "maskedDiffPct": 21.41,
+      "shareOfMaskedDiff": 5
+    }
+  ],
+  "medianColors": {
+    "qrCardBackground": {
+      "ref": {
+        "r": 227,
+        "g": 227,
+        "b": 227,
+        "hex": "#e3e3e3",
+        "samples": 14012
+      },
+      "act": {
+        "r": 255,
+        "g": 255,
+        "b": 255,
+        "hex": "#ffffff",
+        "samples": 14012
+      }
+    },
+    "progressCardBg": {
+      "ref": {
+        "r": 7,
+        "g": 7,
+        "b": 7,
+        "hex": "#070707",
+        "samples": 28778
+      },
+      "act": {
+        "r": 11,
+        "g": 11,
+        "b": 11,
+        "hex": "#0b0b0b",
+        "samples": 28778
+      }
+    },
+    "planCardBg": {
+      "ref": {
+        "r": 8,
+        "g": 8,
+        "b": 8,
+        "hex": "#080808",
+        "samples": 18652
+      },
+      "act": {
+        "r": 11,
+        "g": 11,
+        "b": 11,
+        "hex": "#0b0b0b",
+        "samples": 18652
+      }
+    },
+    "tasteCardBg": {
+      "ref": {
+        "r": 8,
+        "g": 8,
+        "b": 8,
+        "hex": "#080808",
+        "samples": 25946
+      },
+      "act": {
+        "r": 11,
+        "g": 11,
+        "b": 11,
+        "hex": "#0b0b0b",
+        "samples": 25946
+      }
+    },
+    "qrCardBgInner": {
+      "ref": {
+        "r": 227,
+        "g": 227,
+        "b": 227,
+        "hex": "#e3e3e3",
+        "samples": 10524
+      },
+      "act": {
+        "r": 255,
+        "g": 255,
+        "b": 255,
+        "hex": "#ffffff",
+        "samples": 10524
+      }
+    },
+    "pageBg": {
+      "ref": {
+        "r": 8,
+        "g": 8,
+        "b": 8,
+        "hex": "#080808",
+        "samples": 32226
+      },
+      "act": {
+        "r": 0,
+        "g": 0,
+        "b": 0,
+        "hex": "#000000",
+        "samples": 32226
+      }
+    },
+    "cardBorderStrip": {
+      "ref": {
+        "r": 9,
+        "g": 9,
+        "b": 9,
+        "hex": "#090909",
+        "samples": 8142
+      },
+      "act": {
+        "r": 11,
+        "g": 11,
+        "b": 11,
+        "hex": "#0b0b0b",
+        "samples": 8142
+      }
+    }
+  },
+  "simulations": {
+    "qrBgToRefMedian": {
+      "touched": 10524,
+      "compared": 234131,
+      "diff": 45101,
+      "ratio": 0.19263147554147036,
+      "deltaDiffPixels": 10500
+    },
+    "qrBgToActMedian": {
+      "touched": 10524,
+      "compared": 234131,
+      "diff": 55601,
+      "ratio": 0.2374781639338661,
+      "deltaDiffPixels": 0
+    },
+    "logoPerfectUpperBound": {
+      "touched": 2546,
+      "compared": 234131,
+      "diff": 53407,
+      "ratio": 0.2281073416164455,
+      "deltaDiffPixels": 2194
+    },
+    "metricTypographyPerfectUpperBound": {
+      "touched": 7440,
+      "compared": 234131,
+      "diff": 51575,
+      "ratio": 0.2202826622702675,
+      "deltaDiffPixels": 4026
+    },
+    "neutralTextPerfectUpperBound": {
+      "touched": 105560,
+      "compared": 234131,
+      "diff": 24398,
+      "ratio": 0.10420661937120672,
+      "deltaDiffPixels": 31203
+    },
+    "allCardShellsToRefMedian": {
+      "compared": 234131,
+      "diff": 54177,
+      "ratio": 0.2313960987652212,
+      "deltaDiffPixels": 1424
+    },
+    "qrBgRefMedianPlusLogoPerfect": {
+      "compared": 234131,
+      "diff": 42907,
+      "ratio": 0.18326065322404977,
+      "deltaDiffPixels": 12694
+    }
+  },
+  "roi": [
+    {
+      "rank": 1,
+      "change": "QR card background → reference median #e3e3e3 (actual #ffffff)",
+      "cssHint": "QrPromoCard.module.scss — card background off-white `#f5f5f5`/`#f6f6f6` family; actual reads pure white",
+      "evidence": {
+        "qrBackgroundSharePct": 24.75,
+        "simDeltaDiffPixels": 10500,
+        "projectedRatioPct": 19.26
+      }
+    },
+    {
+      "rank": 2,
+      "change": "Dark card shell fills + 1px borders — progress/plan/taste shells still ~12–19% local diff",
+      "cssHint": "Shared `--viwa-cabinet-card-bg` / border rgba(255,255,255,0.1) — align fill medians to ref (#1a1a1a-ish) and border strip",
+      "evidence": {
+        "progressShellSharePct": 0.9,
+        "planShellSharePct": 1.25,
+        "allShellsSimDelta": 1424,
+        "borderRef": "#090909",
+        "borderAct": "#0b0b0b"
+      }
+    }
+  ],
+  "typographyUpperBounds": {
+    "logoPerfect": {
+      "touched": 2546,
+      "compared": 234131,
+      "diff": 53407,
+      "ratio": 0.2281073416164455,
+      "deltaDiffPixels": 2194
+    },
+    "metricPerfect": {
+      "touched": 7440,
+      "compared": 234131,
+      "diff": 51575,
+      "ratio": 0.2202826622702675,
+      "deltaDiffPixels": 4026
+    },
+    "neutralTextPerfect": {
+      "touched": 105560,
+      "compared": 234131,
+      "diff": 24398,
+      "ratio": 0.10420661937120672,
+      "deltaDiffPixels": 31203
+    },
+    "note": "Perfect-copy sims are upper bounds for scaleX/weight/color — not shippable verbatim"
+  },
+  "pixelsToPassGate": {
+    "currentDiff": 55601,
+    "maxAt8Pct": 18730,
+    "mustEliminate": 36871,
+    "pctOfCompared": 15.75
+  }
+}

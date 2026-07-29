@@ -73,3 +73,30 @@ export const installHistoryMock = (initialPath = '/') => {
     },
   };
 };
+
+export type MockClientProfile = {
+  id: string;
+  favoriteTasteKeys: string[];
+  tierName: string | null;
+  subscriptionEndsAt: string | null;
+  monthlyLimitMl?: number;
+  monthlyUsedMl?: number;
+  monthlyRemainingMl?: number;
+  volumeMl?: number;
+  qrPayload?: string;
+};
+
+export const createMockClientProfile = (
+  overrides: Partial<MockClientProfile> = {},
+): MockClientProfile => ({
+  id: 'client-1',
+  favoriteTasteKeys: ['raspberry', 'lime', 'peach-mango'],
+  tierName: null,
+  subscriptionEndsAt: null,
+  volumeMl: 750,
+  monthlyLimitMl: 0,
+  monthlyUsedMl: 0,
+  monthlyRemainingMl: 0,
+  qrPayload: 'viwa:mock-qr',
+  ...overrides,
+});

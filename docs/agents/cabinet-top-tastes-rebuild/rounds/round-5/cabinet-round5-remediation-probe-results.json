@@ -1,0 +1,99 @@
+{
+  "timestamp": "2026-07-29T19:06:34.105Z",
+  "baseUrl": "http://127.0.0.1:5173",
+  "viewport": "342x780",
+  "fonts": {
+    "fontsReady": "loaded",
+    "interLoaded": true,
+    "oswaldLoaded": true,
+    "metricFontFamily": "Oswald, \"Arial Narrow\", \"Helvetica Neue Condensed\", \"Franklin Gothic Medium\", Arial, sans-serif",
+    "metricFontWeight": "500"
+  },
+  "geometry": {
+    "logo": {
+      "x": 18,
+      "y": 29,
+      "w": 67,
+      "h": 38,
+      "right": 85,
+      "bottom": 67
+    },
+    "metricValue": {
+      "x": 26,
+      "y": 129,
+      "w": 87.203125,
+      "h": 59.84375,
+      "right": 113.203125,
+      "bottom": 188.84375
+    },
+    "metricUnit": {
+      "x": 115.203125,
+      "y": 173,
+      "w": 19.375,
+      "h": 21,
+      "right": 134.578125,
+      "bottom": 194
+    },
+    "priceAmount": {
+      "x": 26,
+      "y": 601.53125,
+      "w": 104.0625,
+      "h": 37.6875,
+      "right": 130.0625,
+      "bottom": 639.21875
+    },
+    "qrTitleStyle": {
+      "fontSize": "15px",
+      "fontWeight": "500",
+      "marginBottom": "8px"
+    },
+    "qrSubtitleStyle": {
+      "fontSize": "10px",
+      "fontWeight": "400",
+      "gap": "9px"
+    },
+    "headerLogoSrc": "http://127.0.0.1:5173/assets/viwa/logo/logo-viwa-mark-cabinet-header.webp"
+  },
+  "regions": {
+    "logo": {
+      "bbox": {
+        "x": 18,
+        "y": 30,
+        "w": 67,
+        "h": 38
+      },
+      "before": {
+        "diff": 425,
+        "cmp": 2546,
+        "ratio": 0.16692851531814612
+      },
+      "after": {
+        "diff": 425,
+        "cmp": 2546,
+        "ratio": 0.16692851531814612
+      },
+      "deltaDiffPx": 0
+    },
+    "progressMetric": {
+      "bbox": {
+        "x": 25,
+        "y": 134,
+        "w": 109,
+        "h": 62
+      },
+      "before": {
+        "diff": 3759,
+        "cmp": 6758,
+        "ratio": 0.5562296537437111
+      },
+      "after": {
+        "diff": 3759,
+        "cmp": 6758,
+        "ratio": 0.5562296537437111
+      },
+      "deltaDiffPx": 0
+    }
+  },
+  "screenshot": "cabinet-actual-inner-342x780.png",
+  "overlay": "cabinet-overlay-inner-342x780.png"
+}

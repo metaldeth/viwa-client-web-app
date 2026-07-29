@@ -1,0 +1,373 @@
+{
+  "round": 3,
+  "methodology": "corrected-inner-crop-v1",
+  "supersedes": "cabinet-pixel-browser-report.md @ 2026-07-29T18:01:24.683Z",
+  "invalidPriorMethodology": "Compared browser 399×832 to outer 390×832 mockup including bezel; false header 150px and plan–nav gap 101px",
+  "timestamp": "2026-07-29T18:09:32.796Z",
+  "baseUrl": "http://127.0.0.1:5173",
+  "crop": {
+    "outer": {
+      "width": 390,
+      "height": 832
+    },
+    "crop": {
+      "x0": 24,
+      "y0": 20,
+      "x1": 365,
+      "y1": 799,
+      "width": 342,
+      "height": 780
+    },
+    "detection": {
+      "screenLeft": 0,
+      "screenRight": 389,
+      "targetInnerH": 780
+    },
+    "rationale": [
+      "Outer PNG is 390×832 (includes physical phone bezel; prior runs wrongly used 390×832 as CSS viewport).",
+      "Left/right screen edge from column median luminance in y=120..700: raw 0..389, refined 24..365.",
+      "Right bezel begins ~x=390 where column median jumps (e.g. x=375 med≈125 on this asset).",
+      "Top inset y=20 skips status bar / Dynamic Island chrome.",
+      "Bottom y=799 is last content row before home-indicator grey lift (~y=807). Inner height clamped to 780px.",
+      "CSS viewport for capture must match crop 342×780, not outer 390×832."
+    ],
+    "hypothesis": {
+      "note": "Starting hypothesis x=20..379 (359w) on 399 outer; this asset is 390w so x1=369 (350w). Height ~780.",
+      "matched": false
+    }
+  },
+  "referenceGeometry": {
+    "headerTop": 0,
+    "qrTop": 31,
+    "qrBottom": 68,
+    "navTop": 763,
+    "planBottom": 627,
+    "gapPlanNav": 136,
+    "cardRadius": 19,
+    "cropMeta": {
+      "outer": {
+        "width": 390,
+        "height": 832
+      },
+      "crop": {
+        "x0": 24,
+        "y0": 20,
+        "x1": 365,
+        "y1": 799,
+        "width": 342,
+        "height": 780
+      },
+      "detection": {
+        "screenLeft": 0,
+        "screenRight": 389,
+        "targetInnerH": 780
+      },
+      "rationale": [
+        "Outer PNG is 390×832 (includes physical phone bezel; prior runs wrongly used 390×832 as CSS viewport).",
+        "Left/right screen edge from column median luminance in y=120..700: raw 0..389, refined 24..365.",
+        "Right bezel begins ~x=390 where column median jumps (e.g. x=375 med≈125 on this asset).",
+        "Top inset y=20 skips status bar / Dynamic Island chrome.",
+        "Bottom y=799 is last content row before home-indicator grey lift (~y=807). Inner height clamped to 780px.",
+        "CSS viewport for capture must match crop 342×780, not outer 390×832."
+      ],
+      "hypothesis": {
+        "note": "Starting hypothesis x=20..379 (359w) on 399 outer; this asset is 390w so x1=369 (350w). Height ~780.",
+        "matched": false
+      }
+    }
+  },
+  "pixelResult": "FAIL",
+  "functionalResult": "PASS",
+  "geometryResult": "PASS",
+  "result": "FAIL",
+  "metrics": {
+    "maskedSimilarity": 0.6339,
+    "ssim": 0.4181,
+    "maskedDiffRatio": 0.319176367979978,
+    "rmse": 87.8,
+    "comparedPixels": 237339,
+    "diffPixels": 75753,
+    "viewport": "342x780"
+  },
+  "flawedMetrics": {
+    "maskedSimilarity": 0.6423,
+    "ssim": 0.451,
+    "maskedDiffRatio": 0.31820053872117626,
+    "rmse": 85.28,
+    "comparedPixels": 211241,
+    "diffPixels": 67217,
+    "referenceContentTop": 12
+  },
+  "deltaVsFlawed": {
+    "similarity": -0.0084,
+    "ssim": -0.0329,
+    "maskedDiffRatioPp": 0.1,
+    "rmse": 2.52
+  },
+  "geometryInner": {
+    "viewport": {
+      "w": 342,
+      "h": 780
+    },
+    "doc": {
+      "scrollW": 342,
+      "clientW": 342,
+      "scrollH": 780,
+      "clientH": 780
+    },
+    "header": {
+      "x": 0,
+      "y": 0,
+      "w": 342,
+      "h": 90,
+      "r": 0,
+      "bottom": 90
+    },
+    "logo": {
+      "x": 16,
+      "y": 8,
+      "w": 68,
+      "h": 38,
+      "r": 0,
+      "bottom": 46
+    },
+    "titleBlock": {
+      "x": 204.6,
+      "y": 8,
+      "w": 121.4,
+      "h": 36,
+      "r": 0,
+      "bottom": 44
+    },
+    "qrCard": {
+      "x": 16,
+      "y": 220,
+      "w": 310,
+      "h": 140,
+      "r": 12,
+      "bottom": 360
+    },
+    "cards": [
+      {
+        "index": 0,
+        "tag": "SECTION",
+        "x": 16,
+        "y": 90,
+        "w": 310,
+        "h": 120,
+        "r": 12,
+        "bottom": 210
+      },
+      {
+        "index": 1,
+        "tag": "BUTTON",
+        "x": 16,
+        "y": 220,
+        "w": 310,
+        "h": 140,
+        "r": 12,
+        "bottom": 360
+      },
+      {
+        "index": 2,
+        "tag": "SECTION",
+        "x": 16,
+        "y": 370,
+        "w": 310,
+        "h": 142.4,
+        "r": 12,
+        "bottom": 512.4
+      },
+      {
+        "index": 3,
+        "tag": "BUTTON",
+        "x": 16,
+        "y": 522.4,
+        "w": 310,
+        "h": 108,
+        "r": 12,
+        "bottom": 630.4
+      }
+    ],
+    "tasteSection": {
+      "x": 16,
+      "y": 370,
+      "w": 310,
+      "h": 142.4,
+      "r": 12,
+      "bottom": 512.4
+    },
+    "progressBar": {
+      "x": 27,
+      "y": 170,
+      "w": 240,
+      "h": 8,
+      "r": 999,
+      "bottom": 178,
+      "valueNow": "780",
+      "valueMax": "1000"
+    },
+    "tasteCircles": [
+      {
+        "x": 37.8,
+        "y": 404,
+        "w": 70.4,
+        "h": 70.4,
+        "r": 50,
+        "bottom": 474.4
+      },
+      {
+        "x": 135.8,
+        "y": 404,
+        "w": 70.4,
+        "h": 70.4,
+        "r": 50,
+        "bottom": 474.4
+      },
+      {
+        "x": 233.8,
+        "y": 404,
+        "w": 70.4,
+        "h": 70.4,
+        "r": 50,
+        "bottom": 474.4
+      }
+    ],
+    "planCard": {
+      "x": 16,
+      "y": 522.4,
+      "w": 310,
+      "h": 108,
+      "r": 12,
+      "bottom": 630.4
+    },
+    "bottomNav": {
+      "x": 0,
+      "y": 715,
+      "w": 342,
+      "h": 65,
+      "r": 0,
+      "bottom": 780
+    },
+    "gapPlanNav": 84.6,
+    "sideInsetLeft": 16,
+    "cardGaps": [
+      10,
+      10,
+      10
+    ],
+    "activeNavCount": 1,
+    "flowHeader": false
+  },
+  "geometryValidation": {
+    "failures": [],
+    "checks": [
+      "Side inset L: 16px",
+      "Header height ~90px: 90px",
+      "Progress bar 780/1000",
+      "3 taste circle slots measured",
+      "Plan card bottom (630.4px) above nav top (715px)",
+      "Plan–nav gap 84.6px (≤ ref inner 136px — not excessive vs reference)",
+      "Nav top y≈715 on 780h viewport (expected ~715 on 780h)",
+      "No horizontal overflow",
+      "Taste card radius 12px (Δ12=0, Δ20=8; ref inner≈19)"
+    ]
+  },
+  "responsiveChecks": [
+    {
+      "file": "cabinet-functional-399x832.png",
+      "horizontalOverflow": false,
+      "sideInsetLeft": 16,
+      "gapPlanNav": 101.3,
+      "note": "functional screenshot only — not pixel target"
+    },
+    {
+      "file": "cabinet-responsive-360x800.png",
+      "horizontalOverflow": false,
+      "sideInsetLeft": 16,
+      "gapPlanNav": 99.4,
+      "note": "functional screenshot only — not pixel target"
+    },
+    {
+      "file": "cabinet-responsive-390x844.png",
+      "horizontalOverflow": false,
+      "sideInsetLeft": 16,
+      "gapPlanNav": 116.1,
+      "note": "functional screenshot only — not pixel target"
+    },
+    {
+      "file": "cabinet-responsive-430x932.png",
+      "horizontalOverflow": false,
+      "sideInsetLeft": 16,
+      "gapPlanNav": 193,
+      "note": "functional screenshot only — not pixel target"
+    }
+  ],
+  "functional": {
+    "failures": [],
+    "checks": [
+      "Catalog loading: 3 slots visible before catalog resolves",
+      "Catalog success: exactly 3 taste slots",
+      "Catalog error: 3 slots still visible",
+      "Catalog error: status message shown",
+      "Placeholder case (1 favorite → 2 placeholders)",
+      "No favorite PUT",
+      "No FLOW header",
+      "No horizontal scroll",
+      "Single active bottom-nav item on /home (aria-current=page)",
+      "QR modal opens",
+      "Plan opens billing modal",
+      "Bottom nav SPA (no reload)",
+      "Keyboard focus: BUTTON",
+      "Machine path /m/VIWA-TEST-001/home: single aria-current=page",
+      "Machine path: 3 taste slots"
+    ]
+  },
+  "topDeviations": [
+    {
+      "area": "taste card shell radius",
+      "expected": "ref inner≈19px",
+      "actual": "12px (closer to 12px)",
+      "fix": "FavoriteTastesRow.module.scss — radius token if ref confirms 20px",
+      "rank": 1
+    },
+    {
+      "area": "global layout (dynamic mask only)",
+      "expected": "≤8% masked diff",
+      "actual": "31.9%",
+      "fix": "Typography/QR copy line-breaks, progress card spacing, logo/title positions",
+      "rank": 2
+    },
+    {
+      "area": "INVALID prior plan–nav gap @399×832",
+      "expected": "content-normalized inner viewport only",
+      "actual": "flawed report claimed 101.3px — artifact of taller non-reference viewport",
+      "fix": "Use inner crop geometry only (superseded)",
+      "rank": 3
+    }
+  ],
+  "invalidArtifacts": [
+    "cabinet-pixel-reference-aligned-399x832.png",
+    "cabinet-actual-399x832.png",
+    "cabinet-diff-399x832-masked.png",
+    "cabinet-overlay-399x832.png",
+    "cabinet-pixel-browser-report.md (2026-07-29T18:01Z)",
+    "cabinet-pixel-browser-results.json (2026-07-29T18:01Z)"
+  ],
+  "artifacts": [
+    "reference-inner-crop.json",
+    "cabinet-pixel-reference-inner-crop.png",
+    "cabinet-actual-inner-342x780.png",
+    "cabinet-diff-inner-342x780-masked.png",
+    "cabinet-pixel-browser-report-corrected.md",
+    "cabinet-pixel-browser-results-corrected.json",
+    "cabinet-functional-399x832.png",
+    "cabinet-responsive-360x800.png",
+    "cabinet-responsive-390x844.png",
+    "cabinet-responsive-430x932.png"
+  ],
+  "nextFixes": [
+    "FavoriteTastesRow.module.scss — radius token if ref confirms 20px",
+    "Typography/QR copy line-breaks, progress card spacing, logo/title positions"
+  ]
+}

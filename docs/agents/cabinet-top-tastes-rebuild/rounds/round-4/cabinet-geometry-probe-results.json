@@ -1,0 +1,398 @@
+{
+  "round": "4→5",
+  "timestamp": "2026-07-29T18:34:38.124Z",
+  "baseUrl": "http://127.0.0.1:5173",
+  "viewport": "342x780",
+  "geometry": {
+    "viewport": {
+      "w": 342,
+      "h": 780
+    },
+    "doc": {
+      "scrollW": 342,
+      "clientW": 342,
+      "scrollH": 780,
+      "clientH": 780
+    },
+    "fontsReady": "loaded",
+    "header": {
+      "x": 0,
+      "y": 0,
+      "w": 342,
+      "h": 90,
+      "r": 0,
+      "bottom": 90,
+      "right": 342
+    },
+    "logo": {
+      "x": 0,
+      "y": 29,
+      "w": 79.1,
+      "h": 38,
+      "r": 0,
+      "bottom": 67,
+      "right": 79.1
+    },
+    "cabinetTitle": {
+      "x": 241.1,
+      "y": 40,
+      "w": 49.9,
+      "h": 14,
+      "r": 0,
+      "bottom": 54,
+      "right": 291
+    },
+    "titleStyle": {
+      "fontSize": "10px",
+      "fontWeight": "400",
+      "lineHeight": "normal",
+      "height": 14
+    },
+    "progressCard": {
+      "x": 9,
+      "y": 98,
+      "w": 324,
+      "h": 154,
+      "r": 12,
+      "bottom": 252,
+      "right": 333
+    },
+    "qrCard": {
+      "x": 9,
+      "y": 262,
+      "w": 324,
+      "h": 128,
+      "r": 12,
+      "bottom": 390,
+      "right": 333
+    },
+    "tasteSection": {
+      "x": 9,
+      "y": 400,
+      "w": 324,
+      "h": 148,
+      "r": 12,
+      "bottom": 548,
+      "right": 333
+    },
+    "planCard": {
+      "x": 9,
+      "y": 558,
+      "w": 324,
+      "h": 143,
+      "r": 12,
+      "bottom": 701,
+      "right": 333
+    },
+    "bottomNav": {
+      "x": 0,
+      "y": 715,
+      "w": 342,
+      "h": 65,
+      "r": 0,
+      "bottom": 780,
+      "right": 342
+    },
+    "gapPlanNav": 14,
+    "cardGaps": [
+      10,
+      10,
+      10
+    ],
+    "progressBar": {
+      "x": 26,
+      "y": 201.8,
+      "w": 239,
+      "h": 8,
+      "r": 999,
+      "bottom": 209.8,
+      "right": 265
+    },
+    "progressLimits": {
+      "x": 26,
+      "y": 215.8,
+      "w": 239,
+      "h": 15,
+      "r": 0,
+      "bottom": 230.8,
+      "right": 265
+    },
+    "metricValue": {
+      "fontSize": "59.85px",
+      "fontWeight": "400",
+      "lineHeight": "59.85px",
+      "height": 59.8
+    },
+    "metricUnit": {
+      "fontSize": "14px",
+      "fontWeight": "400",
+      "lineHeight": "normal",
+      "height": 19
+    },
+    "priceAmount": {
+      "fontSize": "35.91px",
+      "fontWeight": "400",
+      "lineHeight": "37.7055px",
+      "height": 37.7
+    },
+    "pricePeriod": {
+      "fontSize": "12px",
+      "fontWeight": "400",
+      "lineHeight": "14.4px",
+      "height": 14.4
+    },
+    "qrVisual": {
+      "x": 221,
+      "y": 279.5,
+      "w": 93,
+      "h": 93,
+      "r": 0,
+      "bottom": 372.5,
+      "right": 314
+    },
+    "tasteCircles": [
+      {
+        "x": 26,
+        "y": 432,
+        "w": 76,
+        "h": 76,
+        "r": 50,
+        "bottom": 508,
+        "right": 102
+      },
+      {
+        "x": 126,
+        "y": 432,
+        "w": 76,
+        "h": 76,
+        "r": 50,
+        "bottom": 508,
+        "right": 202
+      },
+      {
+        "x": 227,
+        "y": 432,
+        "w": 76,
+        "h": 76,
+        "r": 50,
+        "bottom": 508,
+        "right": 303
+      }
+    ],
+    "cardRadii": [
+      12,
+      12,
+      12,
+      12
+    ],
+    "sideInsetLeft": 9,
+    "overflowX": false,
+    "homeActiveIconColor": "rgb(245, 245, 245)"
+  },
+  "checks": [
+    {
+      "name": "progress.y≈98",
+      "pass": true,
+      "actual": 98,
+      "target": 98
+    },
+    {
+      "name": "progress.h≈154",
+      "pass": true,
+      "actual": 154,
+      "target": 154
+    },
+    {
+      "name": "qr.y≈262",
+      "pass": true,
+      "actual": 262,
+      "target": 262
+    },
+    {
+      "name": "qr.h≈128",
+      "pass": true,
+      "actual": 128,
+      "target": 128
+    },
+    {
+      "name": "taste.y≈400",
+      "pass": true,
+      "actual": 400,
+      "target": 400
+    },
+    {
+      "name": "taste.h≈148",
+      "pass": true,
+      "actual": 148,
+      "target": 148
+    },
+    {
+      "name": "plan.y≈558",
+      "pass": true,
+      "actual": 558,
+      "target": 558
+    },
+    {
+      "name": "plan.h≈143",
+      "pass": true,
+      "actual": 143,
+      "target": 143
+    },
+    {
+      "name": "plan.bottom≈701",
+      "pass": true,
+      "actual": 701,
+      "target": 701
+    },
+    {
+      "name": "nav.y≈715",
+      "pass": true,
+      "actual": 715,
+      "target": 715
+    },
+    {
+      "name": "gapPlanNav≈14",
+      "pass": true,
+      "actual": 14,
+      "target": 14
+    },
+    {
+      "name": "cardGaps≈10",
+      "pass": true,
+      "actual": [
+        10,
+        10,
+        10
+      ],
+      "target": 10
+    },
+    {
+      "name": "metric≈60px",
+      "pass": true,
+      "actual": 59.8,
+      "target": 60
+    },
+    {
+      "name": "price≈36px",
+      "pass": true,
+      "actual": "35.91px",
+      "target": "36px"
+    },
+    {
+      "name": "qrVisual≈93px",
+      "pass": true,
+      "actual": 93,
+      "target": 93
+    },
+    {
+      "name": "tasteCircle≈76px",
+      "pass": true,
+      "actual": [
+        76,
+        76,
+        76
+      ],
+      "target": 76
+    },
+    {
+      "name": "cardRadius=12",
+      "pass": true,
+      "actual": [
+        12,
+        12,
+        12,
+        12
+      ],
+      "target": 12
+    },
+    {
+      "name": "title≈10px/400",
+      "pass": true,
+      "actual": {
+        "fontSize": "10px",
+        "fontWeight": "400",
+        "lineHeight": "normal",
+        "height": 14
+      },
+      "target": "10px/400"
+    },
+    {
+      "name": "no overflow @342",
+      "pass": true,
+      "actual": false,
+      "target": false
+    },
+    {
+      "name": "sideInset≈9 @342",
+      "pass": true,
+      "actual": 9,
+      "target": 9
+    },
+    {
+      "name": "home active icon white",
+      "pass": true,
+      "actual": "rgb(245, 245, 245)",
+      "target": "rgb(245, 245, 245)"
+    },
+    {
+      "name": "responsive no clip",
+      "pass": true,
+      "actual": [
+        {
+          "viewport": "399x832",
+          "overflowX": false,
+          "sideInsetLeft": 16,
+          "cards": 4
+        },
+        {
+          "viewport": "360x800",
+          "overflowX": false,
+          "sideInsetLeft": 9,
+          "cards": 4
+        },
+        {
+          "viewport": "390x844",
+          "overflowX": false,
+          "sideInsetLeft": 16,
+          "cards": 4
+        },
+        {
+          "viewport": "430x932",
+          "overflowX": false,
+          "sideInsetLeft": 16,
+          "cards": 4
+        }
+      ],
+      "target": "4 cards, no overflow"
+    }
+  ],
+  "responsive": [
+    {
+      "viewport": "399x832",
+      "overflowX": false,
+      "sideInsetLeft": 16,
+      "cards": 4
+    },
+    {
+      "viewport": "360x800",
+      "overflowX": false,
+      "sideInsetLeft": 9,
+      "cards": 4
+    },
+    {
+      "viewport": "390x844",
+      "overflowX": false,
+      "sideInsetLeft": 16,
+      "cards": 4
+    },
+    {
+      "viewport": "430x932",
+      "overflowX": false,
+      "sideInsetLeft": 16,
+      "cards": 4
+    }
+  ],
+  "passCount": 22,
+  "totalChecks": 22,
+  "result": "PASS"
+}

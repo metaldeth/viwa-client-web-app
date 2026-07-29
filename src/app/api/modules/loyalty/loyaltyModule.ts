@@ -6,10 +6,6 @@ import {
   WaterHistoryPageDTO,
 } from '../../../../types/serverInterface/clientDTO';
 import type { SubscriptionLevelsResponse } from '../../../../types/subscriptionLevel';
-import type {
-  UpdateFavoriteTastesRequest,
-  UpdateFavoriteTastesResponse,
-} from '../../../../types/publicCatalog';
 import { loyaltyBaseUrl, viwaTelemetryApiUrl } from '../../../../consts';
 import { objectToQueryString } from '../../helpers/helpers';
 
@@ -35,14 +31,6 @@ export class LoyaltyModule extends AbstractApiModule {
   fetchSubscriptionLevels() {
     return this.request.get<void, SubscriptionLevelsResponse>(
       `${viwaTelemetryApiUrl}/client/subscription-levels`,
-    );
-  }
-
-  /** Client web: update favorite tastes (max 3 canonical keys) */
-  updateFavoriteTastes(body: UpdateFavoriteTastesRequest) {
-    return this.request.put<UpdateFavoriteTastesRequest, UpdateFavoriteTastesResponse>(
-      `${viwaTelemetryApiUrl}/client/me/favorite-tastes`,
-      body,
     );
   }
 }

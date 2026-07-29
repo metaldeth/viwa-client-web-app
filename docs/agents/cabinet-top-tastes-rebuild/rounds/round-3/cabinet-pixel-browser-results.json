@@ -1,0 +1,353 @@
+{
+  "round": 3,
+  "timestamp": "2026-07-29T18:01:24.683Z",
+  "baseUrl": "http://127.0.0.1:5173",
+  "reference": {
+    "path": "c:\\wiva\\wiva-client-web-app\\docs\\agents\\cabinet-top-tastes-rebuild\\rounds\\round-3\\cabinet-pixel-reference.png",
+    "source": "c:\\wiva\\wiva-client-web-app\\docs\\agents\\cabinet-top-tastes-rebuild\\rounds\\round-2\\pixel-reference.png",
+    "canonical": "round-2 pixel-reference.png"
+  },
+  "pixelResult": "FAIL",
+  "functionalResult": "FAIL",
+  "result": "FAIL",
+  "metrics": {
+    "maskedSimilarity": 0.6423,
+    "ssim": 0.451,
+    "maskedDiffRatio": 0.31820053872117626,
+    "rmse": 85.28,
+    "comparedPixels": 211241,
+    "diffPixels": 67217,
+    "referenceContentTop": 12
+  },
+  "round2Metrics": {
+    "maskedSimilarity": 0.6423,
+    "ssim": 0.451,
+    "maskedDiffRatio": 0.31820053872117626,
+    "rmse": 85.28,
+    "comparedPixels": 211241,
+    "diffPixels": 67217,
+    "referenceContentTop": 12
+  },
+  "deltaVsRound2": {
+    "similarity": 0,
+    "ssim": 0,
+    "maskedDiffRatioPp": 0,
+    "rmse": 0
+  },
+  "geometry399": {
+    "viewport": {
+      "w": 399,
+      "h": 832
+    },
+    "doc": {
+      "scrollW": 399,
+      "clientW": 399,
+      "scrollH": 832,
+      "clientH": 832
+    },
+    "safeArea": {
+      "top": "0px",
+      "bottom": "0px"
+    },
+    "header": {
+      "x": 0,
+      "y": 0,
+      "w": 399,
+      "h": 90,
+      "r": 0,
+      "bottom": 90
+    },
+    "qrCard": {
+      "x": 16,
+      "y": 231.9,
+      "w": 367,
+      "h": 140,
+      "r": 12,
+      "bottom": 371.9
+    },
+    "cards": [
+      {
+        "index": 0,
+        "tag": "SECTION",
+        "x": 16,
+        "y": 90,
+        "w": 367,
+        "h": 129.9,
+        "r": 12,
+        "bottom": 219.9
+      },
+      {
+        "index": 1,
+        "tag": "BUTTON",
+        "x": 16,
+        "y": 231.9,
+        "w": 367,
+        "h": 140,
+        "r": 12,
+        "bottom": 371.9
+      },
+      {
+        "index": 2,
+        "tag": "SECTION",
+        "x": 16,
+        "y": 383.9,
+        "w": 367,
+        "h": 157.8,
+        "r": 12,
+        "bottom": 541.7
+      },
+      {
+        "index": 3,
+        "tag": "BUTTON",
+        "x": 16,
+        "y": 553.7,
+        "w": 367,
+        "h": 112,
+        "r": 12,
+        "bottom": 665.7
+      }
+    ],
+    "tasteSection": {
+      "x": 16,
+      "y": 383.9,
+      "w": 367,
+      "h": 157.8,
+      "r": 12,
+      "bottom": 541.7
+    },
+    "progressBar": {
+      "x": 29,
+      "y": 177.9,
+      "w": 293,
+      "h": 8,
+      "r": 999,
+      "bottom": 185.9,
+      "valueNow": "780",
+      "valueMax": "1000"
+    },
+    "tasteCircles": [
+      {
+        "x": 42.9,
+        "y": 419.9,
+        "w": 81.8,
+        "h": 81.8,
+        "r": 50,
+        "bottom": 501.7
+      },
+      {
+        "x": 158.6,
+        "y": 419.9,
+        "w": 81.8,
+        "h": 81.8,
+        "r": 50,
+        "bottom": 501.7
+      },
+      {
+        "x": 274.3,
+        "y": 419.9,
+        "w": 81.8,
+        "h": 81.8,
+        "r": 50,
+        "bottom": 501.7
+      }
+    ],
+    "planCard": {
+      "x": 16,
+      "y": 553.7,
+      "w": 367,
+      "h": 112,
+      "r": 12,
+      "bottom": 665.7
+    },
+    "bottomNav": {
+      "x": 0,
+      "y": 767,
+      "w": 399,
+      "h": 65,
+      "r": 0,
+      "bottom": 832
+    },
+    "gapPlanNav": 101.3,
+    "sideInsetLeft": 16,
+    "cardGaps": [
+      12,
+      12,
+      12
+    ],
+    "activeNavCount": 1,
+    "activeNavLinkCount": 1,
+    "flowHeader": false
+  },
+  "geometryDeltaVsRound2": [
+    {
+      "metric": "sideInsetLeft",
+      "round2": 16,
+      "round3": 16,
+      "delta": 0
+    },
+    {
+      "metric": "header.h",
+      "round2": 90,
+      "round3": 90,
+      "delta": 0
+    },
+    {
+      "metric": "header.y",
+      "round2": 0,
+      "round3": 0,
+      "delta": 0
+    },
+    {
+      "metric": "progressCard.h",
+      "round2": 129.9,
+      "round3": 129.9,
+      "delta": 0
+    },
+    {
+      "metric": "qrCard.h",
+      "round2": 140,
+      "round3": 140,
+      "delta": 0
+    },
+    {
+      "metric": "tasteSection.h",
+      "round2": 157.8,
+      "round3": 157.8,
+      "delta": 0
+    },
+    {
+      "metric": "tasteSection.r",
+      "round2": 12,
+      "round3": 12,
+      "delta": 0
+    },
+    {
+      "metric": "planCard.h",
+      "round2": 112,
+      "round3": 112,
+      "delta": 0
+    },
+    {
+      "metric": "planCard.y",
+      "round2": 553.7,
+      "round3": 553.7,
+      "delta": 0
+    },
+    {
+      "metric": "bottomNav.y",
+      "round2": 767,
+      "round3": 767,
+      "delta": 0
+    },
+    {
+      "metric": "cardGap[0]",
+      "round2": 12,
+      "round3": 12,
+      "delta": 0
+    }
+  ],
+  "geometryValidation": {
+    "failures": [
+      "Excessive blank gap plan–nav: 101.3px (>48px)"
+    ],
+    "checks": [
+      "Side inset L: 16px",
+      "Progress bar 780/1000",
+      "3 taste circle slots measured",
+      "Plan card bottom (665.7px) above nav top (767px)",
+      "No horizontal overflow"
+    ]
+  },
+  "responsiveChecks": [
+    {
+      "file": "cabinet-responsive-360x800.png",
+      "horizontalOverflow": false,
+      "sideInsetLeft": 16,
+      "cards": 4
+    },
+    {
+      "file": "cabinet-responsive-390x844.png",
+      "horizontalOverflow": false,
+      "sideInsetLeft": 16,
+      "cards": 4
+    },
+    {
+      "file": "cabinet-responsive-430x932.png",
+      "horizontalOverflow": false,
+      "sideInsetLeft": 16,
+      "cards": 4
+    }
+  ],
+  "functional": {
+    "failures": [],
+    "checks": [
+      "Catalog loading: 3 slots visible before catalog resolves",
+      "Catalog success: exactly 3 taste slots",
+      "Catalog success: canonical taste labels present",
+      "Catalog error: 3 slots still visible",
+      "Catalog error: status message shown",
+      "Placeholder case (1 favorite → 2 placeholders)",
+      "No favorite PUT",
+      "No FLOW header",
+      "No horizontal scroll",
+      "Single active bottom-nav item on /home (aria-current=page)",
+      "QR modal opens",
+      "Plan opens billing modal",
+      "Bottom nav SPA (no reload)",
+      "Keyboard focus: BUTTON",
+      "Safe-area CSS on header/nav",
+      "Machine path /m/VIWA-TEST-001/home: single aria-current=page",
+      "Machine path: single active nav link styling",
+      "Machine path: 3 taste slots"
+    ]
+  },
+  "topDeviations": [
+    {
+      "area": "plan–nav vertical gap",
+      "deltaPx": 77,
+      "expected": "8–48px content fill above nav",
+      "actual": "101.3px",
+      "fix": "CabinetHome layout — reduce main padding-bottom or plan card margin after geometry compression",
+      "rank": 1
+    },
+    {
+      "area": "header stack height",
+      "deltaPx": 60,
+      "expected": "~150px stacked title+bell (reference artboard)",
+      "actual": "90px",
+      "fix": "CabinetHeader.module.scss — trailing column gap/padding vs reference",
+      "rank": 2
+    },
+    {
+      "area": "global layout (fair mask)",
+      "deltaPx": 32,
+      "expected": "≤8% masked diff",
+      "actual": "31.8%",
+      "fix": "Typography/QR copy line-breaks, header title placement, progress min-height vs reference",
+      "rank": 3
+    },
+    {
+      "area": "taste card shell radius",
+      "deltaPx": 8,
+      "expected": "20px",
+      "actual": "12px",
+      "fix": "FavoriteTastesRow.module.scss — verify --viwa-radius-lg token on card shell",
+      "rank": 4
+    }
+  ],
+  "artifacts": [
+    "cabinet-pixel-reference.png",
+    "cabinet-pixel-reference-aligned-399x832.png",
+    "cabinet-actual-399x832.png",
+    "cabinet-diff-399x832-masked.png",
+    "cabinet-overlay-399x832.png",
+    "cabinet-responsive-360x800.png",
+    "cabinet-responsive-390x844.png",
+    "cabinet-responsive-430x932.png",
+    "cabinet-pixel-browser-report.md",
+    "cabinet-pixel-browser-results.json"
+  ],
+  "methodologyStatus": "INVALID_SUPERSEDED",
+  "supersededBy": "cabinet-pixel-browser-results-corrected.json",
+  "invalidationReason": "Outer 399×832 viewport compared to bezel-inclusive reference — false geometry"
+}

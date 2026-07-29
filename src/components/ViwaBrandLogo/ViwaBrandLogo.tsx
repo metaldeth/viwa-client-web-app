@@ -1,20 +1,23 @@
 import { useState } from 'react';
-import { getLogoImagePaths } from '../../utils/viwaAssets';
+import { getCabinetHeaderLogoImagePaths, getLogoImagePaths } from '../../utils/viwaAssets';
 import styles from './ViwaBrandLogo.module.scss';
 
 type ViwaBrandLogoProps = {
   className?: string;
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'header';
 };
 
 const SIZE_CLASS = {
   sm: styles.sizeSm,
   md: styles.sizeMd,
   lg: styles.sizeLg,
+  header: styles.sizeHeader,
 } as const;
 
 export function ViwaBrandLogo({ className, size = 'md' }: ViwaBrandLogoProps) {
-  const { svg, png, altRu, width, height } = getLogoImagePaths();
+  const isHeader = size === 'header';
+  const paths = isHeader ? getCabinetHeaderLogoImagePaths() : getLogoImagePaths();
+  const { svg, webp, png, altRu, width, height } = paths;
   const [imgFailed, setImgFailed] = useState(false);
 
   if (imgFailed) {
@@ -30,6 +33,7 @@ export function ViwaBrandLogo({ className, size = 'md' }: ViwaBrandLogoProps) {
 
   return (
     <picture className={[styles.logo, SIZE_CLASS[size], className].filter(Boolean).join(' ')}>
+      {isHeader && webp ? <source srcSet={webp} type="image/webp" /> : null}
       <source srcSet={svg} type="image/svg+xml" />
       <img
         className={styles.logoImg}

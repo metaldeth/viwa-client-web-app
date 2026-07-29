@@ -1,0 +1,371 @@
+{
+  "round": 3,
+  "timestamp": "2026-07-29T17:57:28.201Z",
+  "baseUrl": "http://127.0.0.1:8765",
+  "referenceSource": {
+    "path": "c:\\wiva\\wiva-client-web-app\\docs\\agents\\cabinet-top-tastes-rebuild\\rounds\\round-3\\landing-reference-897x867.png",
+    "source": "c:\\wiva\\wiva-client-web-app\\docs\\agents\\cabinet-top-tastes-rebuild\\rounds\\round-1\\landing-reference-897x867.png",
+    "canonical": "round-1 copy of user design PNG"
+  },
+  "viewportPrimary": "897x867",
+  "result": "FAIL",
+  "pixelResult": "FAIL",
+  "functionalResult": "FAIL",
+  "metrics": {
+    "similarity": 0.449,
+    "ssim": 0.5342,
+    "maskedDiffRatio": 0.37898221572099466,
+    "rmse": 76.48,
+    "comparedPixels": 389670,
+    "diffPixels": 147678
+  },
+  "geometry897": {
+    "viewport": {
+      "w": 897,
+      "h": 867
+    },
+    "doc": {
+      "scrollW": 897,
+      "clientW": 897
+    },
+    "header": {
+      "x": 0,
+      "y": 0,
+      "w": 897,
+      "h": 68,
+      "borderColor": "rgb(255, 255, 255) rgb(255, 255, 255) rgb(51, 51, 51)",
+      "bg": "rgb(0, 0, 0)"
+    },
+    "board": {
+      "x": 0,
+      "y": 68,
+      "w": 897,
+      "h": 800,
+      "borderColor": "rgb(51, 51, 51) rgb(255, 255, 255) rgb(255, 255, 255)",
+      "bg": "rgba(0, 0, 0, 0)"
+    },
+    "boardGridCols": "328.031px 255.016px 313.953px",
+    "heroBrand": {
+      "x": 0,
+      "y": 69,
+      "w": 328,
+      "h": 531,
+      "borderColor": "rgb(255, 255, 255) rgb(51, 51, 51) rgb(51, 51, 51) rgb(255, 255, 255)",
+      "bg": "rgba(0, 0, 0, 0)"
+    },
+    "bento": {
+      "x": 328,
+      "y": 69,
+      "w": 569,
+      "h": 531,
+      "borderColor": "rgb(255, 255, 255)",
+      "bg": "rgba(0, 0, 0, 0)"
+    },
+    "col40Expected": 358.8,
+    "col30Expected": 269.1,
+    "heroColRatio": null,
+    "bentoCells": [
+      {
+        "index": 1,
+        "x": 328,
+        "y": 69,
+        "w": 284.5,
+        "h": 228
+      },
+      {
+        "index": 2,
+        "x": 612.5,
+        "y": 69,
+        "w": 284.5,
+        "h": 228
+      },
+      {
+        "index": 3,
+        "x": 328,
+        "y": 297,
+        "w": 284.5,
+        "h": 303
+      },
+      {
+        "index": 4,
+        "x": 612.5,
+        "y": 297,
+        "w": 284.5,
+        "h": 303
+      }
+    ],
+    "featureBar": {
+      "x": 0,
+      "y": 600,
+      "w": 897,
+      "h": 66,
+      "borderColor": "rgb(255, 255, 255) rgb(255, 255, 255) rgb(51, 51, 51)",
+      "bg": "rgba(0, 0, 0, 0)"
+    },
+    "featureItems": [
+      {
+        "index": 1,
+        "x": 0,
+        "w": 299,
+        "h": 66
+      },
+      {
+        "index": 2,
+        "x": 299,
+        "w": 299,
+        "h": 66
+      },
+      {
+        "index": 3,
+        "x": 598,
+        "w": 299,
+        "h": 66
+      }
+    ],
+    "bottomBlocks": [],
+    "heroLogo": {
+      "x": 27,
+      "y": 135.1,
+      "w": 253.9,
+      "h": 222.8,
+      "objectFit": "fill",
+      "aspect": 1.1
+    },
+    "accentColor": "rgb(92, 45, 168)",
+    "titleFont": {
+      "size": "32.292px",
+      "weight": "700",
+      "family": "\"Arial Narrow\", \"Helvetica Neue Condensed\", \"Franklin Gothic Medium\", Arial, sans-serif",
+      "color": "rgb(255, 255, 255)"
+    },
+    "subtitleFont": null,
+    "navFont": null,
+    "borderSample": {
+      "x": 328,
+      "y": 69,
+      "w": 284.5,
+      "h": 228,
+      "borderColor": "rgb(255, 255, 255) rgb(51, 51, 51) rgb(51, 51, 51) rgb(255, 255, 255)",
+      "bg": "rgb(0, 0, 0)"
+    }
+  },
+  "annotatedRegions": [
+    {
+      "rank": 1,
+      "zone": "hero-bento-grid",
+      "kind": "geometry-typography",
+      "bbox": {
+        "x": 0,
+        "y": 0,
+        "w": 897,
+        "h": 867
+      },
+      "diffPixels": 143120,
+      "refColor": "#7d7b80",
+      "actColor": "#6b696f",
+      "fontSample": "700 34px \"Arial Narrow\""
+    },
+    {
+      "rank": 2,
+      "zone": "header",
+      "kind": "geometry-typography",
+      "bbox": {
+        "x": 745,
+        "y": 3,
+        "w": 146,
+        "h": 58
+      },
+      "diffPixels": 4536,
+      "refColor": "#3f2971",
+      "actColor": "#593591",
+      "fontSample": null
+    }
+  ],
+  "geometryHotspots": [
+    {
+      "rank": 1,
+      "zone": "hero-bento-grid",
+      "kind": "geometry-typography",
+      "bbox": {
+        "x": 0,
+        "y": 0,
+        "w": 897,
+        "h": 867
+      },
+      "diffPixels": 143120,
+      "refColor": "#7d7b80",
+      "actColor": "#6b696f"
+    },
+    {
+      "rank": 2,
+      "zone": "header",
+      "kind": "geometry-typography",
+      "bbox": {
+        "x": 745,
+        "y": 3,
+        "w": 146,
+        "h": 58
+      },
+      "diffPixels": 4536,
+      "refColor": "#3f2971",
+      "actColor": "#593591"
+    }
+  ],
+  "dynamicHotspots": [],
+  "responsiveChecks": [
+    {
+      "name": "360x800",
+      "horizontalOverflow": false,
+      "headerH": 68,
+      "note": "stacked board expected"
+    },
+    {
+      "name": "390x844",
+      "horizontalOverflow": false,
+      "headerH": 68,
+      "note": "stacked board expected"
+    },
+    {
+      "name": "430x932",
+      "horizontalOverflow": false,
+      "headerH": 68,
+      "note": "stacked board expected"
+    },
+    {
+      "name": "1440x900",
+      "horizontalOverflow": false,
+      "headerH": 68,
+      "note": "desktop grid"
+    }
+  ],
+  "functional": {
+    "failures": [
+      "Escape refocuses hamburger when menu already closed (R2-F3 regression)"
+    ],
+    "checks": [
+      "No hardcoded prices in HTML",
+      "14 tastes rendered from API",
+      "2 API tiers rendered",
+      "Tier price from API (499)",
+      "Tier price from API (699)",
+      "Register CTA without serial (entry=website)",
+      "Register CTA with serial + entry=website",
+      "Register CTA preserves serial from URL query",
+      "Cabinet auth link → /auth",
+      "All 29 images loaded",
+      "22 anchor links present",
+      "No horizontal overflow (897)",
+      "Reduced motion CSS present",
+      "No horizontal overflow (360)",
+      "Mobile menu opens",
+      "Menu touch targets ≥44px",
+      "Escape closes mobile menu",
+      "Keyboard Enter opens menu",
+      "Menu link receives keyboard focus",
+      "Safe-area rule present (0px in headless)"
+    ],
+    "image404s": 0,
+    "brokenLinks": 0
+  },
+  "apiRetryOk": true,
+  "image404Count": 0,
+  "image404s": [],
+  "topDeviations": [
+    {
+      "rank": 1,
+      "area": "pixel hotspot: hero-bento-grid",
+      "deltaPx": 143120,
+      "expected": "ref #7d7b80",
+      "actual": "act #6b696f @ (0,0) 897×867px",
+      "fix": "Tune hero-bento-grid CSS to match reference colors/typography"
+    },
+    {
+      "rank": 2,
+      "area": "pixel hotspot: header",
+      "deltaPx": 4536,
+      "expected": "ref #3f2971",
+      "actual": "act #593591 @ (745,3) 146×58px",
+      "fix": "Tune header CSS to match reference colors/typography"
+    },
+    {
+      "rank": 3,
+      "area": "global pixel layout (masked photos)",
+      "deltaPx": 38,
+      "expected": "≤12% masked structural diff",
+      "actual": "37.9% (147678/389670px), SSIM=0.5342",
+      "fix": "Review typography scale, hero logo clamp, header nav spacing, feature strip icons vs reference"
+    },
+    {
+      "rank": 4,
+      "area": "hero column width (40%)",
+      "deltaPx": 31,
+      "expected": "359px (40% of 897)",
+      "actual": "328px",
+      "fix": "viwa-landing.css `.viwa-board { grid-template-columns: 40fr 30fr 30fr }` at ≥768px"
+    },
+    {
+      "rank": 5,
+      "area": "SSIM structural similarity",
+      "deltaPx": 22,
+      "expected": "≥0.75 masked SSIM",
+      "actual": "0.5342",
+      "fix": "Align grid proportions, border #333, title/subtitle sizes to 897×867 reference"
+    },
+    {
+      "rank": 6,
+      "area": "hero logo height vs R2",
+      "deltaPx": 13,
+      "expected": "209.9px (R2)",
+      "actual": "222.8px",
+      "fix": "Tune hero logo clamp after geometry row/column fix"
+    },
+    {
+      "rank": 7,
+      "area": "header height",
+      "deltaPx": 8,
+      "expected": "60px (--viwa-header-height)",
+      "actual": "68px",
+      "fix": "viwa-tokens.css --viwa-header-height; viwa-landing.css .viwa-header min-height"
+    },
+    {
+      "rank": 8,
+      "area": "board grid columns vs R2",
+      "deltaPx": 0,
+      "expected": "358.797px 269.094px 269.109px",
+      "actual": "328.031px 255.016px 313.953px",
+      "fix": "Verify canonical 36.57/28.43/35 column ratios from direct measurement"
+    }
+  ],
+  "nextFixes": [
+    "Raise masked SSIM ≥0.75: align board row heights (68/531/66/202) and column ratios (36.57/28.43/35) to canonical 897×867 measurement",
+    "Cut masked structural diff to ≤12%: typography (hero title/subtitle), nav spacing, feature icon stroke weights",
+    "hero-bento-grid hotspot (0,0) 897×867: ref #7d7b80 vs act #6b696f",
+    "header hotspot (745,3) 146×58: ref #3f2971 vs act #593591",
+    "Hero title font size: expected ~44px, actual 32.292px",
+    "Board grid columns changed vs R2 (358.797px 269.094px 269.109px → 328.031px 255.016px 313.953px) — verify intentional geometry fix"
+  ],
+  "deltaVsRound1": {
+    "ssim": 0.2752,
+    "similarity": 0.1822,
+    "maskedDiffRatioPp": -12.35,
+    "rmse": -23.08
+  },
+  "deltaVsRound2": {
+    "ssim": 0.33,
+    "similarity": 0.2125,
+    "maskedDiffRatioPp": -12.42,
+    "rmse": -23.76
+  },
+  "artifacts": [
+    "landing-reference-897x867.png",
+    "landing-actual-897x867.png",
+    "landing-diff-897x867-masked.png",
+    "landing-overlay-897x867.png",
+    "landing-responsive-360x800.png",
+    "landing-responsive-390x844.png",
+    "landing-responsive-430x932.png",
+    "landing-desktop-1440x900.png",
+    "landing-pixel-browser-report.md",
+    "landing-pixel-browser-results.json"
+  ]
+}

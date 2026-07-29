@@ -1,116 +1,58 @@
 .pageShell {
   display: flex;
   flex-direction: column;
-  min-height: 100%;
+  min-height: 100dvh;
   width: 100%;
-  max-width: var(--viwa-desktop-max, 720px);
+  max-width: var(--viwa-cabinet-max, 430px);
   margin: 0 auto;
+  background: #000000;
   color: var(--viwa-text, #f5f5f5);
   font-family: var(--viwa-font-ui, inherit);
+  overflow-x: hidden;
+
+  /* Round 4 cabinet geometry tokens — inherited by card modules */
+  --viwa-cabinet-gap: 10px;
+  --viwa-cabinet-card-radius: 12px;
+  --viwa-cabinet-card-bg: #0b0b0b;
+  --viwa-cabinet-card-border: rgba(255, 255, 255, 0.1);
+  --viwa-cabinet-card-padding: 12px;
+  --viwa-cabinet-card-padding-x: var(--viwa-cabinet-card-padding, 12px);
+  --viwa-cabinet-card-padding-y: var(--viwa-cabinet-card-padding, 12px);
+  --viwa-cabinet-main-pad-x: 16px;
+  --viwa-cabinet-main-pad-left: var(--viwa-cabinet-main-pad-x, 16px);
+  --viwa-cabinet-main-pad-right: var(--viwa-cabinet-main-pad-x, 16px);
+  --viwa-cabinet-header-pad-left: var(--viwa-cabinet-main-pad-x, 16px);
+  --viwa-cabinet-header-pad-right: var(--viwa-cabinet-main-pad-x, 16px);
+  --viwa-cabinet-main-pad-top: 10px;
+  --viwa-cabinet-main-pad-bottom: 4px;
 }
 
-.SubscriptionPage {
+.main {
+  display: flex;
+  flex-direction: column;
   flex: 1;
-  padding-bottom: var(--viwa-space-md, 1rem);
+  gap: var(--viwa-cabinet-gap);
+  padding: var(--viwa-cabinet-main-pad-top) var(--viwa-cabinet-main-pad-right)
+    var(--viwa-cabinet-main-pad-bottom) var(--viwa-cabinet-main-pad-left);
+  scroll-padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
 }
 
-.brandHeader {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--viwa-space-xs, 0.5rem);
-  padding: 0 var(--viwa-space-xs, 0.5rem);
-}
-
-.progressCard {
-  display: block;
-  width: 100%;
-  padding: var(--viwa-space-md, 1rem);
-  background: var(--viwa-bg-elevated, #141414);
-  border: 1px solid rgba(127, 90, 240, 0.25);
-  box-shadow: var(--viwa-shadow-card);
-  cursor: pointer;
-  text-align: inherit;
-  color: inherit;
-  font: inherit;
-
-  &:focus-visible {
-    outline: 2px solid var(--viwa-focus, #7f5af0);
-    outline-offset: 2px;
+@media (max-width: 360px) {
+  .pageShell {
+    --viwa-cabinet-main-pad-x: 9px;
+    --viwa-cabinet-main-pad-left: 9px;
+    --viwa-cabinet-main-pad-right: 17px;
+    --viwa-cabinet-header-pad-left: 9px;
+    --viwa-cabinet-header-pad-right: 9px;
+    --viwa-cabinet-card-padding-x: 16px;
+    --viwa-cabinet-card-padding-y: 12px;
   }
 }
 
-.progressRow {
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: var(--viwa-space-md, 1rem);
-}
-
-.planSection {
-  display: flex;
-  flex-direction: column;
-  gap: var(--viwa-space-md, 1rem);
-  padding: var(--viwa-space-md, 1rem);
-  border-radius: var(--viwa-radius-md, 12px);
-  background: var(--viwa-bg-elevated, #141414);
-  border: 1px solid var(--viwa-border, #2a2a2a);
-}
-
-.planHeader {
-  display: flex;
-  flex-direction: column;
-  gap: var(--viwa-space-xs, 0.5rem);
-}
-
-.planGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: var(--viwa-space-sm, 0.75rem);
-}
-
-.planCard {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--viwa-space-xs, 0.5rem);
-  min-height: var(--viwa-touch-min, 44px);
-  padding: var(--viwa-space-md, 1rem);
-  border: 1px solid var(--viwa-border, #2a2a2a);
-  border-radius: var(--viwa-radius-md, 12px);
-  background: linear-gradient(135deg, #1a1030 0%, #2a1550 100%);
-  color: var(--viwa-text, #f5f5f5);
-  cursor: pointer;
-  text-align: left;
-  transition: border-color 0.15s ease;
-
-  &:hover {
-    border-color: var(--viwa-accent, #7f5af0);
+@media (max-height: 820px) {
+  .pageShell {
+    --viwa-cabinet-main-pad-top: 10px;
   }
-
-  &:focus-visible {
-    outline: 2px solid var(--viwa-focus, #7f5af0);
-    outline-offset: 2px;
-  }
-}
-
-.planVolume {
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--viwa-muted, #a3a3a3);
-}
-
-.planName {
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.planPrice {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--viwa-accent, #7f5af0);
 }
 
 .qrWhitePad,
@@ -158,18 +100,14 @@
   }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 431px) {
   .pageShell {
-    padding: var(--viwa-space-lg, 1.5rem);
-  }
-
-  .planGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .planCard {
-    transition: none;
+  .pageShell * {
+    scroll-behavior: auto;
   }
 }

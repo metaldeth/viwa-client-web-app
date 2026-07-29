@@ -23,4 +23,22 @@
       display: flex;
     }
   }
+
+  .appCabinetShell {
+    padding: 0;
+    background-color: #000000;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+      width: 0;
+      height: 0;
+      display: none;
+    }
+  }
+
+  .appContentCabinet {
+    flex: 1;
+    min-height: 0;
+  }
 }

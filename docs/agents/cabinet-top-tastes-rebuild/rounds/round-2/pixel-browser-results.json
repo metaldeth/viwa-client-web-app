@@ -1,0 +1,258 @@
+{
+  "round": 2,
+  "timestamp": "2026-07-29T17:57:18.282Z",
+  "baseUrl": "http://127.0.0.1:5173",
+  "result": "FAIL",
+  "metrics": {
+    "maskedSimilarity": 0.6423,
+    "ssim": 0.451,
+    "maskedDiffRatio": 0.31820053872117626,
+    "rmse": 85.28,
+    "comparedPixels": 211241,
+    "diffPixels": 67217,
+    "referenceContentTop": 12
+  },
+  "metricsDeltaVsRound1": {
+    "similarity": -0.0094,
+    "diffRatio": -0.0349,
+    "rmse": -1.29,
+    "ssim": 0.451
+  },
+  "round1Metrics": {
+    "maskedSimilarity": 0.6517,
+    "maskedDiffRatio": 0.3530513945212282,
+    "rmse": 86.57,
+    "comparedPixels": 302075,
+    "diffPixels": 106648
+  },
+  "geometry399": {
+    "viewport": {
+      "w": 399,
+      "h": 832
+    },
+    "doc": {
+      "scrollW": 399,
+      "clientW": 399
+    },
+    "safeArea": {
+      "top": "0px",
+      "bottom": "0px"
+    },
+    "header": {
+      "x": 0,
+      "y": 0,
+      "w": 399,
+      "h": 90,
+      "r": 0
+    },
+    "cards": [
+      {
+        "index": 0,
+        "tag": "SECTION",
+        "x": 16,
+        "y": 90,
+        "w": 367,
+        "h": 129.9,
+        "r": 12
+      },
+      {
+        "index": 1,
+        "tag": "BUTTON",
+        "x": 16,
+        "y": 231.9,
+        "w": 367,
+        "h": 140,
+        "r": 12
+      },
+      {
+        "index": 2,
+        "tag": "SECTION",
+        "x": 16,
+        "y": 383.9,
+        "w": 367,
+        "h": 157.8,
+        "r": 12
+      },
+      {
+        "index": 3,
+        "tag": "BUTTON",
+        "x": 16,
+        "y": 553.7,
+        "w": 367,
+        "h": 112,
+        "r": 12
+      }
+    ],
+    "tasteSection": {
+      "x": 16,
+      "y": 383.9,
+      "w": 367,
+      "h": 157.8,
+      "r": 12
+    },
+    "progressBar": {
+      "x": 29,
+      "y": 177.9,
+      "w": 293,
+      "h": 8,
+      "r": 999,
+      "valueNow": "780",
+      "valueMax": "1000"
+    },
+    "tasteCircles": [
+      {
+        "x": 42.9,
+        "y": 419.9,
+        "w": 81.8,
+        "h": 81.8,
+        "r": 50
+      },
+      {
+        "x": 158.6,
+        "y": 419.9,
+        "w": 81.8,
+        "h": 81.8,
+        "r": 50
+      },
+      {
+        "x": 274.3,
+        "y": 419.9,
+        "w": 81.8,
+        "h": 81.8,
+        "r": 50
+      }
+    ],
+    "planCard": {
+      "x": 16,
+      "y": 553.7,
+      "w": 367,
+      "h": 112,
+      "r": 12
+    },
+    "bottomNav": {
+      "x": 0,
+      "y": 767,
+      "w": 399,
+      "h": 65,
+      "r": 0
+    },
+    "sideInsetLeft": 16,
+    "cardGaps": [
+      12,
+      12,
+      12
+    ],
+    "activeNavCount": 1,
+    "flowHeader": false
+  },
+  "geometryDeltaVsRound1": [
+    {
+      "metric": "sideInsetLeft",
+      "round1": 16,
+      "round2": 16,
+      "delta": 0
+    },
+    {
+      "metric": "header.h",
+      "round1": 68,
+      "round2": 90,
+      "delta": 22
+    },
+    {
+      "metric": "progressCard.h",
+      "round1": 138,
+      "round2": 129.9,
+      "delta": -8.1
+    },
+    {
+      "metric": "planCard.h",
+      "round1": 170.9,
+      "round2": 112,
+      "delta": -58.9
+    },
+    {
+      "metric": "bottomNav.y",
+      "round1": 759,
+      "round2": 767,
+      "delta": 8
+    },
+    {
+      "metric": "cardGap[0]",
+      "round1": 16,
+      "round2": 12,
+      "delta": -4
+    }
+  ],
+  "responsiveChecks": [
+    {
+      "file": "responsive-360x800.png",
+      "horizontalOverflow": false,
+      "sideInsetLeft": 16,
+      "cards": 4
+    },
+    {
+      "file": "responsive-390x844.png",
+      "horizontalOverflow": false,
+      "sideInsetLeft": 16,
+      "cards": 4
+    },
+    {
+      "file": "responsive-430x932.png",
+      "horizontalOverflow": false,
+      "sideInsetLeft": 16,
+      "cards": 4
+    },
+    {
+      "file": "desktop-1440-centered-phone.png",
+      "horizontalOverflow": false,
+      "sideInsetLeft": 521,
+      "cards": 4
+    }
+  ],
+  "functional": {
+    "failures": [],
+    "checks": [
+      "Catalog loading: 3 slots visible before catalog resolves",
+      "Catalog success: exactly 3 taste slots",
+      "Catalog success: canonical taste labels present",
+      "Catalog error: 3 slots still visible",
+      "Catalog error: status message shown",
+      "Placeholder case (1 favorite → 2 placeholders)",
+      "No favorite PUT",
+      "No FLOW header",
+      "No horizontal scroll",
+      "Single active bottom-nav item (aria-current=page)",
+      "QR modal opens",
+      "Plan opens billing modal",
+      "Bottom nav SPA (no reload)",
+      "Keyboard focus: BUTTON",
+      "Safe-area CSS on header/nav"
+    ]
+  },
+  "topDeviations": [
+    {
+      "area": "header stack height",
+      "deltaPx": 60,
+      "expected": "~150px stacked title+bell",
+      "actual": "90px",
+      "fix": "CabinetHeader.module.scss trailing column gap/padding vs reference",
+      "rank": 1
+    },
+    {
+      "area": "global layout (fair mask)",
+      "deltaPx": 32,
+      "expected": "≤8% masked diff",
+      "actual": "31.8%",
+      "fix": "Typography/QR copy line-breaks, header title placement, progress min-height vs reference",
+      "rank": 2
+    },
+    {
+      "area": "taste card shell radius",
+      "deltaPx": 8,
+      "expected": "20px",
+      "actual": "12px",
+      "fix": "FavoriteTastesRow.module.scss — already has card shell; verify radius token",
+      "rank": 3
+    }
+  ]
+}

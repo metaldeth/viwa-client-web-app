@@ -1,7 +1,7 @@
 {
-  "version": "1.0.0",
-  "conceptRef": "concept-16-editorial-fruit-lab",
-  "generatedAt": "2026-07-29T13:44:26Z",
+  "version": "1.1.0",
+  "conceptRef": "concept-bento-station-first",
+  "generatedAt": "2026-07-29T19:21:37Z",
   "assets": [
     {
       "id": "hero-bottle",
@@ -290,6 +290,272 @@
       "tasteMediaKey": "watermelon"
     },
     {
+      "id": "taste-medallion-cherry",
+      "category": "taste-medallion",
+      "files": {
+        "webp": {
+          "path": "tastes/medallions/cherry.webp",
+          "width": 180,
+          "height": 180
+        },
+        "png": {
+          "path": "tastes/medallions/cherry.png",
+          "width": 180,
+          "height": 180
+        }
+      },
+      "altRu": "Чёрная вишня — медальон вкуса",
+      "tasteMediaKey": "cherry",
+      "cabinetRole": "favorite-circle"
+    },
+    {
+      "id": "taste-medallion-blackberry-lime",
+      "category": "taste-medallion",
+      "files": {
+        "webp": {
+          "path": "tastes/medallions/blackberry-lime.webp",
+          "width": 180,
+          "height": 180
+        },
+        "png": {
+          "path": "tastes/medallions/blackberry-lime.png",
+          "width": 180,
+          "height": 180
+        }
+      },
+      "altRu": "Ежевика-лайм — медальон вкуса",
+      "tasteMediaKey": "blackberry-lime",
+      "cabinetRole": "favorite-circle"
+    },
+    {
+      "id": "taste-medallion-coconut",
+      "category": "taste-medallion",
+      "files": {
+        "webp": {
+          "path": "tastes/medallions/coconut.webp",
+          "width": 180,
+          "height": 180
+        },
+        "png": {
+          "path": "tastes/medallions/coconut.png",
+          "width": 180,
+          "height": 180
+        }
+      },
+      "altRu": "Кокос — медальон вкуса",
+      "tasteMediaKey": "coconut",
+      "cabinetRole": "favorite-circle"
+    },
+    {
+      "id": "taste-medallion-cucumber",
+      "category": "taste-medallion",
+      "files": {
+        "webp": {
+          "path": "tastes/medallions/cucumber.webp",
+          "width": 180,
+          "height": 180
+        },
+        "png": {
+          "path": "tastes/medallions/cucumber.png",
+          "width": 180,
+          "height": 180
+        }
+      },
+      "altRu": "Огурец — медальон вкуса",
+      "tasteMediaKey": "cucumber",
+      "cabinetRole": "favorite-circle"
+    },
+    {
+      "id": "taste-medallion-grapefruit",
+      "category": "taste-medallion",
+      "files": {
+        "webp": {
+          "path": "tastes/medallions/grapefruit.webp",
+          "width": 180,
+          "height": 180
+        },
+        "png": {
+          "path": "tastes/medallions/grapefruit.png",
+          "width": 180,
+          "height": 180
+        }
+      },
+      "altRu": "Грейпфрут — медальон вкуса",
+      "tasteMediaKey": "grapefruit",
+      "cabinetRole": "favorite-circle"
+    },
+    {
+      "id": "taste-medallion-lemon",
+      "category": "taste-medallion",
+      "files": {
+        "webp": {
+          "path": "tastes/medallions/lemon.webp",
+          "width": 180,
+          "height": 180
+        },
+        "png": {
+          "path": "tastes/medallions/lemon.png",
+          "width": 180,
+          "height": 180
+        }
+      },
+      "altRu": "Лимон — медальон вкуса",
+      "tasteMediaKey": "lemon",
+      "cabinetRole": "favorite-circle"
+    },
+    {
+      "id": "taste-medallion-lime",
+      "category": "taste-medallion",
+      "files": {
+        "webp": {
+          "path": "tastes/medallions/lime.webp",
+          "width": 180,
+          "height": 180
+        },
+        "png": {
+          "path": "tastes/medallions/lime.png",
+          "width": 180,
+          "height": 180
+        }
+      },
+      "altRu": "Лайм — медальон вкуса",
+      "tasteMediaKey": "lime",
+      "cabinetRole": "favorite-circle"
+    },
+    {
+      "id": "taste-medallion-lime-mint",
+      "category": "taste-medallion",
+      "files": {
+        "webp": {
+          "path": "tastes/medallions/lime-mint.webp",
+          "width": 180,
+          "height": 180
+        },
+        "png": {
+          "path": "tastes/medallions/lime-mint.png",
+          "width": 180,
+          "height": 180
+        }
+      },
+      "altRu": "Лайм-мята — медальон вкуса",
+      "tasteMediaKey": "lime-mint",
+      "cabinetRole": "favorite-circle"
+    },
+    {
+      "id": "taste-medallion-orange",
+      "category": "taste-medallion",
+      "files": {
+        "webp": {
+          "path": "tastes/medallions/orange.webp",
+          "width": 180,
+          "height": 180
+        },
+        "png": {
+          "path": "tastes/medallions/orange.png",
+          "width": 180,
+          "height": 180
+        }
+      },
+      "altRu": "Апельсин — медальон вкуса",
+      "tasteMediaKey": "orange",
+      "cabinetRole": "favorite-circle"
+    },
+    {
+      "id": "taste-medallion-peach-mango",
+      "category": "taste-medallion",
+      "files": {
+        "webp": {
+          "path": "tastes/medallions/peach-mango.webp",
+          "width": 180,
+          "height": 180
+        },
+        "png": {
+          "path": "tastes/medallions/peach-mango.png",
+          "width": 180,
+          "height": 180
+        }
+      },
+      "altRu": "Манго-персик — медальон вкуса",
+      "tasteMediaKey": "peach-mango",
+      "cabinetRole": "favorite-circle"
+    },
+    {
+      "id": "taste-medallion-pomegranate-blueberry",
+      "category": "taste-medallion",
+      "files": {
+        "webp": {
+          "path": "tastes/medallions/pomegranate-blueberry.webp",
+          "width": 180,
+          "height": 180
+        },
+        "png": {
+          "path": "tastes/medallions/pomegranate-blueberry.png",
+          "width": 180,
+          "height": 180
+        }
+      },
+      "altRu": "Гранат-черника — медальон вкуса",
+      "tasteMediaKey": "pomegranate-blueberry",
+      "cabinetRole": "favorite-circle"
+    },
+    {
+      "id": "taste-medallion-raspberry",
+      "category": "taste-medallion",
+      "files": {
+        "webp": {
+          "path": "tastes/medallions/raspberry.webp",
+          "width": 180,
+          "height": 180
+        },
+        "png": {
+          "path": "tastes/medallions/raspberry.png",
+          "width": 180,
+          "height": 180
+        }
+      },
+      "altRu": "Малина — медальон вкуса",
+      "tasteMediaKey": "raspberry",
+      "cabinetRole": "favorite-circle"
+    },
+    {
+      "id": "taste-medallion-strawberry-lemongrass",
+      "category": "taste-medallion",
+      "files": {
+        "webp": {
+          "path": "tastes/medallions/strawberry-lemongrass.webp",
+          "width": 180,
+          "height": 180
+        },
+        "png": {
+          "path": "tastes/medallions/strawberry-lemongrass.png",
+          "width": 180,
+          "height": 180
+        }
+      },
+      "altRu": "Клубника-лемонграсс — медальон вкуса",
+      "tasteMediaKey": "strawberry-lemongrass",
+      "cabinetRole": "favorite-circle"
+    },
+    {
+      "id": "taste-medallion-watermelon",
+      "category": "taste-medallion",
+      "files": {
+        "webp": {
+          "path": "tastes/medallions/watermelon.webp",
+          "width": 180,
+          "height": 180
+        },
+        "png": {
+          "path": "tastes/medallions/watermelon.png",
+          "width": 180,
+          "height": 180
+        }
+      },
+      "altRu": "Арбуз — медальон вкуса",
+      "tasteMediaKey": "watermelon",
+      "cabinetRole": "favorite-circle"
+    },
+    {
       "id": "cabinet-mock-preview",
       "category": "cabinet",
       "files": {
@@ -305,6 +571,108 @@
         }
       },
       "altRu": "Предпросмотр экрана подписки VIWA"
+    },
+    {
+      "id": "landing-water-droplets",
+      "category": "landing",
+      "files": {
+        "webp": {
+          "path": "landing/landing-water-droplets.webp",
+          "width": 540,
+          "height": 520
+        },
+        "png": {
+          "path": "landing/landing-water-droplets.png",
+          "width": 540,
+          "height": 520
+        }
+      },
+      "altRu": "Капли воды — макро"
+    },
+    {
+      "id": "landing-athlete-profile",
+      "category": "landing",
+      "files": {
+        "webp": {
+          "path": "landing/landing-athlete-profile.webp",
+          "width": 540,
+          "height": 520
+        },
+        "png": {
+          "path": "landing/landing-athlete-profile.png",
+          "width": 540,
+          "height": 520
+        }
+      },
+      "altRu": "Спортсмен — портрет"
+    },
+    {
+      "id": "landing-station-concrete",
+      "category": "landing",
+      "files": {
+        "webp": {
+          "path": "landing/landing-station-concrete.webp",
+          "width": 540,
+          "height": 520
+        },
+        "png": {
+          "path": "landing/landing-station-concrete.png",
+          "width": 540,
+          "height": 520
+        }
+      },
+      "altRu": "Умная станция VIWA на стене"
+    },
+    {
+      "id": "landing-three-bottles",
+      "category": "landing",
+      "files": {
+        "webp": {
+          "path": "landing/landing-three-bottles.webp",
+          "width": 540,
+          "height": 520
+        },
+        "png": {
+          "path": "landing/landing-three-bottles.png",
+          "width": 540,
+          "height": 520
+        }
+      },
+      "altRu": "Lab range — три бутылки VIWA"
+    },
+    {
+      "id": "landing-water-bubble",
+      "category": "landing",
+      "files": {
+        "webp": {
+          "path": "landing/landing-water-bubble.webp",
+          "width": 400,
+          "height": 480
+        },
+        "png": {
+          "path": "landing/landing-water-bubble.png",
+          "width": 400,
+          "height": 480
+        }
+      },
+      "altRu": "Пузыри воды — макро"
+    },
+    {
+      "id": "landing-station-product",
+      "category": "landing",
+      "files": {
+        "webp": {
+          "path": "landing/landing-station-product.webp",
+          "width": 600,
+          "height": 480
+        },
+        "png": {
+          "path": "landing/landing-station-product.png",
+          "width": 600,
+          "height": 480
+        }
+      },
+      "altRu": "Питьевая станция VIWA"
     },
     {
       "id": "logo-viwa-mark",
@@ -327,6 +695,42 @@
         }
       },
       "altRu": "VIWA"
+    },
+    {
+      "id": "logo-viwa-mark-hero",
+      "category": "logo",
+      "files": {
+        "webp": {
+          "path": "logo/logo-viwa-mark-hero.webp",
+          "width": 277,
+          "height": 243
+        },
+        "png": {
+          "path": "logo/logo-viwa-mark-hero.png",
+          "width": 277,
+          "height": 243
+        }
+      },
+      "altRu": "VIWA",
+      "cabinetRole": "hero-mark"
+    },
+    {
+      "id": "logo-viwa-mark-cabinet-header",
+      "category": "logo",
+      "files": {
+        "webp": {
+          "path": "logo/logo-viwa-mark-cabinet-header.webp",
+          "width": 67,
+          "height": 38
+        },
+        "png": {
+          "path": "logo/logo-viwa-mark-cabinet-header.png",
+          "width": 67,
+          "height": 38
+        }
+      },
+      "altRu": "VIWA",
+      "cabinetRole": "cabinet-header-mark"
     }
   ]
 }
