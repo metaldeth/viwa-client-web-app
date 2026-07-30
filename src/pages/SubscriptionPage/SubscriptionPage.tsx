@@ -6,6 +6,7 @@ import classNames from 'classnames';
 import { QRCodeSVG } from 'qrcode.react';
 import styles from './SubscriptionPage.module.scss';
 import BottomSheetModal from '../../components/BottomSheetModal';
+import SbpPaymentQr from '../../components/SbpPaymentQr';
 import CabinetHeader from '../../components/CabinetHeader';
 import MonthlyProgressCard from '../../components/MonthlyProgressCard';
 import QrPromoCard from '../../components/QrPromoCard';
@@ -254,11 +255,9 @@ const SubscriptionPage: FC = () => {
 
       {paymentUrl && (
         <div className={styles.paymentStage}>
-          <Text size="m" weight="medium" align="center">
-            {tSubscription('subscribeSbp')}
-          </Text>
-          <div className={styles.qrWhitePad}>
-            <QRCodeSVG value={paymentUrl} size={200} aria-label={tSubscription('subscribeSbp')} />
+          <p className={styles.paymentStageLabel}>{tSubscription('subscribeSbp')}</p>
+          <div className={styles.paymentQrPad}>
+            <SbpPaymentQr value={paymentUrl} ariaLabel={tSubscription('subscribeSbp')} />
           </div>
           <a href={paymentUrl} target="_blank" rel="noopener noreferrer" className={styles.payLink}>
             {tSubscription('subscribeOpenBank')}
@@ -301,13 +300,13 @@ const SubscriptionPage: FC = () => {
     </div>
   );
 
-  const renderScanModalHeader = () => (
+  const renderSheetCloseHeader = (onClose: () => void) => (
     <header className={styles.scanSheetHeader}>
       <button
         type="button"
         className={styles.scanSheetClose}
         aria-label="Закрыть"
-        onClick={() => setIsScanModalOpen(false)}
+        onClick={onClose}
       >
         <svg viewBox="0 0 20 20" aria-hidden="true">
           <path d="M5 5l10 10M15 5 5 15" />
@@ -315,6 +314,10 @@ const SubscriptionPage: FC = () => {
       </button>
     </header>
   );
+
+  const renderScanModalHeader = () => renderSheetCloseHeader(() => setIsScanModalOpen(false));
+
+  const renderSubscribeModalHeader = () => renderSheetCloseHeader(handleDescriptionModalClose);
 
   const renderScanModalBody = () => (
     <div className={styles.scanBody}>
@@ -359,10 +362,7 @@ const SubscriptionPage: FC = () => {
       <BottomSheetModal
         isOpen={isDescriptionModalOpen}
         className={styles.DescriptionSheetModal}
-        headerClassName={styles.subscribeModalHeader}
-        titleClassName={styles.subscribeModalTitle}
-        closeButtonClassName={styles.subscribeModalClose}
-        modalTitle={tSubscription('subscribeModalTitle')}
+        renderHeader={renderSubscribeModalHeader}
         onClose={handleDescriptionModalClose}
       >
         {renderDescriptionModalBody()}

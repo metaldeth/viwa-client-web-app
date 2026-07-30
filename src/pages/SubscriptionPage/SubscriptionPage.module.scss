@@ -56,19 +56,28 @@
   }
 }
 
-.qrWhitePad {
+.paymentQrPad {
   display: flex;
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
+  width: min(100%, 280px);
+  max-width: 100%;
+  aspect-ratio: 1;
+  margin: 0 auto;
+  padding: 16px;
   background: #ffffff;
   border-radius: 16px;
   border: 1px solid rgba(127, 90, 240, 0.35);
-}
 
-.qrWhitePad {
-  padding: 16px;
+  svg {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100%;
+    max-height: 100%;
+  }
 }
 
 .ScanSheetModal {
@@ -213,21 +222,6 @@
   box-shadow: 0 -18px 48px rgba(0, 0, 0, 0.42);
 }
 
-.subscribeModalHeader {
-  align-items: center;
-  margin-bottom: 8px;
-}
-
-.subscribeModalTitle {
-  font-size: 1.125rem !important;
-  line-height: 1.25;
-  letter-spacing: 0.01em;
-}
-
-.subscribeModalClose {
-  flex-shrink: 0;
-}
-
 .subscribeModalBody {
   display: flex;
   flex-direction: column;
@@ -297,9 +291,13 @@
 .tierCardBackground {
   position: absolute;
   inset: 0;
-  background-position: center right;
+  background-position: right 18%;
   background-size: cover;
   background-repeat: no-repeat;
+}
+
+.tierCardList > .tierCard:nth-child(2) .tierCardBackground {
+  background-position: right 20%;
 }
 
 .tierCardGradient {
@@ -387,6 +385,17 @@
   gap: 12px;
 }
 
+.paymentStageLabel {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: center;
+  color: rgba(245, 245, 245, 0.62);
+}
+
 .subscribeActions {
   display: flex;
   flex-direction: column;
@@ -397,6 +406,11 @@
 @media (max-width: 390px) {
   .DescriptionSheetModal {
     --bottom-sheet-padding: 10px 14px calc(14px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .paymentQrPad {
+    width: min(100%, calc(100vw - 72px));
+    padding: 12px;
   }
 
   .tierCardContent {
