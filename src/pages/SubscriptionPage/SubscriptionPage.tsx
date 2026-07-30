@@ -1,9 +1,9 @@
 ﻿import { FC, memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { Button } from '@asnefedov/uikit/Button';
-import HorizontalContainer from '../../components/HorizontalContainer';
-import VerticalContainer from '../../components/VerticalContainer';
 import { Text } from '@asnefedov/uikit/Text';
+import classNames from 'classnames';
+import { QRCodeSVG } from 'qrcode.react';
 import styles from './SubscriptionPage.module.scss';
 import BottomSheetModal from '../../components/BottomSheetModal';
 import CabinetHeader from '../../components/CabinetHeader';
@@ -14,11 +14,6 @@ import PlanSummaryCard from '../../components/PlanSummaryCard';
 import { useAppDispatch, useAppSelector } from '../../app/hooks/store';
 import { getCurrentClientProfileAction } from '../../state/loyalty/actions';
 import { selectClientProfile } from '../../state/loyalty/selectors';
-import { IconHeart } from '../../assets/icon/iconHeart';
-import { IconBrilliant } from '../../assets/icon/iconBrilliant';
-import { IconSparkles } from '../../assets/icon/iconSparkles';
-import { IconDoubleDrops } from '../../assets/icon/iconDoubleDrops';
-import { QRCodeSVG } from 'qrcode.react';
 import { api } from '../../app/api';
 import type { SubscriptionLevelDTO } from '../../types/subscriptionLevel';
 import { hasAuthTokens } from '../ValidationPage/helpers';
@@ -26,6 +21,7 @@ import { useClientSubscriptionWs } from '../../hooks/useClientSubscriptionWs';
 import { formatLitersFromMl, formatPriceRub, tSubscription } from '../../locale/subscriptionLocale';
 import { resolveMonthlyProgress } from '../../utils/monthlyProgress';
 import { resolvePlanSummaryDisplay } from '../../utils/planSummary';
+import { resolveTierCardBackground } from '../../utils/tierCardBackground';
 
 type PayPhase =
   | 'idle'
@@ -36,6 +32,8 @@ type PayPhase =
   | 'await_subscription'
   | 'done'
   | 'error';
+
+const PAYMENT_ACTIVE_PHASES: PayPhase[] = ['init', 'await_payment', 'await_subscription'];
 
 const LoyaltyQrCode = memo(function LoyaltyQrCode({
   value,
@@ -61,6 +59,10 @@ function tierVolumeMl(level: SubscriptionLevelDTO): number {
   return level.monthlyVolumeMl ?? level.dailyVolumeMl ?? 0;
 }
 
+function isPaymentFlowActive(payPhase: PayPhase, paymentUrl: string | null): boolean {
+  return Boolean(paymentUrl) || PAYMENT_ACTIVE_PHASES.includes(payPhase);
+}
+
 const SubscriptionPage: FC = () => {
   const dispatch = useAppDispatch();
   const { state: client, isReject } = useAppSelector(selectClientProfile());
@@ -71,19 +73,6 @@ const SubscriptionPage: FC = () => {
   const monthlyProgress = useMemo(() => resolveMonthlyProgress(client), [client]);
   const qrPayload = client?.qrPayload ?? '';
   const favoriteKeys = client?.favoriteTasteKeys ?? [];
-
-  const subscriptionBenefits = useMemo(
-    () => [
-      {
-        icon: <IconDoubleDrops className={styles.icon} />,
-        label: tSubscription('benefitVolume', { liters: '12–18' }),
-      },
-      { icon: <IconSparkles className={styles.icon} />, label: tSubscription('benefitVitamins') },
-      { icon: <IconBrilliant className={styles.icon} />, label: tSubscription('benefitMinerals') },
-      { icon: <IconHeart className={styles.icon} />, label: tSubscription('benefitSugarFree') },
-    ],
-    [],
-  );
 
   const [levels, setLevels] = useState<SubscriptionLevelDTO[]>([]);
   const [selectedLevelId, setSelectedLevelId] = useState<string | null>(null);
@@ -176,57 +165,95 @@ const SubscriptionPage: FC = () => {
     setPayPhase('ready');
   };
 
-  const selectedLevel = levels.find((l) => l.id === selectedLevelId);
-
-  const renderModalInfo = (icon: JSX.Element, label: string) => (
-    <HorizontalContainer space="m">
-      <HorizontalContainer className={styles.iconContainer}>{icon}</HorizontalContainer>
-      <Text size="m" weight="medium">
-        {label}
-      </Text>
-    </HorizontalContainer>
-  );
+  const showTariffSelection = !isPaymentFlowActive(payPhase, paymentUrl);
+  const isPayButtonDisabled =
+    !selectedLevelId ||
+    payPhase === 'init' ||
+    payPhase === 'await_payment' ||
+    payPhase === 'await_subscription' ||
+    payPhase === 'loading_levels';
 
   const renderDescriptionModalBody = () => (
-    <VerticalContainer space="l">
-      <VerticalContainer space="s">
-        {subscriptionBenefits.map((item) => renderModalInfo(item.icon, item.label))}
-      </VerticalContainer>
-
-      <VerticalContainer space="s">
-        <Text size="m" weight="semibold">
-          {tSubscription('planSelect')}
-        </Text>
-        {payPhase === 'loading_levels' && (
-          <Text size="m" view="secondary">
-            {tSubscription('planLoading')}
-          </Text>
-        )}
-        {levels.length === 0 && payPhase === 'ready' && (
-          <Text size="m" view="secondary">
-            {tSubscription('planEmpty')}
-          </Text>
-        )}
-        {levels.map((lvl) => (
-          <label key={lvl.id} className={styles.levelRow}>
-            <input
-              type="radio"
-              name="level"
-              checked={selectedLevelId === lvl.id}
-              onChange={() => setSelectedLevelId(lvl.id)}
-            />
-            <Text size="m" weight="medium">
-              {lvl.name} —{' '}
-              {tSubscription('planPerMonth', { price: formatPriceRub(lvl.priceKopecks) })}
-              {' · '}
-              {tSubscription('planVolume', { liters: formatLitersFromMl(tierVolumeMl(lvl)) })}
+    <div className={styles.subscribeModalBody}>
+      {showTariffSelection && (
+        <div className={styles.tierSelection}>
+          {payPhase !== 'loading_levels' && levels.length > 0 ? (
+            <Text size="s" view="secondary" className={styles.tierSelectionHint}>
+              {tSubscription('planSelect')}
             </Text>
-          </label>
-        ))}
-      </VerticalContainer>
+          ) : null}
+
+          {payPhase === 'loading_levels' && (
+            <Text size="m" view="secondary">
+              {tSubscription('planLoading')}
+            </Text>
+          )}
+
+          {levels.length === 0 && payPhase === 'ready' && (
+            <Text size="m" view="secondary">
+              {tSubscription('planEmpty')}
+            </Text>
+          )}
+
+          {payPhase === 'error' && payError && (
+            <Text size="m" view="alert">
+              {payError}
+            </Text>
+          )}
+
+          <div
+            className={styles.tierCardList}
+            role="radiogroup"
+            aria-label={tSubscription('planSelect')}
+          >
+            {levels.map((level, index) => {
+              const isSelected = selectedLevelId === level.id;
+
+              return (
+                <label
+                  key={level.id}
+                  className={classNames(styles.tierCard, isSelected && styles.tierCardSelected)}
+                >
+                  <input
+                    type="radio"
+                    name="subscription-tier"
+                    className={styles.tierCardInput}
+                    checked={isSelected}
+                    onChange={() => setSelectedLevelId(level.id)}
+                  />
+                  <span
+                    className={styles.tierCardBackground}
+                    style={{ backgroundImage: `url(${resolveTierCardBackground(index)})` }}
+                    aria-hidden="true"
+                  />
+                  <span className={styles.tierCardGradient} aria-hidden="true" />
+                  <span className={styles.tierCardContent}>
+                    <span className={styles.tierCardName}>{level.name}</span>
+                    <span className={styles.tierCardMeta}>
+                      {tSubscription('planVolume', {
+                        liters: formatLitersFromMl(tierVolumeMl(level)),
+                      })}
+                    </span>
+                    <span className={styles.tierCardPrice}>
+                      {tSubscription('planPerMonth', { price: formatPriceRub(level.priceKopecks) })}
+                    </span>
+                  </span>
+                  {isSelected ? (
+                    <span className={styles.tierCardCheck} aria-hidden="true">
+                      <svg viewBox="0 0 20 20">
+                        <path d="M5 10.5l3 3 7-7" />
+                      </svg>
+                    </span>
+                  ) : null}
+                </label>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {paymentUrl && (
-        <VerticalContainer space="m" align="center">
+        <div className={styles.paymentStage}>
           <Text size="m" weight="medium" align="center">
             {tSubscription('subscribeSbp')}
           </Text>
@@ -236,10 +263,10 @@ const SubscriptionPage: FC = () => {
           <a href={paymentUrl} target="_blank" rel="noopener noreferrer" className={styles.payLink}>
             {tSubscription('subscribeOpenBank')}
           </a>
-        </VerticalContainer>
+        </div>
       )}
 
-      <VerticalContainer space="2xs">
+      <div className={styles.subscribeActions}>
         <Button
           size="l"
           label={
@@ -247,13 +274,7 @@ const SubscriptionPage: FC = () => {
               ? tSubscription('subscribeWait')
               : tSubscription('subscribePay')
           }
-          disabled={
-            !selectedLevelId ||
-            payPhase === 'init' ||
-            payPhase === 'await_payment' ||
-            payPhase === 'await_subscription' ||
-            payPhase === 'loading_levels'
-          }
+          disabled={isPayButtonDisabled}
           onClick={() => void handlePurchase()}
         />
         {payPhase === 'await_payment' && (
@@ -276,14 +297,8 @@ const SubscriptionPage: FC = () => {
             {payError}
           </Text>
         )}
-        {selectedLevel && (
-          <Text size="s" weight="medium" align="center" view="secondary">
-            {selectedLevel.name},{' '}
-            {tSubscription('planPerMonth', { price: formatPriceRub(selectedLevel.priceKopecks) })}
-          </Text>
-        )}
-      </VerticalContainer>
-    </VerticalContainer>
+      </div>
+    </div>
   );
 
   const renderScanModalHeader = () => (
@@ -344,6 +359,9 @@ const SubscriptionPage: FC = () => {
       <BottomSheetModal
         isOpen={isDescriptionModalOpen}
         className={styles.DescriptionSheetModal}
+        headerClassName={styles.subscribeModalHeader}
+        titleClassName={styles.subscribeModalTitle}
+        closeButtonClassName={styles.subscribeModalClose}
         modalTitle={tSubscription('subscribeModalTitle')}
         onClose={handleDescriptionModalClose}
       >

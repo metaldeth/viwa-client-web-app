@@ -1,5 +1,6 @@
 .PlanSummaryCard {
   position: relative;
+  isolation: isolate;
   display: block;
   width: 100%;
   min-height: 180px;

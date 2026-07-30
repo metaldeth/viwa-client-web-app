@@ -51,8 +51,9 @@ const BottomSheetModal: FC<BottomSheetModalProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={handleClose}
-      rootClassName={rootClassName}
+      rootClassName={classNames(styles.modalRoot, rootClassName)}
       className={classNames(styles.BottomSheetModal, className)}
+      style={{ zIndex: 1000 }}
     >
       <VerticalContainer>
         {renderHeader ? renderHeader() : renderDefaultHeader()}

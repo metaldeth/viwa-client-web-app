@@ -1,4 +1,10 @@
 $BottomSheetModalMaxHeight: 594px;
+$BottomSheetModalZIndex: 1000;
+
+.modalRoot {
+  padding: 0 !important;
+  z-index: $BottomSheetModalZIndex;
+}
 
 .BottomSheetModal {
   background: var(--bottom-sheet-bg, #1a1a28);
