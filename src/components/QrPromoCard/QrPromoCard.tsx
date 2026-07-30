@@ -1,7 +1,6 @@
 import { FC, memo } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { tSubscription } from '../../locale/subscriptionLocale';
-import { getLogoImagePaths } from '../../utils/viwaAssets';
 import styles from './QrPromoCard.module.scss';
 
 export type QrPromoCardProps = {
@@ -9,10 +8,8 @@ export type QrPromoCardProps = {
   onOpen: () => void;
 };
 
-/** White QR promo card opening the loyalty scan modal. */
+/** Light QR promo card opening the loyalty scan modal. */
 const QrPromoCard: FC<QrPromoCardProps> = ({ qrPayload, onOpen }) => {
-  const logo = getLogoImagePaths();
-
   return (
     <button
       type="button"
@@ -30,37 +27,14 @@ const QrPromoCard: FC<QrPromoCardProps> = ({ qrPayload, onOpen }) => {
       </div>
 
       <div className={styles.qrWrap} aria-hidden="true">
-        {qrPayload ? (
-          <LoyaltyQrPreview value={qrPayload} logoSrc={logo.png} />
-        ) : (
-          <span className={styles.qrPlaceholder} />
-        )}
+        {qrPayload ? <LoyaltyQrPreview value={qrPayload} /> : <span className={styles.qrPlaceholder} />}
       </div>
     </button>
   );
 };
 
-const LoyaltyQrPreview = memo(function LoyaltyQrPreview({
-  value,
-  logoSrc,
-}: {
-  value: string;
-  logoSrc: string;
-}) {
-  return (
-    <QRCodeSVG
-      value={value}
-      size={93}
-      level="H"
-      includeMargin={false}
-      imageSettings={{
-        src: logoSrc,
-        height: 17,
-        width: 17,
-        excavate: true,
-      }}
-    />
-  );
+const LoyaltyQrPreview = memo(function LoyaltyQrPreview({ value }: { value: string }) {
+  return <QRCodeSVG value={value} size={93} level="M" includeMargin={false} />;
 });
 
 export default QrPromoCard;

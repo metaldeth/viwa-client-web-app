@@ -27,7 +27,6 @@ import { useClientSubscriptionWs } from '../../hooks/useClientSubscriptionWs';
 import { formatLitersFromMl, formatPriceRub, tSubscription } from '../../locale/subscriptionLocale';
 import { resolveMonthlyProgress, isTrialProfile } from '../../utils/monthlyProgress';
 import { resolvePlanSummaryDisplay } from '../../utils/planSummary';
-import { getLogoImagePaths } from '../../utils/viwaAssets';
 import {
   isActiveSubscriptionProfile,
   isExpiredSubscriptionProfile,
@@ -52,26 +51,13 @@ const LoyaltyQrCode = memo(function LoyaltyQrCode({
   size: number;
   label: string;
 }) {
-  const logo = getLogoImagePaths();
-
   if (!value) {
     return null;
   }
 
   return (
     <div role="img" aria-label={label}>
-      <QRCodeSVG
-        value={value}
-        size={size}
-        level="H"
-        aria-hidden="true"
-        imageSettings={{
-          src: logo.png,
-          height: Math.round(size * 0.16),
-          width: Math.round(size * 0.16),
-          excavate: true,
-        }}
-      />
+      <QRCodeSVG value={value} size={size} level="M" aria-hidden="true" />
     </div>
   );
 });
