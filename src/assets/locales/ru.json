@@ -3,6 +3,8 @@
     "subscription.progressTitle": "Месячный прогресс",
     "subscription.progressCardTitle": "ТВОЙ ПРОГРЕСС",
     "subscription.progressMetricUsed": "Использовано {{used}} миллилитров",
+    "subscription.progressMetricRemaining": "Осталось {{remaining}} миллилитров",
+    "subscription.progressOfLimit": "ИЗ {{limit}} МЛ",
     "subscription.progressTrial": "Пробный абонемент активен",
     "subscription.progressActive": "Абонемент «{{tier}}» до {{date}}",
     "subscription.progressInactive": "Абонемент не активен",

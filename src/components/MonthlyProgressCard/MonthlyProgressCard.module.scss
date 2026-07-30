@@ -5,28 +5,11 @@
   background: var(--viwa-cabinet-card-bg, #0b0b0b);
   border: 1px solid var(--viwa-cabinet-card-border, rgba(127, 90, 240, 0.2));
   box-shadow: none;
-  min-height: 154px;
   box-sizing: border-box;
 }
 
-.content {
-  display: flex;
-  align-items: stretch;
-  gap: 8px;
-  min-height: 0;
-}
-
-.main {
-  position: relative;
-  left: -1px;
-  flex: 1;
-  min-width: 0;
-}
-
 .title {
-  position: relative;
-  top: 3px;
-  margin: 0 0 2px;
+  margin: 0 0 4px;
   font-size: 0.6875rem;
   font-weight: 600;
   letter-spacing: 0.12em;
@@ -34,82 +17,100 @@
   color: var(--viwa-muted, #a3a3a3);
 }
 
-.metric {
+.gaugeWrap {
   position: relative;
-  top: 3px;
+  width: 100%;
+  max-width: 280px;
+  margin: 0 auto;
+}
+
+.gaugeSvg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.gaugeTrack,
+.gaugeFill {
+  fill: none;
+  stroke-linecap: round;
+}
+
+.gaugeTrack {
+  stroke: rgba(255, 255, 255, 0.1);
+}
+
+.gaugeFill {
+  transition: stroke-dasharray 0.25s ease;
+}
+
+.center {
+  position: absolute;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%);
   display: flex;
-  align-items: baseline;
-  gap: 0;
-  margin: 0 0 14px;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  pointer-events: none;
+}
+
+.metric {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  line-height: 1;
 }
 
 .metricValue {
   font-family: var(--viwa-font-condensed, inherit);
-  font-size: clamp(2.75rem, 17.5vw, 3.75rem);
+  font-size: clamp(2.25rem, 14vw, 3rem);
   font-weight: 500;
-  letter-spacing: 0;
-  line-height: 1;
+  letter-spacing: -0.02em;
   color: var(--viwa-text, #f5f5f5);
-  transform: scaleX(0.92);
-  transform-origin: left center;
 }
 
 .metricUnit {
-  position: relative;
-  top: -5px;
+  margin-top: 2px;
   font-family: var(--viwa-font-condensed, inherit);
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   font-weight: 500;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.08em;
   color: var(--viwa-muted, #a3a3a3);
 }
 
-.progressTrack {
-  position: relative;
-  top: 6px;
-  width: calc(100% + 6px);
-  height: 8px;
-  margin-top: 6px;
-  border-radius: 999px;
-  background: #2a2a2a;
-  overflow: hidden;
+.ofLimit {
+  margin: 6px 0 0;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--viwa-muted, #a3a3a3);
 }
 
-.progressFill {
-  display: block;
-  height: 100%;
-  border-radius: inherit;
-  background: var(--viwa-accent, #7f5af0);
-  transition: width 0.2s ease;
-}
-
-.limits {
-  position: relative;
-  top: 6px;
-  width: calc(100% + 6px);
+.scale {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
   justify-content: space-between;
-  margin-top: 0.375rem;
+  padding: 0 4px;
   font-size: 0.6875rem;
   font-weight: 500;
   color: var(--viwa-muted, #a3a3a3);
 }
 
-.bottleWrap {
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
-  transform: translate(-1px, 2px);
-}
-
-.bottle {
-  width: 42px;
-  height: 83px;
-  color: rgba(245, 245, 245, 0.72);
+.scaleMin,
+.scaleMax {
+  transform: translateY(-2px);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .progressFill {
+  .gaugeFill {
     transition: none;
   }
 }

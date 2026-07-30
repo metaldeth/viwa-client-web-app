@@ -5,6 +5,8 @@ export type SubscriptionLocaleKey =
   | 'progressTitle'
   | 'progressCardTitle'
   | 'progressMetricUsed'
+  | 'progressMetricRemaining'
+  | 'progressOfLimit'
   | 'progressTrial'
   | 'progressActive'
   | 'progressInactive'

@@ -3,6 +3,8 @@
     "subscription.progressTitle": "Monthly progress",
     "subscription.progressCardTitle": "YOUR PROGRESS",
     "subscription.progressMetricUsed": "Used {{used}} milliliters",
+    "subscription.progressMetricRemaining": "{{remaining}} milliliters remaining",
+    "subscription.progressOfLimit": "OF {{limit}} ML",
     "subscription.progressTrial": "Trial subscription active",
     "subscription.progressActive": "Plan «{{tier}}» until {{date}}",
     "subscription.progressInactive": "Subscription inactive",

@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useId, useMemo } from 'react';
 import { tSubscription } from '../../locale/subscriptionLocale';
 import type { MonthlyProgress } from '../../utils/monthlyProgress';
 import styles from './MonthlyProgressCard.module.scss';
@@ -7,66 +7,89 @@ export type MonthlyProgressCardProps = {
   progress: MonthlyProgress;
 };
 
+const GAUGE_WIDTH = 280;
+const GAUGE_HEIGHT = 148;
+const STROKE_WIDTH = 14;
+const RADIUS = 100;
+const CENTER_X = GAUGE_WIDTH / 2;
+const CENTER_Y = GAUGE_HEIGHT - 18;
+const ARC_START_X = CENTER_X - RADIUS;
+const ARC_END_X = CENTER_X + RADIUS;
+const ARC_Y = CENTER_Y;
+
+const ARC_PATH = `M ${ARC_START_X} ${ARC_Y} A ${RADIUS} ${RADIUS} 0 0 1 ${ARC_END_X} ${ARC_Y}`;
+const ARC_LENGTH = Math.PI * RADIUS;
+
 const MonthlyProgressCard: FC<MonthlyProgressCardProps> = ({ progress }) => {
-  const usedLabel = tSubscription('progressMetricUsed', { used: progress.usedMl });
+  const gradientId = useId();
+
+  const { remainingMl, limitMl, fillLength, remainingLabel } = useMemo(() => {
+    const safeLimit = Math.max(progress.limitMl, 0);
+    const safeRemaining = Math.max(0, Math.min(progress.remainingMl, safeLimit));
+    const ratio = safeLimit > 0 ? safeRemaining / safeLimit : 0;
+
+    return {
+      remainingMl: Math.round(safeRemaining),
+      limitMl: Math.round(safeLimit),
+      fillLength: ratio * ARC_LENGTH,
+      remainingLabel: tSubscription('progressMetricRemaining', { remaining: Math.round(safeRemaining) }),
+    };
+  }, [progress.limitMl, progress.remainingMl]);
 
   return (
     <section className={styles.MonthlyProgressCard} aria-labelledby="monthly-progress-title">
-      <div className={styles.content}>
-        <div className={styles.main}>
-          <h2 id="monthly-progress-title" className={styles.title}>
-            {tSubscription('progressCardTitle')}
-          </h2>
+      <h2 id="monthly-progress-title" className={styles.title}>
+        {tSubscription('progressCardTitle')}
+      </h2>
 
-          <p className={styles.metric} aria-label={usedLabel}>
-            <span className={styles.metricValue}>{progress.usedMl}</span>
+      <div
+        className={styles.gaugeWrap}
+        role="progressbar"
+        aria-valuemin={0}
+        aria-valuemax={limitMl}
+        aria-valuenow={remainingMl}
+        aria-label={tSubscription('progressRemaining', { remaining: remainingMl })}
+      >
+        <svg
+          className={styles.gaugeSvg}
+          viewBox={`0 0 ${GAUGE_WIDTH} ${GAUGE_HEIGHT}`}
+          aria-hidden="true"
+        >
+          <defs>
+            <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#7f5af0" />
+              <stop offset="50%" stopColor="#4361ee" />
+              <stop offset="100%" stopColor="#2dd4bf" />
+            </linearGradient>
+          </defs>
+
+          <path
+            className={styles.gaugeTrack}
+            d={ARC_PATH}
+            strokeWidth={STROKE_WIDTH}
+            pathLength={ARC_LENGTH}
+          />
+          <path
+            className={styles.gaugeFill}
+            d={ARC_PATH}
+            strokeWidth={STROKE_WIDTH}
+            pathLength={ARC_LENGTH}
+            stroke={`url(#${gradientId})`}
+            strokeDasharray={`${fillLength} ${ARC_LENGTH}`}
+          />
+        </svg>
+
+        <div className={styles.center} aria-hidden="true">
+          <p className={styles.metric} aria-label={remainingLabel}>
+            <span className={styles.metricValue}>{remainingMl}</span>
             <span className={styles.metricUnit}>{tSubscription('volumeUnit')}</span>
           </p>
-
-          <div
-            className={styles.progressTrack}
-            role="progressbar"
-            aria-valuemin={0}
-            aria-valuemax={progress.limitMl}
-            aria-valuenow={progress.usedMl}
-            aria-label={tSubscription('progressUsed', {
-              used: progress.usedMl,
-              limit: progress.limitMl,
-            })}
-          >
-            <span className={styles.progressFill} style={{ width: `${progress.percent}%` }} />
-          </div>
-
-          <div className={styles.limits} aria-hidden="true">
-            <span>0</span>
-            <span>{progress.limitMl}</span>
-          </div>
+          <p className={styles.ofLimit}>{tSubscription('progressOfLimit', { limit: limitMl })}</p>
         </div>
 
-        <div className={styles.bottleWrap} aria-hidden="true">
-          <svg className={styles.bottle} viewBox="0 0 48 96" fill="none">
-            <rect
-              x="14"
-              y="4"
-              width="20"
-              height="8"
-              rx="2"
-              stroke="currentColor"
-              strokeWidth="1.5"
-            />
-            <path
-              d="M12 14h24v68c0 3.3-2.7 6-6 6H18c-3.3 0-6-2.7-6-6V14Z"
-              stroke="currentColor"
-              strokeWidth="1.5"
-            />
-            <path
-              d="M16 34h16M16 48h16M16 62h10"
-              stroke="currentColor"
-              strokeWidth="1.25"
-              strokeLinecap="round"
-              opacity="0.55"
-            />
-          </svg>
+        <div className={styles.scale} aria-hidden="true">
+          <span className={styles.scaleMin}>0</span>
+          <span className={styles.scaleMax}>{limitMl}</span>
         </div>
       </div>
     </section>
