@@ -1,10 +1,14 @@
 ﻿import { AxiosCoreApi } from './axiosCore';
+import {
+  clearAuthTokens,
+  getStoredRefreshToken,
+  saveAccessToken,
+  saveAuthTokens,
+} from './authStorage';
 import LoyaltyModule from './modules/loyalty';
 import AuthModule from './modules/auth';
 import BillingModule from './modules/billing';
 import PublicModule from './modules/public';
-import { ACCESS_TOKEN_STORAGE_NAME, REFRESH_TOKEN_STORAGE_NAME } from '../../consts/env/storage';
-import { ClientDataType } from '../../types/enums/clientDataType';
 
 const SNACK_API_BASE_URL = import.meta.env.VITE_APP_SNACK_API_URL ?? 'http://localhost:4000';
 
@@ -28,29 +32,21 @@ export class Api {
 
   clearTokens(): void {
     this.request.accessToken = null;
-    localStorage.removeItem(ACCESS_TOKEN_STORAGE_NAME);
-    localStorage.removeItem(REFRESH_TOKEN_STORAGE_NAME);
-    localStorage.removeItem(ClientDataType.CLIENT_TOKEN);
+    clearAuthTokens();
   }
 
   saveTokens(accessToken: string, refreshToken: string, clientId?: string): void {
-    localStorage.setItem(ACCESS_TOKEN_STORAGE_NAME, accessToken);
-    localStorage.setItem(REFRESH_TOKEN_STORAGE_NAME, refreshToken);
-
-    if (clientId) {
-      localStorage.setItem(ClientDataType.CLIENT_TOKEN, clientId);
-    }
-
+    saveAuthTokens(accessToken, refreshToken, clientId);
     this.request.accessToken = accessToken;
   }
 
   saveToken(token: string): void {
-    localStorage.setItem(ACCESS_TOKEN_STORAGE_NAME, token);
+    saveAccessToken(token);
     this.request.accessToken = token;
   }
 
   getRefreshToken(): string | null {
-    return localStorage.getItem(REFRESH_TOKEN_STORAGE_NAME);
+    return getStoredRefreshToken();
   }
 }
 

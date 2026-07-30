@@ -1,11 +1,17 @@
 ﻿import axios, {
+  AxiosError,
   AxiosInstance,
   AxiosResponse,
   AxiosRequestConfig,
   InternalAxiosRequestConfig,
 } from 'axios';
-import { api } from './index';
-import { ACCESS_TOKEN_STORAGE_NAME, REFRESH_TOKEN_STORAGE_NAME } from '../../consts/env/storage';
+import {
+  clearAuthTokens,
+  getStoredAccessToken,
+  getStoredRefreshToken,
+  saveAuthTokens,
+} from './authStorage';
+import { ACCESS_TOKEN_STORAGE_NAME } from '../../consts/env/storage';
 import { viwaTelemetryApiUrl } from '../../consts';
 import { redirectToClientAuth } from '../../pages/ValidationPage/helpers';
 
@@ -20,17 +26,57 @@ export type AxiosRequestConfigWithAuth = AxiosRequestConfig & {
   _retry?: boolean;
 };
 
+type RefreshOutcome =
+  | { status: 'success'; accessToken: string }
+  | { status: 'no_refresh_token' }
+  | { status: 'transient_failure' }
+  | { status: 'definitive_failure' };
+
+export function isTransientRefreshError(error: unknown): boolean {
+  if (!axios.isAxiosError(error)) {
+    return true;
+  }
+
+  const axiosError = error as AxiosError;
+  const status = axiosError.response?.status;
+
+  if (status === undefined) {
+    return true;
+  }
+
+  if (status === 429 || status >= 500) {
+    return true;
+  }
+
+  if (axiosError.code === 'ERR_NETWORK' || axiosError.code === 'ECONNABORTED') {
+    return true;
+  }
+
+  return false;
+}
+
 export class AxiosCoreApi {
   private readonly _apiConfig: AxiosRequestConfig;
   private _axiosInstance: AxiosInstance;
   private _accessToken: string | null = null;
-  private _refreshPromise: Promise<string | null> | null = null;
+  private _refreshPromise: Promise<RefreshOutcome> | null = null;
+  private readonly _handleStorageEvent: (event: StorageEvent) => void;
 
   constructor(apiConfig?: AxiosRequestConfig) {
     this._apiConfig = apiConfig || {};
     this._axiosInstance = axios.create(apiConfig);
 
-    this._accessToken = localStorage.getItem(ACCESS_TOKEN_STORAGE_NAME);
+    this._accessToken = getStoredAccessToken();
+
+    this._handleStorageEvent = (event: StorageEvent) => {
+      if (event.key === ACCESS_TOKEN_STORAGE_NAME) {
+        this._accessToken = event.newValue;
+      }
+    };
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('storage', this._handleStorageEvent);
+    }
 
     this.extractData = this.extractData.bind(this);
 
@@ -67,23 +113,17 @@ export class AxiosCoreApi {
         ) {
           originalConfig._retry = true;
 
-          try {
-            const newAccessToken = await this.refreshAccessToken();
+          const refreshOutcome = await this.refreshAccessToken();
 
-            if (newAccessToken) {
-              originalConfig.headers = originalConfig.headers || {};
-              originalConfig.headers.Authorization = `Bearer ${newAccessToken}`;
-              return this._axiosInstance.request(originalConfig);
-            }
-          } catch {
-            // fall through to clear tokens
+          if (refreshOutcome.status === 'success') {
+            originalConfig.headers = originalConfig.headers || {};
+            originalConfig.headers.Authorization = `Bearer ${refreshOutcome.accessToken}`;
+            return this._axiosInstance.request(originalConfig);
           }
-        }
 
-        if (status === 401) {
-          api.clearTokens();
-          this._accessToken = null;
-          redirectToClientAuth();
+          if (refreshOutcome.status === 'definitive_failure') {
+            this.clearSessionAndRedirect();
+          }
         }
 
         return Promise.reject({
@@ -97,47 +137,75 @@ export class AxiosCoreApi {
     );
   }
 
-  private async refreshAccessToken(): Promise<string | null> {
+  private clearSessionAndRedirect(): void {
+    clearAuthTokens();
+    this._accessToken = null;
+    redirectToClientAuth();
+  }
+
+  private async refreshAccessToken(): Promise<RefreshOutcome> {
     if (this._refreshPromise) {
       return this._refreshPromise;
     }
 
-    this._refreshPromise = (async () => {
-      const refreshToken = localStorage.getItem(REFRESH_TOKEN_STORAGE_NAME);
+    this._refreshPromise = this.performRefresh(false);
 
-      if (!refreshToken) {
-        return null;
+    try {
+      return await this._refreshPromise;
+    } finally {
+      this._refreshPromise = null;
+    }
+  }
+
+  private async performRefresh(isCrossTabRetry: boolean): Promise<RefreshOutcome> {
+    const refreshToken = getStoredRefreshToken();
+
+    if (!refreshToken) {
+      return { status: 'no_refresh_token' };
+    }
+
+    const attemptedRefreshToken = refreshToken;
+
+    try {
+      const response = await axios.post<{
+        accessToken: string;
+        refreshToken: string;
+        expiresIn: number;
+      }>(
+        `${viwaTelemetryApiUrl}/client/auth/refresh`,
+        { refreshToken },
+        { headers: { 'Content-Type': 'application/json' } },
+      );
+
+      const { accessToken, refreshToken: nextRefreshToken } = response.data;
+
+      saveAuthTokens(accessToken, nextRefreshToken);
+      this._accessToken = accessToken;
+
+      return { status: 'success', accessToken };
+    } catch (error) {
+      if (isTransientRefreshError(error)) {
+        return { status: 'transient_failure' };
       }
 
-      try {
-        const response = await axios.post<{
-          accessToken: string;
-          refreshToken: string;
-          expiresIn: number;
-        }>(
-          `${viwaTelemetryApiUrl}/client/auth/refresh`,
-          { refreshToken },
-          { headers: { 'Content-Type': 'application/json' } },
-        );
+      const status = axios.isAxiosError(error) ? error.response?.status : undefined;
 
-        const { accessToken, refreshToken: nextRefreshToken } = response.data;
+      if (status === 401 || status === 403) {
+        const currentRefreshToken = getStoredRefreshToken();
 
-        localStorage.setItem(ACCESS_TOKEN_STORAGE_NAME, accessToken);
-        localStorage.setItem(REFRESH_TOKEN_STORAGE_NAME, nextRefreshToken);
-        this._accessToken = accessToken;
-        api.saveToken(accessToken);
+        if (
+          !isCrossTabRetry &&
+          currentRefreshToken &&
+          currentRefreshToken !== attemptedRefreshToken
+        ) {
+          return this.performRefresh(true);
+        }
 
-        return accessToken;
-      } catch {
-        api.clearTokens();
-        this._accessToken = null;
-        return null;
-      } finally {
-        this._refreshPromise = null;
+        return { status: 'definitive_failure' };
       }
-    })();
 
-    return this._refreshPromise;
+      return { status: 'transient_failure' };
+    }
   }
 
   public get accessToken() {

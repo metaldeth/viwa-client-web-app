@@ -1,4 +1,4 @@
-﻿import { FC, memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { FC, memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { Button } from '@asnefedov/uikit/Button';
 import { Text } from '@asnefedov/uikit/Text';

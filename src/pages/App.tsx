@@ -79,9 +79,23 @@ export const App: FC = () => {
             />
 
             <Route path={validAddress} element={<ValidationPage validAddress={validAddress} />}>
-              <Route path="auth" element={<AuthPage />} />
+              <Route
+                path="auth"
+                element={
+                  <ReturningAuthGuard>
+                    <AuthPage />
+                  </ReturningAuthGuard>
+                }
+              />
 
-              <Route path="auth/sms/:time/:phone" element={<SmsPage />} />
+              <Route
+                path="auth/sms/:time/:phone"
+                element={
+                  <ReturningAuthGuard>
+                    <SmsPage />
+                  </ReturningAuthGuard>
+                }
+              />
 
               <Route path="home" element={<SubscriptionPage />} />
             </Route>

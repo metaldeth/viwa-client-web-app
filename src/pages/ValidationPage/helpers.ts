@@ -86,12 +86,15 @@ export const redirectToClientAuth = (): void => {
   window.location.replace(getReturningAuthPath());
 };
 
-export const hasAuthTokens = () => {
-  const accessToken = localStorage.getItem(ACCESS_TOKEN_STORAGE_NAME);
+export const hasAuthTokens = (): boolean => {
   const refreshToken = localStorage.getItem(REFRESH_TOKEN_STORAGE_NAME);
-  const clientId = localStorage.getItem(ClientDataType.CLIENT_TOKEN);
 
-  return Boolean(accessToken && refreshToken && clientId);
+  if (refreshToken) {
+    return true;
+  }
+
+  const accessToken = localStorage.getItem(ACCESS_TOKEN_STORAGE_NAME);
+  return Boolean(accessToken);
 };
 
 export const clearClientAuthStorage = () => {
