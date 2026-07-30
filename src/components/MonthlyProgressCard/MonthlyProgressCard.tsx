@@ -41,7 +41,8 @@ function polar(cx: number, cy: number, r: number, deg: number): { x: number; y: 
 function buildHorseshoePath(cx: number, cy: number, r: number): string {
   const start = polar(cx, cy, r, START_DEG);
   const end = polar(cx, cy, r, END_DEG);
-  return `M ${start.x.toFixed(2)} ${start.y.toFixed(2)} A ${r} ${r} 0 1 0 ${end.x.toFixed(2)} ${end.y.toFixed(2)}`;
+  // large-arc=1, sweep=1 (clockwise in SVG) → 270° over the TOP (opening at bottom)
+  return `M ${start.x.toFixed(2)} ${start.y.toFixed(2)} A ${r} ${r} 0 1 1 ${end.x.toFixed(2)} ${end.y.toFixed(2)}`;
 }
 
 const ARC_PATH = buildHorseshoePath(CENTER_X, CENTER_Y, RADIUS);

@@ -6,6 +6,7 @@
   border: 1px solid var(--viwa-cabinet-card-border, rgba(127, 90, 240, 0.2));
   box-shadow: none;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 .title {
@@ -28,7 +29,7 @@
   display: block;
   width: 100%;
   height: auto;
-  overflow: visible;
+  overflow: hidden;
 }
 
 .tickRing {
