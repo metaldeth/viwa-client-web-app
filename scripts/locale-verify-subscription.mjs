@@ -78,6 +78,7 @@ const REQUIRED_KEYS = [
   'subscription.volumeUnit',
   'subscription.cabinetTitle',
   'subscription.cabinetMenuAria',
+  'subscription.cabinetMenuLogOut',
   'subscription.cabinetNotificationsDecorative',
 ];
 

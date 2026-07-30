@@ -66,7 +66,8 @@
     "subscription.brand": "VIWA",
     "subscription.volumeUnit": "МЛ",
     "subscription.cabinetTitle": "КАБИНЕТ",
-    "subscription.cabinetMenuAria": "Меню кабинета (скоро)",
+    "subscription.cabinetMenuAria": "Меню кабинета",
+    "subscription.cabinetMenuLogOut": "Выйти",
     "subscription.cabinetNotificationsDecorative": "Уведомления: декоративный индикатор, функция пока недоступна"
   }
 }

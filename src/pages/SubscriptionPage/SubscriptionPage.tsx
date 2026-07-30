@@ -6,7 +6,6 @@ import VerticalContainer from '../../components/VerticalContainer';
 import { Text } from '@asnefedov/uikit/Text';
 import styles from './SubscriptionPage.module.scss';
 import BottomSheetModal from '../../components/BottomSheetModal';
-import BottomNav from '../../components/BottomNav';
 import CabinetHeader from '../../components/CabinetHeader';
 import MonthlyProgressCard from '../../components/MonthlyProgressCard';
 import QrPromoCard from '../../components/QrPromoCard';
@@ -360,8 +359,6 @@ const SubscriptionPage: FC = () => {
           onOpen={() => openSubscribeModal(planSummary?.levelId)}
         />
       </main>
-
-      <BottomNav />
 
       <BottomSheetModal
         isOpen={isScanModalOpen}

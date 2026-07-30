@@ -69,6 +69,7 @@ export type SubscriptionLocaleKey =
   | 'volumeUnit'
   | 'cabinetTitle'
   | 'cabinetMenuAria'
+  | 'cabinetMenuLogOut'
   | 'cabinetNotificationsDecorative';
 
 type LocaleCatalog = Record<SubscriptionLocaleKey, string>;

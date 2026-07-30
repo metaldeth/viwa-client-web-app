@@ -24,7 +24,7 @@
   --viwa-cabinet-header-pad-left: var(--viwa-cabinet-main-pad-x, 16px);
   --viwa-cabinet-header-pad-right: var(--viwa-cabinet-main-pad-x, 16px);
   --viwa-cabinet-main-pad-top: 10px;
-  --viwa-cabinet-main-pad-bottom: 4px;
+  --viwa-cabinet-main-pad-bottom: 16px;
 }
 
 .main {
@@ -33,8 +33,9 @@
   flex: 1;
   gap: var(--viwa-cabinet-gap);
   padding: var(--viwa-cabinet-main-pad-top) var(--viwa-cabinet-main-pad-right)
-    var(--viwa-cabinet-main-pad-bottom) var(--viwa-cabinet-main-pad-left);
-  scroll-padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+    calc(var(--viwa-cabinet-main-pad-bottom) + env(safe-area-inset-bottom, 0px))
+    var(--viwa-cabinet-main-pad-left);
+  scroll-padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 @media (max-width: 360px) {
