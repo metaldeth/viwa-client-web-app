@@ -132,6 +132,18 @@
   color: var(--viwa-muted, #a3a3a3);
 }
 
+.validityLine {
+  margin: 2px 0 0;
+  padding-top: 2px;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  line-height: 1.3;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--viwa-muted, #a3a3a3);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .gaugeRemaining,
   .gaugeGoal {

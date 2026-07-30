@@ -15,6 +15,7 @@ describe('MonthlyProgressCard', () => {
           percent: 30,
           isTrial: false,
         }}
+        subscriptionEndsAt="2026-08-15T00:00:00.000Z"
       />,
     );
 
@@ -22,6 +23,7 @@ describe('MonthlyProgressCard', () => {
     expect(screen.getByText('700')).toBeTruthy();
     expect(screen.queryByText('300')).toBeNull();
     expect(screen.getByText('ИЗ 1000 МЛ')).toBeTruthy();
+    expect(screen.getByText(/Действует до/i)).toBeTruthy();
     expect(screen.queryByText(/сегодня/i)).toBeNull();
 
     const progressbar = screen.getByRole('progressbar');
@@ -32,5 +34,23 @@ describe('MonthlyProgressCard', () => {
     const paths = Array.from(container.querySelectorAll('path'));
     expect(paths.length).toBeGreaterThanOrEqual(3);
     expect(paths.some((p) => p.getAttribute('stroke') === '#A6FFE0')).toBe(true);
+  });
+
+  it('shows trial status when plan has no end date', () => {
+    render(
+      <MonthlyProgressCard
+        progress={{
+          usedMl: 0,
+          limitMl: 1000,
+          remainingMl: 1000,
+          percent: 0,
+          isTrial: true,
+        }}
+        subscriptionEndsAt={null}
+      />,
+    );
+
+    expect(screen.getByText('Пробный абонемент активен')).toBeTruthy();
+    expect(screen.queryByText(/Действует до/i)).toBeNull();
   });
 });

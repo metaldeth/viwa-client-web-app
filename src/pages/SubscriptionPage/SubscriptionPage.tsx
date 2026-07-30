@@ -318,12 +318,16 @@ const SubscriptionPage: FC = () => {
       <CabinetHeader />
 
       <main className={styles.main}>
-        <MonthlyProgressCard progress={monthlyProgress} />
+        <MonthlyProgressCard
+          progress={monthlyProgress}
+          subscriptionEndsAt={client?.subscriptionEndsAt ?? null}
+        />
         <QrPromoCard qrPayload={qrPayload} onOpen={() => setIsScanModalOpen(true)} />
         <FavoriteTastesRow favoriteKeys={favoriteKeys} />
         <PlanSummaryCard
           plan={planSummary}
           isLoading={payPhase === 'loading_levels'}
+          isTrial={monthlyProgress.isTrial}
           onOpen={() => openSubscribeModal(planSummary?.levelId)}
         />
       </main>

@@ -1,10 +1,13 @@
 import { FC, useId, useMemo } from 'react';
+import { formatDateDDMMYYYY } from '../../helpers/transformDateDDMMYYY';
 import { tSubscription } from '../../locale/subscriptionLocale';
 import type { MonthlyProgress } from '../../utils/monthlyProgress';
 import styles from './MonthlyProgressCard.module.scss';
 
 export type MonthlyProgressCardProps = {
   progress: MonthlyProgress;
+  /** ISO end date of the current plan; null for trial / no plan. */
+  subscriptionEndsAt?: string | null;
 };
 
 /** Horseshoe gauge: ~270° arc with opening at the bottom (not a semicircle). */
@@ -74,7 +77,10 @@ const TICKS = buildTicks();
 const LABEL_0 = polar(CENTER_X, CENTER_Y, TICK_OUTER + 14, START_DEG);
 const LABEL_MAX = polar(CENTER_X, CENTER_Y, TICK_OUTER + 14, END_DEG);
 
-const MonthlyProgressCard: FC<MonthlyProgressCardProps> = ({ progress }) => {
+const MonthlyProgressCard: FC<MonthlyProgressCardProps> = ({
+  progress,
+  subscriptionEndsAt = null,
+}) => {
   const gradientId = useId().replace(/:/g, '');
 
   const { remainingMl, limitMl, usedLength, remainingLength, remainingLabel } = useMemo(() => {
@@ -94,6 +100,17 @@ const MonthlyProgressCard: FC<MonthlyProgressCardProps> = ({ progress }) => {
       }),
     };
   }, [progress.limitMl, progress.remainingMl]);
+
+  const validityText = useMemo(() => {
+    const formatted = formatDateDDMMYYYY(subscriptionEndsAt);
+    if (formatted) {
+      return tSubscription('progressValidUntil', { date: formatted });
+    }
+    if (progress.isTrial) {
+      return tSubscription('progressTrial');
+    }
+    return null;
+  }, [subscriptionEndsAt, progress.isTrial]);
 
   return (
     <section className={styles.MonthlyProgressCard} aria-labelledby="monthly-progress-title">
@@ -185,6 +202,8 @@ const MonthlyProgressCard: FC<MonthlyProgressCardProps> = ({ progress }) => {
           <p className={styles.ofLimit}>{tSubscription('progressOfLimit', { limit: limitMl })}</p>
         </div>
       </div>
+
+      {validityText ? <p className={styles.validityLine}>{validityText}</p> : null}
     </section>
   );
 };

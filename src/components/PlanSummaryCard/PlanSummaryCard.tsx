@@ -1,89 +1,131 @@
 import { FC } from 'react';
-import { tSubscription, formatPriceRub } from '../../locale/subscriptionLocale';
+import { formatDateDDMMYYYY } from '../../helpers/transformDateDDMMYYY';
+import { formatLitersFromMl, formatPriceRub, tSubscription } from '../../locale/subscriptionLocale';
 import type { PlanSummaryDisplay } from '../../utils/planSummary';
 import styles from './PlanSummaryCard.module.scss';
+
+const OFFER_BG = '/assets/viwa/plans/subscription-offer-bg.webp';
+const CURRENT_BG = '/assets/viwa/plans/current-plan-bg.webp';
 
 export type PlanSummaryCardProps = {
   plan: PlanSummaryDisplay | null;
   isLoading: boolean;
+  isTrial?: boolean;
   onOpen: () => void;
 };
-
-const PLAN_BENEFIT_KEYS = [
-  'planBenefitSavings',
-  'planBenefitPriority',
-  'planBenefitBonuses',
-] as const;
 
 function buildPlanAriaLabel(plan: PlanSummaryDisplay | null): string {
   if (!plan) {
     return tSubscription('planCardOpenHint');
   }
 
-  return `${tSubscription('planCardOpenHint')}. ${plan.tierName}, ${tSubscription('planPerMonth', {
-    price: formatPriceRub(plan.priceKopecks),
-  })}`;
+  const parts = [tSubscription('planCardOpenHint'), plan.tierName];
+
+  if (plan.monthlyVolumeMl != null) {
+    parts.push(tSubscription('planVolume', { liters: formatLitersFromMl(plan.monthlyVolumeMl) }));
+  }
+
+  if (plan.priceKopecks != null) {
+    parts.push(tSubscription('planPerMonth', { price: formatPriceRub(plan.priceKopecks) }));
+  }
+
+  if (plan.variant === 'current' && plan.subscriptionEndsAt) {
+    const formatted = formatDateDDMMYYYY(plan.subscriptionEndsAt);
+    if (formatted) {
+      parts.push(tSubscription('progressValidUntil', { date: formatted }));
+    }
+  }
+
+  return parts.join('. ');
 }
 
-/** Summary plan card opening the subscription/billing modal. */
-const PlanSummaryCard: FC<PlanSummaryCardProps> = ({ plan, isLoading, onOpen }) => {
+/** Editorial plan banner opening the subscription/billing modal. */
+const PlanSummaryCard: FC<PlanSummaryCardProps> = ({
+  plan,
+  isLoading,
+  isTrial = false,
+  onOpen,
+}) => {
+  const variant = plan?.variant ?? 'offer';
+  const backgroundImage = variant === 'current' ? CURRENT_BG : OFFER_BG;
+  const microLabelKey = variant === 'current' ? 'planCurrentLabel' : 'planOfferLabel';
+  const ctaKey = variant === 'current' ? 'planCtaCurrent' : 'planCtaOffer';
+  const expiryFormatted =
+    plan?.subscriptionEndsAt != null ? formatDateDDMMYYYY(plan.subscriptionEndsAt) : null;
+
   return (
     <button
       type="button"
       className={styles.PlanSummaryCard}
+      data-variant={variant}
       onClick={onOpen}
       aria-label={buildPlanAriaLabel(plan)}
-      disabled={isLoading || !plan}
+      aria-busy={isLoading}
     >
-      <div className={styles.content}>
-        <div className={styles.main}>
-          <h2 className={styles.title}>{tSubscription('planCardTitle')}</h2>
+      <span
+        className={styles.background}
+        style={{ backgroundImage: `url(${backgroundImage})` }}
+        aria-hidden="true"
+      />
+      <span className={styles.gradient} aria-hidden="true" />
 
-          {isLoading && <p className={styles.loading}>{tSubscription('planLoading')}</p>}
+      <span className={styles.content}>
+        <span className={styles.textBlock}>
+          <span className={styles.microLabel}>{tSubscription(microLabelKey)}</span>
 
-          {!isLoading && plan && (
+          {isTrial && variant === 'offer' ? (
+            <span className={styles.trialBadge}>{tSubscription('planTrialLiter')}</span>
+          ) : null}
+
+          {isLoading ? (
+            <span className={styles.headline}>{tSubscription('planLoading')}</span>
+          ) : plan ? (
             <>
-              <p className={styles.priceLine} aria-hidden="true">
-                <span className={styles.priceAmount}>{formatPriceRub(plan.priceKopecks)} ₽</span>
-                <span className={styles.pricePeriod}>{tSubscription('planPeriodSuffix')}</span>
-              </p>
+              <span className={styles.headline}>{plan.tierName}</span>
 
-              <ul className={styles.benefits}>
-                {PLAN_BENEFIT_KEYS.map((key) => (
-                  <li key={key}>
-                    <svg className={styles.checkIcon} viewBox="0 0 16 16" aria-hidden="true">
-                      <path
-                        d="M3 8.5 6.5 12 13 4"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.75"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                    <span>{tSubscription(key)}</span>
-                  </li>
-                ))}
-              </ul>
+              <span className={styles.details}>
+                {plan.monthlyVolumeMl != null ? (
+                  <span className={styles.detail}>
+                    {tSubscription('planVolume', {
+                      liters: formatLitersFromMl(plan.monthlyVolumeMl),
+                    })}
+                  </span>
+                ) : null}
+
+                {plan.priceKopecks != null ? (
+                  <span className={styles.detail}>
+                    {tSubscription('planPerMonth', {
+                      price: formatPriceRub(plan.priceKopecks),
+                    })}
+                  </span>
+                ) : null}
+
+                {variant === 'current' && expiryFormatted ? (
+                  <span className={styles.detail}>
+                    {tSubscription('progressValidUntil', { date: expiryFormatted })}
+                  </span>
+                ) : null}
+              </span>
             </>
+          ) : (
+            <span className={styles.headline}>{tSubscription('planEmpty')}</span>
           )}
 
-          {!isLoading && !plan && <p className={styles.loading}>{tSubscription('planEmpty')}</p>}
-        </div>
-
-        <span className={styles.chevron} aria-hidden="true">
-          <svg viewBox="0 0 24 24">
-            <path
-              d="M9 6l6 6-6 6"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+          <span className={styles.cta}>
+            <span>{tSubscription(ctaKey)}</span>
+            <svg className={styles.ctaIcon} viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M9 6l6 6-6 6"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </span>
         </span>
-      </div>
+      </span>
     </button>
   );
 };

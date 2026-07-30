@@ -1,6 +1,9 @@
 import { FC, useEffect, useMemo, useRef, useState } from 'react';
 import { tSubscription } from '../../locale/subscriptionLocale';
-import type { FavoriteTasteCatalogItem, FavoriteTasteFeedItem } from '../../utils/favoriteTastesSlots';
+import type {
+  FavoriteTasteCatalogItem,
+  FavoriteTasteFeedItem,
+} from '../../utils/favoriteTastesSlots';
 import {
   buildCabinetTastesFeed,
   getUnknownTasteFallbackLabel,

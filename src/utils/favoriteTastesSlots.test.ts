@@ -51,7 +51,11 @@ describe('favoriteTastesSlots', () => {
 
     it('uses mediaKey label before catalog enrichment', () => {
       const slots = buildFavoriteTasteSlots(['raspberry'], new Map());
-      expect(slots[0]).toMatchObject({ kind: 'filled', mediaKey: 'raspberry', nameRu: 'raspberry' });
+      expect(slots[0]).toMatchObject({
+        kind: 'filled',
+        mediaKey: 'raspberry',
+        nameRu: 'raspberry',
+      });
     });
   });
 
@@ -63,7 +67,11 @@ describe('favoriteTastesSlots', () => {
       expect(feed[0]).toMatchObject({ mediaKey: 'lime', nameRu: 'Лайм', rank: 1 });
       expect(feed[1]).toMatchObject({ mediaKey: 'cherry', nameRu: 'Чёрная вишня', rank: 2 });
       expect(feed[2]).toMatchObject({ mediaKey: 'raspberry', nameRu: 'Малина', rank: null });
-      expect(feed[3]).toMatchObject({ mediaKey: 'peach-mango', nameRu: 'Персик-манго', rank: null });
+      expect(feed[3]).toMatchObject({
+        mediaKey: 'peach-mango',
+        nameRu: 'Персик-манго',
+        rank: null,
+      });
     });
 
     it('uses mediaKey as label for favorites missing from catalog', () => {
