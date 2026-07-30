@@ -134,32 +134,25 @@ const MonthlyProgressCard: FC<MonthlyProgressCardProps> = ({ progress }) => {
             ))}
           </g>
 
-          <path
-            className={styles.gaugeTrack}
-            d={ARC_PATH}
-            strokeWidth={STROKE_WIDTH}
-            pathLength={ARC_LENGTH}
-          />
+          <path className={styles.gaugeTrack} d={ARC_PATH} strokeWidth={STROKE_WIDTH} />
 
-          {/* Right: remaining balance (purple → cyan) */}
+          {/* Right: remaining balance (purple → cyan), after the green bite */}
           <path
             className={styles.gaugeRemaining}
             d={ARC_PATH}
             strokeWidth={STROKE_WIDTH}
-            pathLength={ARC_LENGTH}
             stroke={`url(#${gradientId})`}
-            strokeDasharray={`${remainingLength} ${ARC_LENGTH}`}
+            strokeDasharray={`${Math.max(remainingLength, 0)} ${ARC_LENGTH}`}
             strokeDashoffset={-usedLength}
           />
 
-          {/* Left: goal progress “bite” in mint green */}
+          {/* Left: goal progress “bite” in mint green #A6FFE0 */}
           <path
             className={styles.gaugeGoal}
             d={ARC_PATH}
             strokeWidth={STROKE_WIDTH}
-            pathLength={ARC_LENGTH}
             stroke={GOAL_GREEN}
-            strokeDasharray={`${usedLength} ${ARC_LENGTH}`}
+            strokeDasharray={`${Math.max(usedLength, 0)} ${ARC_LENGTH}`}
           />
 
           <text
