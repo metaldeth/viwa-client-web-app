@@ -72,75 +72,61 @@
 }
 
 .ScanSheetModal {
-  --bottom-sheet-bg: var(--viwa-bg, #0a0a0a);
-  --bottom-sheet-border: rgba(255, 255, 255, 0.12);
-  --bottom-sheet-padding: calc(env(safe-area-inset-top, 0px) + 14px) 16px
-    calc(18px + env(safe-area-inset-bottom, 0px));
+  --bottom-sheet-bg: #171421;
+  --bottom-sheet-border: rgba(127, 90, 240, 0.24);
+  --bottom-sheet-padding: calc(env(safe-area-inset-top, 0px) + 12px) 18px
+    calc(20px + env(safe-area-inset-bottom, 0px));
 
   width: min(100%, 430px);
   max-width: 100%;
   box-sizing: border-box;
-  border-radius: 8px 8px 0 0;
+  border-radius: 22px 22px 0 0;
   overflow-x: hidden;
+  box-shadow: 0 -18px 48px rgba(0, 0, 0, 0.42);
 }
 
 .scanSheetHeader {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 36px;
+  display: flex;
+  justify-content: flex-end;
   align-items: center;
   width: 100%;
-  margin: 0 0 16px;
-  padding: 0 0 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.scanSheetTitle {
-  margin: 0;
-  font-family: var(--viwa-font-ui, inherit);
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  line-height: 1.35;
-  text-align: left;
-  text-transform: uppercase;
-  color: var(--viwa-text, #f5f5f5);
+  height: 32px;
+  margin: 0 0 8px;
 }
 
 .scanSheetClose {
-  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   margin: 0;
   padding: 0;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 4px;
+  border: 0;
+  border-radius: 50%;
   background: transparent;
-  color: var(--viwa-muted, #a3a3a3);
+  color: rgba(245, 245, 245, 0.58);
   cursor: pointer;
-  justify-self: end;
   transition:
-    border-color 0.15s ease,
-    color 0.15s ease;
+    color 0.15s ease,
+    background-color 0.15s ease;
 
   svg {
     display: block;
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
 
     path {
       fill: none;
       stroke: currentColor;
-      stroke-width: 1.5;
+      stroke-width: 1.25;
       stroke-linecap: round;
     }
   }
 
   &:hover {
-    border-color: rgba(255, 255, 255, 0.22);
     color: var(--viwa-text, #f5f5f5);
+    background: rgba(255, 255, 255, 0.06);
   }
 
   &:focus-visible {
@@ -157,7 +143,7 @@
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
-  padding: 4px 0 0;
+  padding: 0;
 }
 
 .scanQrPad {
@@ -169,10 +155,11 @@
   max-width: 100%;
   aspect-ratio: 1;
   margin: 0 auto;
-  padding: 10px;
+  padding: 12px;
   background: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 16px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.24);
 
   svg {
     display: block;
@@ -185,8 +172,8 @@
 
 @media (max-width: 390px) {
   .ScanSheetModal {
-    --bottom-sheet-padding: calc(env(safe-area-inset-top, 0px) + 12px) 12px
-      calc(16px + env(safe-area-inset-bottom, 0px));
+    --bottom-sheet-padding: calc(env(safe-area-inset-top, 0px) + 10px) 14px
+      calc(18px + env(safe-area-inset-bottom, 0px));
   }
 
   .scanQrPad {
@@ -194,13 +181,9 @@
     padding: 8px;
   }
 
-  .scanSheetTitle {
-    letter-spacing: 0.12em;
-  }
-
   .scanSheetClose {
-    width: 34px;
-    height: 34px;
+    width: 32px;
+    height: 32px;
   }
 }
 

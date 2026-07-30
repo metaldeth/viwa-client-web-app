@@ -288,7 +288,6 @@ const SubscriptionPage: FC = () => {
 
   const renderScanModalHeader = () => (
     <header className={styles.scanSheetHeader}>
-      <h2 className={styles.scanSheetTitle}>{tSubscription('scanModalTitle')}</h2>
       <button
         type="button"
         className={styles.scanSheetClose}
