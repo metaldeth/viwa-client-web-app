@@ -51,7 +51,8 @@
 }
 
 .gaugeTrack,
-.gaugeFill {
+.gaugeRemaining,
+.gaugeGoal {
   fill: none;
   stroke-linecap: round;
 }
@@ -60,9 +61,11 @@
   stroke: rgba(255, 255, 255, 0.1);
 }
 
-.gaugeFill {
-  /* Solid gradient stroke — no hatch / stripe texture */
-  transition: stroke-dasharray 0.25s ease;
+.gaugeRemaining,
+.gaugeGoal {
+  transition:
+    stroke-dasharray 0.25s ease,
+    stroke-dashoffset 0.25s ease;
 }
 
 .scaleText {
@@ -82,6 +85,15 @@
   align-items: center;
   text-align: center;
   pointer-events: none;
+}
+
+.remainingCaption {
+  margin: 0 0 6px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--viwa-muted, #a3a3a3);
 }
 
 .metric {
@@ -120,7 +132,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .gaugeFill {
+  .gaugeRemaining,
+  .gaugeGoal {
     transition: none;
   }
 }

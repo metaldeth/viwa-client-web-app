@@ -16,6 +16,7 @@ const REQUIRED_KEYS = [
   'subscription.progressCardTitle',
   'subscription.progressMetricUsed',
   'subscription.progressMetricRemaining',
+  'subscription.progressRemainingCaption',
   'subscription.progressOfLimit',
   'subscription.progressTrial',
   'subscription.progressActive',

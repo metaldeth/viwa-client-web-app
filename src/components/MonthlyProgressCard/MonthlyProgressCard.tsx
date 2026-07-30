@@ -12,23 +12,24 @@ const GAUGE_WIDTH = 300;
 const GAUGE_HEIGHT = 250;
 const CENTER_X = GAUGE_WIDTH / 2;
 const CENTER_Y = 128;
-/** Sweep through the top; gap centered at bottom. */
 const SWEEP_DEG = 270;
-const START_DEG = 225; // ~7:30
-const END_DEG = 315; // ~4:30, clockwise via top
+const START_DEG = 225;
+const END_DEG = 315;
 const STROKE_WIDTH = 16;
 const RADIUS = 102;
 const TICK_OUTER = RADIUS + 18;
 const TICK_INNER_MAJOR = RADIUS + 6;
 const TICK_INNER_MINOR = RADIUS + 10;
 const MAJOR_EVERY = 5;
-const TICK_COUNT = 49; // inclusive ends → dense dashed ring behind the stroke
+const TICK_COUNT = 49;
+
+/** Goal progress (used) — mint from brand palette. */
+const GOAL_GREEN = '#A6FFE0';
 
 function degToRad(deg: number): number {
   return (deg * Math.PI) / 180;
 }
 
-/** Math angle (0° = +x / 3 o'clock, CCW) → SVG coords (y down). */
 function polar(cx: number, cy: number, r: number, deg: number): { x: number; y: number } {
   const rad = degToRad(deg);
   return {
@@ -40,7 +41,6 @@ function polar(cx: number, cy: number, r: number, deg: number): { x: number; y: 
 function buildHorseshoePath(cx: number, cy: number, r: number): string {
   const start = polar(cx, cy, r, START_DEG);
   const end = polar(cx, cy, r, END_DEG);
-  // large-arc=1 (>180°), sweep=0 (CCW on SVG plane) → long way over the top
   return `M ${start.x.toFixed(2)} ${start.y.toFixed(2)} A ${r} ${r} 0 1 0 ${end.x.toFixed(2)} ${end.y.toFixed(2)}`;
 }
 
@@ -53,7 +53,6 @@ function buildTicks(): Tick[] {
   const ticks: Tick[] = [];
   for (let i = 0; i < TICK_COUNT; i += 1) {
     const t = i / (TICK_COUNT - 1);
-    // Clockwise from START along the horseshoe (decreasing math angle through top)
     const deg = START_DEG - t * SWEEP_DEG;
     const major = i % MAJOR_EVERY === 0;
     const inner = major ? TICK_INNER_MAJOR : TICK_INNER_MINOR;
@@ -77,15 +76,18 @@ const LABEL_MAX = polar(CENTER_X, CENTER_Y, TICK_OUTER + 14, END_DEG);
 const MonthlyProgressCard: FC<MonthlyProgressCardProps> = ({ progress }) => {
   const gradientId = useId().replace(/:/g, '');
 
-  const { remainingMl, limitMl, fillLength, remainingLabel } = useMemo(() => {
+  const { remainingMl, limitMl, usedLength, remainingLength, remainingLabel } = useMemo(() => {
     const safeLimit = Math.max(progress.limitMl, 0);
     const safeRemaining = Math.max(0, Math.min(progress.remainingMl, safeLimit));
-    const ratio = safeLimit > 0 ? safeRemaining / safeLimit : 0;
+    const safeUsed = Math.max(0, safeLimit - safeRemaining);
+    const usedRatio = safeLimit > 0 ? safeUsed / safeLimit : 0;
+    const remainingRatio = safeLimit > 0 ? safeRemaining / safeLimit : 0;
 
     return {
       remainingMl: Math.round(safeRemaining),
       limitMl: Math.round(safeLimit),
-      fillLength: ratio * ARC_LENGTH,
+      usedLength: usedRatio * ARC_LENGTH,
+      remainingLength: remainingRatio * ARC_LENGTH,
       remainingLabel: tSubscription('progressMetricRemaining', {
         remaining: Math.round(safeRemaining),
       }),
@@ -113,9 +115,9 @@ const MonthlyProgressCard: FC<MonthlyProgressCardProps> = ({ progress }) => {
         >
           <defs>
             <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#8b5cf6" />
-              <stop offset="45%" stopColor="#3b82f6" />
-              <stop offset="100%" stopColor="#22d3ee" />
+              <stop offset="0%" stopColor="#7F5AF0" />
+              <stop offset="55%" stopColor="#3b82f6" />
+              <stop offset="100%" stopColor="#00E5FF" />
             </linearGradient>
           </defs>
 
@@ -138,13 +140,26 @@ const MonthlyProgressCard: FC<MonthlyProgressCardProps> = ({ progress }) => {
             strokeWidth={STROKE_WIDTH}
             pathLength={ARC_LENGTH}
           />
+
+          {/* Right: remaining balance (purple → cyan) */}
           <path
-            className={styles.gaugeFill}
+            className={styles.gaugeRemaining}
             d={ARC_PATH}
             strokeWidth={STROKE_WIDTH}
             pathLength={ARC_LENGTH}
             stroke={`url(#${gradientId})`}
-            strokeDasharray={`${fillLength} ${ARC_LENGTH}`}
+            strokeDasharray={`${remainingLength} ${ARC_LENGTH}`}
+            strokeDashoffset={-usedLength}
+          />
+
+          {/* Left: goal progress “bite” in mint green */}
+          <path
+            className={styles.gaugeGoal}
+            d={ARC_PATH}
+            strokeWidth={STROKE_WIDTH}
+            pathLength={ARC_LENGTH}
+            stroke={GOAL_GREEN}
+            strokeDasharray={`${usedLength} ${ARC_LENGTH}`}
           />
 
           <text
@@ -168,6 +183,7 @@ const MonthlyProgressCard: FC<MonthlyProgressCardProps> = ({ progress }) => {
         </svg>
 
         <div className={styles.center} aria-hidden="true">
+          <p className={styles.remainingCaption}>{tSubscription('progressRemainingCaption')}</p>
           <p className={styles.metric} aria-label={remainingLabel}>
             <span className={styles.metricValue}>{remainingMl}</span>
             <span className={styles.metricUnit}>{tSubscription('volumeUnit')}</span>
