@@ -5,6 +5,12 @@ export type FavoriteTasteCatalogEntry = {
   nameRu: string;
 };
 
+export type FavoriteTasteCatalogItem = {
+  mediaKey: string;
+  nameRu: string;
+  sortOrder: number;
+};
+
 export type FavoriteTasteFilledSlot = {
   kind: 'filled';
   rank: number;
@@ -19,11 +25,74 @@ export type FavoriteTastePlaceholderSlot = {
 
 export type FavoriteTasteSlot = FavoriteTasteFilledSlot | FavoriteTastePlaceholderSlot;
 
+export type FavoriteTasteFeedItem = {
+  mediaKey: string;
+  nameRu: string;
+  /** Dose rank for poured favorites; null for catalog-only or shuffled tastes. */
+  rank: number | null;
+};
+
+export type BuildCabinetTastesFeedOptions = {
+  /** Returns a value in [0, 1). Injectable for deterministic shuffle tests. */
+  random?: () => number;
+};
+
 function resolveTasteLabel(mediaKey: string, catalogEntry?: FavoriteTasteCatalogEntry): string {
   if (catalogEntry?.nameRu) {
     return catalogEntry.nameRu;
   }
   return mediaKey;
+}
+
+/** Fisher–Yates shuffle (mutates a copy). */
+export function shuffleArray<T>(items: T[], random: () => number = Math.random): T[] {
+  const result = [...items];
+  for (let i = result.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
+
+/**
+ * Builds the cabinet «ТВОЙ ВКУС» feed: favorites first (with dose ranks), then remaining
+ * catalog tastes in sortOrder. When favorites are empty, returns all catalog tastes shuffled.
+ */
+export function buildCabinetTastesFeed(
+  favoriteKeys: string[],
+  catalogItems: FavoriteTasteCatalogItem[],
+  options?: BuildCabinetTastesFeedOptions,
+): FavoriteTasteFeedItem[] {
+  const random = options?.random ?? Math.random;
+  const catalogByKey = new Map(catalogItems.map((item) => [item.mediaKey, item]));
+  const sortedCatalog = [...catalogItems].sort((a, b) => a.sortOrder - b.sortOrder);
+
+  if (favoriteKeys.length === 0) {
+    return shuffleArray(sortedCatalog, random).map((item) => ({
+      mediaKey: item.mediaKey,
+      nameRu: item.nameRu,
+      rank: null,
+    }));
+  }
+
+  const favoriteSet = new Set(favoriteKeys);
+  const feed: FavoriteTasteFeedItem[] = favoriteKeys.map((mediaKey, index) => ({
+    mediaKey,
+    nameRu: resolveTasteLabel(mediaKey, catalogByKey.get(mediaKey)),
+    rank: index + 1,
+  }));
+
+  sortedCatalog.forEach((item) => {
+    if (!favoriteSet.has(item.mediaKey)) {
+      feed.push({
+        mediaKey: item.mediaKey,
+        nameRu: item.nameRu,
+        rank: null,
+      });
+    }
+  });
+
+  return feed;
 }
 
 /**

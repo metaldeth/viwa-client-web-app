@@ -1,7 +1,8 @@
-import { FC, useEffect, useMemo, useState } from 'react';
+import { FC, useEffect, useMemo, useRef, useState } from 'react';
 import { tSubscription } from '../../locale/subscriptionLocale';
+import type { FavoriteTasteCatalogItem, FavoriteTasteFeedItem } from '../../utils/favoriteTastesSlots';
 import {
-  buildFavoriteTasteSlots,
+  buildCabinetTastesFeed,
   getUnknownTasteFallbackLabel,
 } from '../../utils/favoriteTastesSlots';
 import { loadPublicTastesCatalog } from '../../utils/publicTastesCatalogCache';
@@ -15,7 +16,7 @@ export type FavoriteTastesRowProps = {
 type TasteCircleProps = {
   nameRu: string;
   mediaKey: string;
-  rank: number;
+  rank: number | null;
   catalogReady: boolean;
   isKnownInCatalog: boolean;
 };
@@ -53,26 +54,22 @@ const TasteCircle: FC<TasteCircleProps> = ({
         )}
       </div>
       <span className={styles.tasteName}>{displayName}</span>
-      <span className={styles.rankLabel}>{tSubscription('favoritesDoseRank', { rank })}</span>
+      {rank != null ? (
+        <span className={styles.rankLabel}>{tSubscription('favoritesDoseRank', { rank })}</span>
+      ) : (
+        <span className={styles.rankLabel} aria-hidden="true" />
+      )}
     </li>
   );
 };
 
-const PlaceholderCircle: FC<{ rank: number }> = ({ rank }) => (
-  <li className={styles.slot}>
-    <div className={`${styles.circle} ${styles.circlePlaceholder}`} aria-hidden="true">
-      <span className={styles.placeholderGlyph}>+</span>
-    </div>
-    <span className={styles.tasteName}>{tSubscription('favoritesTryTaste')}</span>
-    <span className={styles.rankLabel}>{tSubscription('favoritesDoseRank', { rank })}</span>
-  </li>
-);
-
-/** Read-only TOP-3 favorite tastes row for the cabinet page. */
+/** Horizontally scrollable tastes feed for the cabinet page. */
 const FavoriteTastesRow: FC<FavoriteTastesRowProps> = ({ favoriteKeys }) => {
   const [catalogReady, setCatalogReady] = useState(false);
   const [catalogError, setCatalogError] = useState(false);
-  const [catalogByKey, setCatalogByKey] = useState(() => new Map<string, { nameRu: string }>());
+  const [catalogItems, setCatalogItems] = useState<FavoriteTasteCatalogItem[]>([]);
+  const shuffledFeedRef = useRef<FavoriteTasteFeedItem[] | null>(null);
+  const shuffleRandomRef = useRef<(() => number) | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -80,9 +77,13 @@ const FavoriteTastesRow: FC<FavoriteTastesRowProps> = ({ favoriteKeys }) => {
     loadPublicTastesCatalog()
       .then((items) => {
         if (cancelled) return;
-        const map = new Map<string, { nameRu: string }>();
-        items.forEach((item) => map.set(item.mediaKey, { nameRu: item.nameRu }));
-        setCatalogByKey(map);
+        setCatalogItems(
+          items.map((item) => ({
+            mediaKey: item.mediaKey,
+            nameRu: item.nameRu,
+            sortOrder: item.sortOrder,
+          })),
+        );
         setCatalogReady(true);
         setCatalogError(false);
       })
@@ -98,10 +99,52 @@ const FavoriteTastesRow: FC<FavoriteTastesRowProps> = ({ favoriteKeys }) => {
     };
   }, []);
 
-  const slots = useMemo(
-    () => buildFavoriteTasteSlots(favoriteKeys, catalogByKey),
-    [favoriteKeys, catalogByKey],
+  const catalogByKey = useMemo(
+    () => new Map(catalogItems.map((item) => [item.mediaKey, item])),
+    [catalogItems],
   );
+
+  const feed = useMemo((): FavoriteTasteFeedItem[] => {
+    const hasFavorites = favoriteKeys.length > 0;
+
+    if (catalogError) {
+      if (!hasFavorites) {
+        return [];
+      }
+      return favoriteKeys.map((mediaKey, index) => ({
+        mediaKey,
+        nameRu: mediaKey,
+        rank: index + 1,
+      }));
+    }
+
+    if (!catalogReady) {
+      if (hasFavorites) {
+        return favoriteKeys.map((mediaKey, index) => ({
+          mediaKey,
+          nameRu: mediaKey,
+          rank: index + 1,
+        }));
+      }
+      return [];
+    }
+
+    if (!hasFavorites) {
+      if (shuffledFeedRef.current === null) {
+        if (shuffleRandomRef.current === null) {
+          shuffleRandomRef.current = () => Math.random();
+        }
+        shuffledFeedRef.current = buildCabinetTastesFeed([], catalogItems, {
+          random: shuffleRandomRef.current,
+        });
+      }
+      return shuffledFeedRef.current;
+    }
+
+    return buildCabinetTastesFeed(favoriteKeys, catalogItems);
+  }, [favoriteKeys, catalogItems, catalogReady, catalogError]);
+
+  const showErrorOnly = catalogError && favoriteKeys.length === 0;
 
   return (
     <section className={styles.FavoriteTastesRow} aria-labelledby="favorite-tastes-title">
@@ -115,22 +158,20 @@ const FavoriteTastesRow: FC<FavoriteTastesRowProps> = ({ favoriteKeys }) => {
         </p>
       )}
 
-      <ul className={styles.row} aria-label={tSubscription('favoritesRowTitle')}>
-        {slots.map((slot) =>
-          slot.kind === 'filled' ? (
+      {!showErrorOnly && feed.length > 0 && (
+        <ul className={styles.row} aria-label={tSubscription('favoritesRowTitle')}>
+          {feed.map((item) => (
             <TasteCircle
-              key={`filled-${slot.rank}-${slot.mediaKey}`}
-              nameRu={slot.nameRu}
-              mediaKey={slot.mediaKey}
-              rank={slot.rank}
-              catalogReady={catalogReady}
-              isKnownInCatalog={catalogByKey.has(slot.mediaKey)}
+              key={item.mediaKey}
+              nameRu={item.nameRu}
+              mediaKey={item.mediaKey}
+              rank={item.rank}
+              catalogReady={catalogReady && !catalogError}
+              isKnownInCatalog={catalogByKey.has(item.mediaKey)}
             />
-          ) : (
-            <PlaceholderCircle key={`placeholder-${slot.rank}`} rank={slot.rank} />
-          ),
-        )}
-      </ul>
+          ))}
+        </ul>
+      )}
     </section>
   );
 };
