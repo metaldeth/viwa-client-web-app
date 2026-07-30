@@ -17,6 +17,11 @@ const BottomSheetModal: FC<BottomSheetModalProps> = ({
   modalTitle,
   children,
   className,
+  headerClassName,
+  titleClassName,
+  closeButtonClassName,
+  renderHeader,
+  rootClassName,
   onClose,
 }) => {
   // Обработчики
@@ -25,12 +30,18 @@ const BottomSheetModal: FC<BottomSheetModalProps> = ({
   };
 
   // render методы
-  const renderHeader = () => (
-    <HorizontalContainer space="l" isAutoWidth>
-      <Text size="2xl" weight="semibold">
+  const renderDefaultHeader = () => (
+    <HorizontalContainer space="l" isAutoWidth className={headerClassName}>
+      <Text size="2xl" weight="semibold" className={titleClassName}>
         {modalTitle}
       </Text>
-      <Button view="clear" onlyIcon iconLeft={IconCloseFilled} onClick={onClose} />
+      <Button
+        view="clear"
+        onlyIcon
+        iconLeft={IconCloseFilled}
+        className={closeButtonClassName}
+        onClick={onClose}
+      />
     </HorizontalContainer>
   );
 
@@ -40,10 +51,11 @@ const BottomSheetModal: FC<BottomSheetModalProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={handleClose}
+      rootClassName={rootClassName}
       className={classNames(styles.BottomSheetModal, className)}
     >
       <VerticalContainer>
-        {renderHeader()}
+        {renderHeader ? renderHeader() : renderDefaultHeader()}
         {renderBody()}
       </VerticalContainer>
     </Modal>

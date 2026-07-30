@@ -27,7 +27,11 @@ const QrPromoCard: FC<QrPromoCardProps> = ({ qrPayload, onOpen }) => {
       </div>
 
       <div className={styles.qrWrap} aria-hidden="true">
-        {qrPayload ? <LoyaltyQrPreview value={qrPayload} /> : <span className={styles.qrPlaceholder} />}
+        {qrPayload ? (
+          <LoyaltyQrPreview value={qrPayload} />
+        ) : (
+          <span className={styles.qrPlaceholder} />
+        )}
       </div>
     </button>
   );

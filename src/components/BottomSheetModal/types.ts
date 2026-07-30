@@ -18,6 +18,26 @@ export type BottomSheetModalProps = {
    */
   className?: string;
   /**
+   * Класс строки заголовка
+   */
+  headerClassName?: string;
+  /**
+   * Класс текста заголовка
+   */
+  titleClassName?: string;
+  /**
+   * Класс кнопки закрытия
+   */
+  closeButtonClassName?: string;
+  /**
+   * Кастомный заголовок (если задан — стандартный header не рендерится)
+   */
+  renderHeader?: () => ReactNode;
+  /**
+   * Класс корневого контейнера Modal (оверлей + позиционирование)
+   */
+  rootClassName?: string;
+  /**
    * Обработчик закрытия модального окна
    */
   onClose?: () => void;

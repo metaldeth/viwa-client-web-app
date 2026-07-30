@@ -11,7 +11,6 @@ import MonthlyProgressCard from '../../components/MonthlyProgressCard';
 import QrPromoCard from '../../components/QrPromoCard';
 import FavoriteTastesRow from '../../components/FavoriteTastesRow';
 import PlanSummaryCard from '../../components/PlanSummaryCard';
-import RemainingVolumeBar from '../../components/RemainingVolumeBar';
 import { useAppDispatch, useAppSelector } from '../../app/hooks/store';
 import { getCurrentClientProfileAction } from '../../state/loyalty/actions';
 import { selectClientProfile } from '../../state/loyalty/selectors';
@@ -20,18 +19,13 @@ import { IconBrilliant } from '../../assets/icon/iconBrilliant';
 import { IconSparkles } from '../../assets/icon/iconSparkles';
 import { IconDoubleDrops } from '../../assets/icon/iconDoubleDrops';
 import { QRCodeSVG } from 'qrcode.react';
-import { formatDateDDMMYYYY } from '../../helpers/transformDateDDMMYYY';
 import { api } from '../../app/api';
 import type { SubscriptionLevelDTO } from '../../types/subscriptionLevel';
 import { hasAuthTokens } from '../ValidationPage/helpers';
 import { useClientSubscriptionWs } from '../../hooks/useClientSubscriptionWs';
 import { formatLitersFromMl, formatPriceRub, tSubscription } from '../../locale/subscriptionLocale';
-import { resolveMonthlyProgress, isTrialProfile } from '../../utils/monthlyProgress';
+import { resolveMonthlyProgress } from '../../utils/monthlyProgress';
 import { resolvePlanSummaryDisplay } from '../../utils/planSummary';
-import {
-  isActiveSubscriptionProfile,
-  isExpiredSubscriptionProfile,
-} from '../../utils/subscriptionStatus';
 
 type PayPhase =
   | 'idle'
@@ -75,20 +69,8 @@ const SubscriptionPage: FC = () => {
   useClientSubscriptionWs(isAuthed);
 
   const monthlyProgress = useMemo(() => resolveMonthlyProgress(client), [client]);
-  const isTrial = isTrialProfile(client);
-  const isActiveSubscription = isActiveSubscriptionProfile(client);
-  const isExpiredSubscription = isExpiredSubscriptionProfile(client);
-  const subscriptionEnd = formatDateDDMMYYYY(client?.subscriptionEndsAt ?? null) ?? '';
   const qrPayload = client?.qrPayload ?? '';
   const favoriteKeys = client?.favoriteTasteKeys ?? [];
-
-  const statusText = isTrial
-    ? tSubscription('progressTrial')
-    : isExpiredSubscription
-      ? tSubscription('progressExpired', { date: subscriptionEnd })
-      : isActiveSubscription
-        ? tSubscription('progressActive', { tier: client?.tierName ?? '', date: subscriptionEnd })
-        : tSubscription('progressInactive');
 
   const subscriptionBenefits = useMemo(
     () => [
@@ -304,18 +286,27 @@ const SubscriptionPage: FC = () => {
     </VerticalContainer>
   );
 
+  const renderScanModalHeader = () => (
+    <header className={styles.scanSheetHeader}>
+      <h2 className={styles.scanSheetTitle}>{tSubscription('scanModalTitle')}</h2>
+      <button
+        type="button"
+        className={styles.scanSheetClose}
+        aria-label="Закрыть"
+        onClick={() => setIsScanModalOpen(false)}
+      >
+        <svg viewBox="0 0 20 20" aria-hidden="true">
+          <path d="M5 5l10 10M15 5 5 15" />
+        </svg>
+      </button>
+    </header>
+  );
+
   const renderScanModalBody = () => (
     <div className={styles.scanBody}>
-      <div className={styles.qrWhitePadLarge}>
+      <div className={styles.scanQrPad}>
         <LoyaltyQrCode value={qrPayload} size={340} label={tSubscription('scanModalTitle')} />
       </div>
-      <RemainingVolumeBar
-        remainingMl={monthlyProgress.remainingMl}
-        limitMl={monthlyProgress.limitMl}
-      />
-      {!isTrial && (isActiveSubscription || isExpiredSubscription) && (
-        <p className={styles.scanStatus}>{statusText}</p>
-      )}
     </div>
   );
 
@@ -341,7 +332,7 @@ const SubscriptionPage: FC = () => {
       <BottomSheetModal
         isOpen={isScanModalOpen}
         className={styles.ScanSheetModal}
-        modalTitle={tSubscription('scanModalTitle')}
+        renderHeader={renderScanModalHeader}
         onClose={() => setIsScanModalOpen(false)}
       >
         {renderScanModalBody()}
