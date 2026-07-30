@@ -1,0 +1,90 @@
+.RemainingVolumeBar {
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto;
+  text-align: center;
+  font-family: var(--viwa-font-ui, inherit);
+}
+
+.caption {
+  margin: 0 0 6px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--viwa-muted, #a3a3a3);
+}
+
+.metric {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  line-height: 1;
+}
+
+.metricValue {
+  font-family: var(--viwa-font-condensed, inherit);
+  font-size: clamp(2.25rem, 12vw, 2.75rem);
+  font-weight: 600;
+  color: var(--viwa-text, #f5f5f5);
+}
+
+.metricUnit {
+  margin-top: 4px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(245, 245, 245, 0.85);
+}
+
+.ofLimit {
+  margin: 8px 0 14px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--viwa-muted, #a3a3a3);
+}
+
+.track {
+  display: flex;
+  width: 100%;
+  height: 12px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.goal {
+  display: block;
+  height: 100%;
+  flex-shrink: 0;
+  transition: width 0.25s ease;
+}
+
+.remaining {
+  display: block;
+  height: 100%;
+  flex-shrink: 0;
+  background: linear-gradient(90deg, #7f5af0 0%, #3b82f6 55%, #00e5ff 100%);
+  transition: width 0.25s ease;
+}
+
+.scale {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--viwa-muted, #a3a3a3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .goal,
+  .remaining {
+    transition: none;
+  }
+}

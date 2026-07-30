@@ -11,6 +11,7 @@ import MonthlyProgressCard from '../../components/MonthlyProgressCard';
 import QrPromoCard from '../../components/QrPromoCard';
 import FavoriteTastesRow from '../../components/FavoriteTastesRow';
 import PlanSummaryCard from '../../components/PlanSummaryCard';
+import RemainingVolumeBar from '../../components/RemainingVolumeBar';
 import { useAppDispatch, useAppSelector } from '../../app/hooks/store';
 import { getCurrentClientProfileAction } from '../../state/loyalty/actions';
 import { selectClientProfile } from '../../state/loyalty/selectors';
@@ -304,27 +305,18 @@ const SubscriptionPage: FC = () => {
   );
 
   const renderScanModalBody = () => (
-    <VerticalContainer space="l" isAutoWidth align="center">
+    <div className={styles.scanBody}>
       <div className={styles.qrWhitePadLarge}>
-        <LoyaltyQrCode value={qrPayload} size={315} label={tSubscription('scanModalTitle')} />
+        <LoyaltyQrCode value={qrPayload} size={340} label={tSubscription('scanModalTitle')} />
       </div>
-      <VerticalContainer space="s">
-        <Text size="xl" weight="medium" align="center">
-          {tSubscription('progressRemaining', { remaining: monthlyProgress.remainingMl })}
-        </Text>
-        <Text size="s" weight="medium" align="center" view="secondary">
-          {tSubscription('progressUsed', {
-            used: monthlyProgress.usedMl,
-            limit: monthlyProgress.limitMl,
-          })}
-        </Text>
-        {!isTrial && (isActiveSubscription || isExpiredSubscription) && (
-          <Text size="s" weight="medium" align="center">
-            {statusText}
-          </Text>
-        )}
-      </VerticalContainer>
-    </VerticalContainer>
+      <RemainingVolumeBar
+        remainingMl={monthlyProgress.remainingMl}
+        limitMl={monthlyProgress.limitMl}
+      />
+      {!isTrial && (isActiveSubscription || isExpiredSubscription) && (
+        <p className={styles.scanStatus}>{statusText}</p>
+      )}
+    </div>
   );
 
   if (isReject && !isAuthed) {
