@@ -103,8 +103,9 @@ export function getLogoImagePaths(): LogoImagePaths {
       svg: `${VIWA_ASSETS_BASE}/${logoAsset.files.svg.path}`,
       png: `${VIWA_ASSETS_BASE}/${logoAsset.files.png.path}`,
       altRu: logoAsset.altRu,
-      width: logoAsset.files.svg.width ?? 277,
-      height: logoAsset.files.svg.height ?? 243,
+      // Corrected wordmark aspect (~1.85); ignore stale manifest 277×243 if present
+      width: 277,
+      height: 150,
     };
   }
 
@@ -113,33 +114,13 @@ export function getLogoImagePaths(): LogoImagePaths {
     png: `${VIWA_ASSETS_BASE}/logo/logo-viwa-mark.png`,
     altRu: 'VIWA',
     width: 277,
-    height: 243,
+    height: 150,
   };
 }
 
-/** Cabinet header mark — canonical inner-crop raster (67×38), SVG fallback unchanged. */
+/** @deprecated Prefer getLogoImagePaths — header uses the same corrected SVG. */
 export function getCabinetHeaderLogoImagePaths(): LogoImagePaths {
-  const canonical = getLogoImagePaths();
-
-  if (cabinetHeaderLogoAsset?.files.webp?.path && cabinetHeaderLogoAsset.files.png?.path) {
-    return {
-      svg: canonical.svg,
-      webp: `${VIWA_ASSETS_BASE}/${cabinetHeaderLogoAsset.files.webp.path}`,
-      png: `${VIWA_ASSETS_BASE}/${cabinetHeaderLogoAsset.files.png.path}`,
-      altRu: cabinetHeaderLogoAsset.altRu,
-      width: cabinetHeaderLogoAsset.files.png.width ?? 67,
-      height: cabinetHeaderLogoAsset.files.png.height ?? 38,
-    };
-  }
-
-  return {
-    svg: canonical.svg,
-    webp: `${VIWA_ASSETS_BASE}/logo/logo-viwa-mark-cabinet-header.webp`,
-    png: `${VIWA_ASSETS_BASE}/logo/logo-viwa-mark-cabinet-header.png`,
-    altRu: canonical.altRu,
-    width: 67,
-    height: 38,
-  };
+  return getLogoImagePaths();
 }
 
 export function getViwaAssetManifestVersion(): string {

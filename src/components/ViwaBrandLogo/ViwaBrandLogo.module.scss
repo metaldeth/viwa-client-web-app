@@ -7,10 +7,10 @@
 
 .logoImg {
   display: block;
-  width: 100%;
+  width: auto;
   height: 100%;
   max-width: 100%;
-  object-fit: fill;
+  object-fit: contain;
 }
 
 .sizeSm {
@@ -25,16 +25,17 @@
   height: 3rem;
 }
 
+/* ~1.85 aspect from corrected SVG viewBox 277×150 */
 .sizeHeader {
-  width: 67px;
+  width: 70px;
   height: 38px;
 }
 
 .sizeHeader .logoImg {
   width: 100%;
   height: 100%;
-  max-width: 100%;
   object-fit: contain;
+  object-position: left center;
 }
 
 .textFallback {

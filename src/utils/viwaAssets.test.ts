@@ -32,13 +32,13 @@ describe('viwaAssets taste paths', () => {
     expect(manifest.assets).toHaveLength(40);
   });
 
-  it('resolves cabinet header logo raster with canonical svg fallback', () => {
+  it('resolves logo paths with corrected SVG aspect', () => {
     const paths = getCabinetHeaderLogoImagePaths();
 
-    expect(paths.png).toBe('/assets/viwa/logo/logo-viwa-mark-cabinet-header.png');
     expect(paths.svg).toBe('/assets/viwa/logo/logo-viwa-mark.svg');
-    expect(paths.width).toBe(67);
-    expect(paths.height).toBe(38);
+    expect(paths.png).toBe('/assets/viwa/logo/logo-viwa-mark.png');
+    expect(paths.width).toBe(277);
+    expect(paths.height).toBe(150);
   });
 
   it('resolves bottle paths for landing from manifest', () => {
