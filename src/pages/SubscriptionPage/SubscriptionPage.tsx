@@ -229,14 +229,13 @@ const SubscriptionPage: FC = () => {
                   />
                   <span className={styles.tierCardGradient} aria-hidden="true" />
                   <span className={styles.tierCardContent}>
-                    <span className={styles.tierCardName}>{level.name}</span>
-                    <span className={styles.tierCardMeta}>
+                    <span className={styles.tierCardName}>
                       {tSubscription('planVolume', {
                         liters: formatLitersFromMl(tierVolumeMl(level)),
                       })}
                     </span>
                     <span className={styles.tierCardPrice}>
-                      {tSubscription('planPerMonth', { price: formatPriceRub(level.priceKopecks) })}
+                      {formatPriceRub(level.priceKopecks)} ₽
                     </span>
                   </span>
                   {isSelected ? (
