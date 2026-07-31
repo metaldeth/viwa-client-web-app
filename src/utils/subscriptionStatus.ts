@@ -2,7 +2,7 @@ import type { ClientProfileDTO } from '../types/serverInterface/clientDTO';
 
 export type SubscriptionStatusInput = Pick<
   ClientProfileDTO,
-  'tierName' | 'subscriptionEndsAt' | 'monthlyLimitMl' | 'dailyLimitMl'
+  'tierName' | 'subscriptionEndsAt' | 'monthlyLimitMl' | 'dailyLimitMl' | 'active'
 >;
 
 export function isSubscriptionEndDateActive(
@@ -19,11 +19,16 @@ export function isSubscriptionEndDateActive(
 /**
  * Active marketing monthly subscription: future end date and positive monthly pool.
  * Expired profiles must surface renewal/plan cards (architecture v1.2 §3).
+ * When backend sets `active: false` (admin-disabled), profile is never active.
  */
 export function isActiveSubscriptionProfile(
   profile: SubscriptionStatusInput | null | undefined,
   nowMs: number = Date.now(),
 ): boolean {
+  if (profile?.active === false) {
+    return false;
+  }
+
   if (!profile?.tierName || !profile.subscriptionEndsAt) {
     return false;
   }

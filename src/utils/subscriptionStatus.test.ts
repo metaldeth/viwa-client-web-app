@@ -43,4 +43,41 @@ describe('subscriptionStatus', () => {
     expect(isActiveSubscriptionProfile(profile, now)).toBe(false);
     expect(shouldShowRenewalPlans(profile, now)).toBe(true);
   });
+
+  it('admin-disabled profile (active: false) is not active despite valid tier and dates', () => {
+    const profile = {
+      tierName: '12 литров',
+      subscriptionEndsAt: '2026-12-01T00:00:00.000Z',
+      monthlyLimitMl: 12000,
+      dailyLimitMl: 12000,
+      active: false,
+    };
+
+    expect(isActiveSubscriptionProfile(profile, now)).toBe(false);
+    expect(shouldShowRenewalPlans(profile, now)).toBe(true);
+  });
+
+  it('active: true with valid tier, dates, and limit is active', () => {
+    const profile = {
+      tierName: '12 литров',
+      subscriptionEndsAt: '2026-12-01T00:00:00.000Z',
+      monthlyLimitMl: 12000,
+      dailyLimitMl: 12000,
+      active: true,
+    };
+
+    expect(isActiveSubscriptionProfile(profile, now)).toBe(true);
+    expect(shouldShowRenewalPlans(profile, now)).toBe(false);
+  });
+
+  it('absent active preserves tier/date/limit derivation', () => {
+    const profile = {
+      tierName: '12 литров',
+      subscriptionEndsAt: '2026-12-01T00:00:00.000Z',
+      monthlyLimitMl: 12000,
+      dailyLimitMl: 12000,
+    };
+
+    expect(isActiveSubscriptionProfile(profile, now)).toBe(true);
+  });
 });

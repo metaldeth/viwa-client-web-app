@@ -2,12 +2,18 @@ import { FC, useId, useMemo } from 'react';
 import { formatDateDDMMYYYY } from '../../helpers/transformDateDDMMYYY';
 import { tSubscription } from '../../locale/subscriptionLocale';
 import type { MonthlyProgress } from '../../utils/monthlyProgress';
+import {
+  unlimitedWaterBenefitLocaleKey,
+  type UnlimitedWaterBenefitVariant,
+} from '../../utils/unlimitedWaterBenefit';
 import styles from './MonthlyProgressCard.module.scss';
 
 export type MonthlyProgressCardProps = {
   progress: MonthlyProgress;
   /** ISO end date of the current plan; null for trial / no plan. */
   subscriptionEndsAt?: string | null;
+  waterBenefitVariant: UnlimitedWaterBenefitVariant;
+  limitExhausted?: boolean;
 };
 
 /** Horseshoe gauge: ~270° arc with opening at the bottom (not a semicircle). */
@@ -80,26 +86,38 @@ const LABEL_MAX = polar(CENTER_X, CENTER_Y, TICK_OUTER + 14, END_DEG);
 const MonthlyProgressCard: FC<MonthlyProgressCardProps> = ({
   progress,
   subscriptionEndsAt = null,
+  waterBenefitVariant,
+  limitExhausted = false,
 }) => {
   const gradientId = useId().replace(/:/g, '');
 
-  const { remainingMl, limitMl, usedLength, remainingLength, remainingLabel } = useMemo(() => {
-    const safeLimit = Math.max(progress.limitMl, 0);
-    const safeRemaining = Math.max(0, Math.min(progress.remainingMl, safeLimit));
-    const safeUsed = Math.max(0, safeLimit - safeRemaining);
-    const usedRatio = safeLimit > 0 ? safeUsed / safeLimit : 0;
-    const remainingRatio = safeLimit > 0 ? safeRemaining / safeLimit : 0;
+  const isExhausted =
+    limitExhausted || (!progress.isTrial && progress.limitMl > 0 && progress.remainingMl <= 0);
 
-    return {
-      remainingMl: Math.round(safeRemaining),
-      limitMl: Math.round(safeLimit),
-      usedLength: usedRatio * ARC_LENGTH,
-      remainingLength: remainingRatio * ARC_LENGTH,
-      remainingLabel: tSubscription('progressMetricRemaining', {
-        remaining: Math.round(safeRemaining),
-      }),
-    };
-  }, [progress.limitMl, progress.remainingMl]);
+  const waterBenefitText = tSubscription(unlimitedWaterBenefitLocaleKey(waterBenefitVariant));
+
+  const { remainingMl, limitMl, usedLength, remainingLength, remainingLabel, progressAriaLabel } =
+    useMemo(() => {
+      const safeLimit = Math.max(progress.limitMl, 0);
+      const safeRemaining = Math.max(0, Math.min(progress.remainingMl, safeLimit));
+      const safeUsed = Math.max(0, safeLimit - safeRemaining);
+      const usedRatio = safeLimit > 0 ? safeUsed / safeLimit : 0;
+      const remainingRatio = safeLimit > 0 ? safeRemaining / safeLimit : 0;
+      const roundedRemaining = Math.round(safeRemaining);
+
+      return {
+        remainingMl: roundedRemaining,
+        limitMl: Math.round(safeLimit),
+        usedLength: usedRatio * ARC_LENGTH,
+        remainingLength: remainingRatio * ARC_LENGTH,
+        remainingLabel: tSubscription('progressMetricRemaining', {
+          remaining: roundedRemaining,
+        }),
+        progressAriaLabel: isExhausted
+          ? tSubscription('limitExhausted')
+          : tSubscription('progressRemaining', { remaining: roundedRemaining }),
+      };
+    }, [progress.limitMl, progress.remainingMl, isExhausted]);
 
   const validityText = useMemo(() => {
     const formatted = formatDateDDMMYYYY(subscriptionEndsAt);
@@ -124,7 +142,7 @@ const MonthlyProgressCard: FC<MonthlyProgressCardProps> = ({
         aria-valuemin={0}
         aria-valuemax={limitMl}
         aria-valuenow={remainingMl}
-        aria-label={tSubscription('progressRemaining', { remaining: remainingMl })}
+        aria-label={progressAriaLabel}
       >
         <svg
           className={styles.gaugeSvg}
@@ -204,6 +222,21 @@ const MonthlyProgressCard: FC<MonthlyProgressCardProps> = ({
       </div>
 
       {validityText ? <p className={styles.validityLine}>{validityText}</p> : null}
+
+      {isExhausted ? (
+        <p className={styles.exhaustedLine} role="status">
+          {tSubscription('limitExhausted')}
+        </p>
+      ) : null}
+
+      <p
+        className={styles.waterBenefit}
+        data-testid="unlimited-water-benefit"
+        data-variant={waterBenefitVariant}
+        aria-live="polite"
+      >
+        {waterBenefitText}
+      </p>
     </section>
   );
 };

@@ -20,7 +20,11 @@ export type CheckCodeRequest = {
 };
 
 /**
- * Viwa Telemetry client profile (GET /client/me, nested in check-code)
+ * Viwa Telemetry client profile (GET /client/me, WS subscribe ack, check-code).
+ *
+ * REST and subscribe ack carry the full snapshot including `qrPayload`.
+ * `client.profile.updated` pushes omit `qrPayload` — merge keeps the existing QR.
+ * `active` is authoritative when present: `false` means admin-disabled regardless of tier/dates.
  */
 export type ClientProfileDTO = {
   id: string;
@@ -43,6 +47,8 @@ export type ClientProfileDTO = {
   subscriptionEndsAt: string | null;
   limitExhausted?: boolean;
   limitResetsAt?: string | null;
+  /** When `false`, subscription is admin-disabled; absent/`true` — derive from tier/dates/limits. */
+  active?: boolean;
   qrPayload: string;
 };
 

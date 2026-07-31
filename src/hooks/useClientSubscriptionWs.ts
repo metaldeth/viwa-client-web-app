@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useAppDispatch } from '../app/hooks/store';
-import { ACCESS_TOKEN_STORAGE_NAME } from '../consts/env/storage';
+import { getStoredAccessToken, subscribeAccessTokenChanges } from '../app/api/authStorage';
 import { viwaTelemetryApiUrl } from '../consts/env/baseUrlFront';
 import { patchClientProfile } from '../state/loyalty/slice';
 import type { ClientProfileDTO } from '../types/serverInterface/clientDTO';
@@ -31,6 +31,13 @@ function extractProfile(
   return null;
 }
 
+/**
+ * Keeps subscription profile live via client WebSocket (no HTTP polling).
+ *
+ * On open/reconnect: `subscribe.subscription` → ack snapshot heals missed events.
+ * Runtime pushes: `client.profile.updated` and ack `payload.profile` → `patchClientProfile`.
+ * Auth: `subscribeAccessTokenChanges` drives reconnect/disconnect; cleanup on unmount.
+ */
 export function useClientSubscriptionWs(enabled: boolean): void {
   const dispatch = useAppDispatch();
   const clientRef = useRef<ClientWsClient | null>(null);
@@ -40,10 +47,7 @@ export function useClientSubscriptionWs(enabled: boolean): void {
       return;
     }
 
-    const wsClient = new ClientWsClient(
-      () => localStorage.getItem(ACCESS_TOKEN_STORAGE_NAME),
-      viwaTelemetryApiUrl,
-    );
+    const wsClient = new ClientWsClient(getStoredAccessToken, viwaTelemetryApiUrl);
     clientRef.current = wsClient;
 
     const unsubscribe = wsClient.subscribe((envelope) => {
@@ -53,12 +57,19 @@ export function useClientSubscriptionWs(enabled: boolean): void {
       }
     });
 
+    const unsubscribeAuth = subscribeAccessTokenChanges((accessToken) => {
+      wsClient.handleAccessTokenChange(accessToken);
+    });
+
     wsClient.connect();
 
     return () => {
+      unsubscribeAuth();
       unsubscribe();
       wsClient.disconnect();
       clientRef.current = null;
     };
   }, [dispatch, enabled]);
 }
+
+export { extractProfile, isProfilePayload };

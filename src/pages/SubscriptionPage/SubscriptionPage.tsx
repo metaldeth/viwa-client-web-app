@@ -22,6 +22,7 @@ import { useClientSubscriptionWs } from '../../hooks/useClientSubscriptionWs';
 import { formatLitersFromMl, formatPriceRub, tSubscription } from '../../locale/subscriptionLocale';
 import { resolveMonthlyProgress } from '../../utils/monthlyProgress';
 import { resolvePlanSummaryDisplay } from '../../utils/planSummary';
+import { resolveUnlimitedWaterBenefitVariant } from '../../utils/unlimitedWaterBenefit';
 import { resolveTierCardBackground } from '../../utils/tierCardBackground';
 
 type PayPhase =
@@ -72,6 +73,7 @@ const SubscriptionPage: FC = () => {
   useClientSubscriptionWs(isAuthed);
 
   const monthlyProgress = useMemo(() => resolveMonthlyProgress(client), [client]);
+  const waterBenefitVariant = useMemo(() => resolveUnlimitedWaterBenefitVariant(client), [client]);
   const qrPayload = client?.qrPayload ?? '';
   const favoriteKeys = client?.favoriteTasteKeys ?? [];
 
@@ -230,9 +232,15 @@ const SubscriptionPage: FC = () => {
                   <span className={styles.tierCardGradient} aria-hidden="true" />
                   <span className={styles.tierCardContent}>
                     <span className={styles.tierCardName}>
-                      {tSubscription('planVolume', {
+                      {tSubscription('tierFlavoredVolume', {
                         liters: formatLitersFromMl(tierVolumeMl(level)),
                       })}
+                    </span>
+                    <span
+                      className={styles.tierCardMeta}
+                      data-testid="tier-unlimited-water-benefit"
+                    >
+                      {tSubscription('tierUnlimitedWaterBenefit')}
                     </span>
                     <span className={styles.tierCardPrice}>
                       {formatPriceRub(level.priceKopecks)} ₽
@@ -338,6 +346,8 @@ const SubscriptionPage: FC = () => {
         <MonthlyProgressCard
           progress={monthlyProgress}
           subscriptionEndsAt={client?.subscriptionEndsAt ?? null}
+          waterBenefitVariant={waterBenefitVariant}
+          limitExhausted={client?.limitExhausted}
         />
         <QrPromoCard qrPayload={qrPayload} onOpen={() => setIsScanModalOpen(true)} />
         <FavoriteTastesRow favoriteKeys={favoriteKeys} />
@@ -345,6 +355,7 @@ const SubscriptionPage: FC = () => {
           plan={planSummary}
           isLoading={payPhase === 'loading_levels'}
           isTrial={monthlyProgress.isTrial}
+          waterBenefitVariant={waterBenefitVariant}
           onOpen={() => openSubscribeModal(planSummary?.levelId)}
         />
       </main>

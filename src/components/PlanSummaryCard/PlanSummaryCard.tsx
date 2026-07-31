@@ -2,6 +2,10 @@ import { FC } from 'react';
 import { formatDateDDMMYYYY } from '../../helpers/transformDateDDMMYYY';
 import { formatLitersFromMl, formatPriceRub, tSubscription } from '../../locale/subscriptionLocale';
 import type { PlanSummaryDisplay } from '../../utils/planSummary';
+import {
+  unlimitedWaterBenefitLocaleKey,
+  type UnlimitedWaterBenefitVariant,
+} from '../../utils/unlimitedWaterBenefit';
 import styles from './PlanSummaryCard.module.scss';
 
 const OFFER_BG = '/assets/viwa/plans/subscription-offer-bg.webp';
@@ -11,10 +15,14 @@ export type PlanSummaryCardProps = {
   plan: PlanSummaryDisplay | null;
   isLoading: boolean;
   isTrial?: boolean;
+  waterBenefitVariant: UnlimitedWaterBenefitVariant;
   onOpen: () => void;
 };
 
-function buildPlanAriaLabel(plan: PlanSummaryDisplay | null): string {
+function buildPlanAriaLabel(
+  plan: PlanSummaryDisplay | null,
+  waterBenefitVariant: UnlimitedWaterBenefitVariant,
+): string {
   if (!plan) {
     return tSubscription('planCardOpenHint');
   }
@@ -22,8 +30,12 @@ function buildPlanAriaLabel(plan: PlanSummaryDisplay | null): string {
   const parts = [tSubscription('planCardOpenHint'), plan.tierName];
 
   if (plan.monthlyVolumeMl != null) {
-    parts.push(tSubscription('planVolume', { liters: formatLitersFromMl(plan.monthlyVolumeMl) }));
+    parts.push(
+      tSubscription('planFlavoredVolume', { liters: formatLitersFromMl(plan.monthlyVolumeMl) }),
+    );
   }
+
+  parts.push(tSubscription(unlimitedWaterBenefitLocaleKey(waterBenefitVariant)));
 
   if (plan.priceKopecks != null) {
     parts.push(tSubscription('planPerMonth', { price: formatPriceRub(plan.priceKopecks) }));
@@ -44,12 +56,15 @@ const PlanSummaryCard: FC<PlanSummaryCardProps> = ({
   plan,
   isLoading,
   isTrial = false,
+  waterBenefitVariant,
   onOpen,
 }) => {
   const variant = plan?.variant ?? 'offer';
   const backgroundImage = variant === 'current' ? CURRENT_BG : OFFER_BG;
   const microLabelKey = variant === 'current' ? 'planCurrentLabel' : 'planOfferLabel';
   const ctaKey = variant === 'current' ? 'planCtaCurrent' : 'planCtaOffer';
+  const waterBenefitKey =
+    variant === 'current' ? 'planUnlimitedWaterActive' : 'planUnlimitedWaterOffer';
   const expiryFormatted =
     plan?.subscriptionEndsAt != null ? formatDateDDMMYYYY(plan.subscriptionEndsAt) : null;
 
@@ -59,7 +74,7 @@ const PlanSummaryCard: FC<PlanSummaryCardProps> = ({
       className={styles.PlanSummaryCard}
       data-variant={variant}
       onClick={onOpen}
-      aria-label={buildPlanAriaLabel(plan)}
+      aria-label={buildPlanAriaLabel(plan, waterBenefitVariant)}
       aria-busy={isLoading}
     >
       <span
@@ -86,11 +101,18 @@ const PlanSummaryCard: FC<PlanSummaryCardProps> = ({
               <span className={styles.details}>
                 {plan.monthlyVolumeMl != null ? (
                   <span className={styles.detail}>
-                    {tSubscription('planVolume', {
+                    {tSubscription('planFlavoredVolume', {
                       liters: formatLitersFromMl(plan.monthlyVolumeMl),
                     })}
                   </span>
                 ) : null}
+
+                <span
+                  className={`${styles.detail} ${styles.waterBenefitDetail}`}
+                  data-testid="plan-unlimited-water-benefit"
+                >
+                  {tSubscription(waterBenefitKey)}
+                </span>
 
                 {plan.priceKopecks != null ? (
                   <span className={styles.detail}>

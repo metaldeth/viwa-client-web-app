@@ -418,6 +418,17 @@
   }
 }
 
+@media (max-width: 360px) {
+  .tierCardContent {
+    padding: 10px 38px 10px 12px;
+  }
+
+  .tierCardMeta {
+    font-size: 0.6875rem;
+    line-height: 1.3;
+  }
+}
+
 @media (max-height: 780px) {
   .subscribeModalBody {
     max-height: min(calc(100dvh - 96px), 480px);

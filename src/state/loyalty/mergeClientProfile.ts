@@ -11,6 +11,7 @@ export const VOLATILE_CLIENT_PROFILE_FIELDS = [
   'dailyRemainingMl',
   'dailyLimitMl',
   'limitExhausted',
+  'active',
   'tierName',
   'subscriptionEndsAt',
   'qrPayload',

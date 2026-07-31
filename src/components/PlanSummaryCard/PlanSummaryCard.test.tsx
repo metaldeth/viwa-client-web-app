@@ -5,7 +5,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import PlanSummaryCard from './PlanSummaryCard';
 
 describe('PlanSummaryCard', () => {
-  it('renders offer banner with recommended plan data and opens modal', () => {
+  it('renders offer banner with flavored volume and subscription water benefit', () => {
     const onOpen = vi.fn();
 
     render(
@@ -21,6 +21,7 @@ describe('PlanSummaryCard', () => {
         }}
         isLoading={false}
         isTrial
+        waterBenefitVariant="trial"
         onOpen={onOpen}
       />,
     );
@@ -28,15 +29,21 @@ describe('PlanSummaryCard', () => {
     expect(screen.getByText('ПЕРЕЙТИ НА АБОНЕМЕНТ')).toBeTruthy();
     expect(screen.getByText('ПРОБНЫЙ ЛИТР')).toBeTruthy();
     expect(screen.getByText('12 литров')).toBeTruthy();
-    expect(screen.getByText('12 л / мес')).toBeTruthy();
+    expect(screen.getByText('12 л вкусовых / мес')).toBeTruthy();
+    expect(screen.getByText(/\+ вода безлимитно/i)).toBeTruthy();
+    expect(screen.queryByText('12 л / мес')).toBeNull();
     expect(screen.getByText('499 ₽ / мес')).toBeTruthy();
     expect(screen.getByText('ВЫБРАТЬ ТАРИФ')).toBeTruthy();
 
-    fireEvent.click(screen.getByRole('button', { name: /тариф/i }));
+    const button = screen.getByRole('button', { name: /тариф/i });
+    expect(button.getAttribute('aria-label')).toMatch(/вкусовых/i);
+    expect(button.getAttribute('aria-label')).toMatch(/Обычная вода/i);
+
+    fireEvent.click(button);
     expect(onOpen).toHaveBeenCalledTimes(1);
   });
 
-  it('renders current-plan banner with expiry and manage CTA', () => {
+  it('renders current-plan banner with active water benefit', () => {
     const onOpen = vi.fn();
 
     render(
@@ -51,16 +58,15 @@ describe('PlanSummaryCard', () => {
           subscriptionEndsAt: '2099-01-01T00:00:00.000Z',
         }}
         isLoading={false}
+        waterBenefitVariant="active"
         onOpen={onOpen}
       />,
     );
 
     expect(screen.getByText('ТВОЙ ТАРИФ')).toBeTruthy();
-    expect(screen.getByText('18 литров')).toBeTruthy();
-    expect(screen.getByText('18 л / мес')).toBeTruthy();
-    expect(screen.getByText('699 ₽ / мес')).toBeTruthy();
+    expect(screen.getByText('18 л вкусовых / мес')).toBeTruthy();
+    expect(screen.getByText('Вода безлимитно')).toBeTruthy();
     expect(screen.getByText(/Действует до/i)).toBeTruthy();
-    expect(screen.getByText('УПРАВЛЯТЬ / ПРОДЛИТЬ')).toBeTruthy();
     expect(screen.queryByText('ПРОБНЫЙ ЛИТР')).toBeNull();
   });
 
@@ -77,20 +83,20 @@ describe('PlanSummaryCard', () => {
           subscriptionEndsAt: '2099-06-15T00:00:00.000Z',
         }}
         isLoading={false}
+        waterBenefitVariant="active"
         onOpen={vi.fn()}
       />,
     );
 
     expect(screen.getByText('Legacy VIP')).toBeTruthy();
-    expect(screen.queryByText(/л \/ мес/)).toBeNull();
-    expect(screen.queryByText(/₽ \/ мес/)).toBeNull();
-    expect(screen.getByText(/Действует до/i)).toBeTruthy();
+    expect(screen.queryByText(/вкусовых/)).toBeNull();
+    expect(screen.getByText('Вода безлимитно')).toBeTruthy();
   });
 
   it('stays clickable while loading', () => {
     const onOpen = vi.fn();
 
-    render(<PlanSummaryCard plan={null} isLoading onOpen={onOpen} />);
+    render(<PlanSummaryCard plan={null} isLoading waterBenefitVariant="trial" onOpen={onOpen} />);
 
     const button = screen.getByRole('button', { name: /тариф/i });
     expect(button.getAttribute('aria-busy')).toBe('true');

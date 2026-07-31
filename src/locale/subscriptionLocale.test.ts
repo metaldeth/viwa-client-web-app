@@ -5,8 +5,10 @@ describe('subscriptionLocale', () => {
     setSubscriptionLocale('en');
     expect(tSubscription('planTitle')).toBe('VIWA plans');
     expect(tSubscription('progressExpired', { date: '01.01.2026' })).toContain('expired');
+    expect(tSubscription('unlimitedWaterBenefitActive')).toContain('Unlimited water');
 
     setSubscriptionLocale('ru');
     expect(tSubscription('planTitle')).toBe('Тарифы VIWA');
+    expect(tSubscription('unlimitedWaterBenefitTrial')).toMatch(/Обычная вода/i);
   });
 });
