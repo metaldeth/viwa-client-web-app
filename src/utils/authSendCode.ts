@@ -52,12 +52,25 @@ export function getSendCodeErrorMessage(error: unknown): string {
   return 'Не удалось отправить код';
 }
 
+export function buildSmsAuthPath(
+  cooldownSeconds: number,
+  phone: string,
+  channel: OtpChannel,
+  machineSerial?: string,
+): string {
+  const segment = `sms/${cooldownSeconds}/${phone}/${channel}`;
+  return machineSerial
+    ? `/m/${encodeURIComponent(machineSerial)}/auth/${segment}`
+    : `/auth/${segment}`;
+}
+
+/** @deprecated Use {@link buildSmsAuthPath} with absolute paths */
 export function buildSmsAuthRelativePath(
   cooldownSeconds: number,
   phone: string,
   channel: OtpChannel,
 ): string {
-  return `sms/${cooldownSeconds}/${phone}/${channel}`;
+  return buildSmsAuthPath(cooldownSeconds, phone, channel);
 }
 
 export function getCodeEntryTitle(channel: OtpChannel): string {

@@ -1,4 +1,5 @@
 import {
+  buildSmsAuthPath,
   buildSmsAuthRelativePath,
   getCodeEntryTitle,
   getResendReadyLabel,
@@ -8,11 +9,26 @@ import {
 } from './authSendCode';
 
 describe('authSendCode', () => {
-  it('builds sms auth path with channel', () => {
-    expect(buildSmsAuthRelativePath(30, '79991234567', 'FLASHCALL')).toBe(
-      'sms/30/79991234567/FLASHCALL',
+  it('builds absolute sms auth path with channel', () => {
+    expect(buildSmsAuthPath(30, '79991234567', 'FLASHCALL')).toBe(
+      '/auth/sms/30/79991234567/FLASHCALL',
     );
-    expect(buildSmsAuthRelativePath(30, '79991234567', 'SMS')).toBe('sms/30/79991234567/SMS');
+    expect(buildSmsAuthPath(30, '79991234567', 'SMS')).toBe('/auth/sms/30/79991234567/SMS');
+  });
+
+  it('builds machine-scoped sms auth path', () => {
+    expect(buildSmsAuthPath(30, '79991234567', 'SMS', 'ABC-123')).toBe(
+      '/m/ABC-123/auth/sms/30/79991234567/SMS',
+    );
+    expect(buildSmsAuthPath(30, '79991234567', 'SMS', 'serial/with/slash')).toBe(
+      '/m/serial%2Fwith%2Fslash/auth/sms/30/79991234567/SMS',
+    );
+  });
+
+  it('deprecated relative alias returns absolute path without serial', () => {
+    expect(buildSmsAuthRelativePath(30, '79991234567', 'FLASHCALL')).toBe(
+      '/auth/sms/30/79991234567/FLASHCALL',
+    );
   });
 
   it('parses otp channel from route param', () => {

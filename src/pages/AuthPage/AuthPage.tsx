@@ -7,15 +7,16 @@ import { ReactMaskOpts, useIMask } from 'react-imask';
 import { PhoneValidation } from './types';
 import { Button } from '@asnefedov/uikit/Button';
 import { checkPhoneValidation } from './helpers';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch } from '../../app/hooks/store';
 import { sendCodeToPhoneThunk } from '../../state/auth/thunk';
-import { buildSmsAuthRelativePath, getSendCodeErrorMessage } from '../../utils/authSendCode';
+import { buildSmsAuthPath, getSendCodeErrorMessage } from '../../utils/authSendCode';
 
 const AuthPage: FC = () => {
   const dispatch = useAppDispatch();
   const isOnRequest = true;
   const navigate = useNavigate();
+  const { machineSerial } = useParams();
 
   const { ref, unmaskedValue } = useIMask<HTMLInputElement, ReactMaskOpts>({
     mask: '+{7}(000)000-00-00',
@@ -39,14 +40,19 @@ const AuthPage: FC = () => {
         .unwrap()
         .then((response) => {
           navigate(
-            buildSmsAuthRelativePath(response.cooldownSeconds, unmaskedValue, response.channel),
+            buildSmsAuthPath(
+              response.cooldownSeconds,
+              unmaskedValue,
+              response.channel,
+              machineSerial,
+            ),
           );
         })
         .catch((error: unknown) => {
           setSendError(getSendCodeErrorMessage(error));
         });
     } else {
-      navigate(buildSmsAuthRelativePath(10, unmaskedValue, 'FLASHCALL'));
+      navigate(buildSmsAuthPath(10, unmaskedValue, 'FLASHCALL', machineSerial));
     }
   };
 

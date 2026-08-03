@@ -16,7 +16,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { checkCodeAndCreateClientThunk, sendCodeToPhoneThunk } from '../../state/auth/thunk';
 import { POST_AUTH_HOME_PATH } from '../../state/auth/navigation';
 import {
-  buildSmsAuthRelativePath,
+  buildSmsAuthPath,
   getCodeEntryTitle,
   getResendReadyLabel,
   getResendWaitingLabel,
@@ -129,11 +129,16 @@ const SmsPage: FC = () => {
         .unwrap()
         .then((response) => {
           setChannel(response.channel);
+          start(response.cooldownSeconds, handleCompleteTimer);
           navigate(
-            buildSmsAuthRelativePath(response.cooldownSeconds, formattedPhone, response.channel),
+            buildSmsAuthPath(
+              response.cooldownSeconds,
+              formattedPhone,
+              response.channel,
+              machineSerial,
+            ),
             { replace: true },
           );
-          start(response.cooldownSeconds, handleCompleteTimer);
         })
         .catch((error: unknown) => {
           const parsed = parseSendCodeApiError(error);
