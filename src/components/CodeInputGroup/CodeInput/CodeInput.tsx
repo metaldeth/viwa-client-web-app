@@ -5,11 +5,9 @@ import { motion } from 'framer-motion';
 import { initialCodeInput, visibleCodeInput } from '../../../animations/variants/codeInputVariants';
 import { CodeInputProps } from './types';
 
-/**
- * Кодовое поле
- */
 const CodeInput: FC<CodeInputProps> = ({
   index,
+  total,
   inputRef,
   value,
   isValid,
@@ -23,7 +21,6 @@ const CodeInput: FC<CodeInputProps> = ({
 }) => {
   const [isFocus, setIsFocus] = React.useState(false);
 
-  // Обработчики
   const handleFocus = () => {
     setIsFocus(true);
   };
@@ -39,16 +36,20 @@ const CodeInput: FC<CodeInputProps> = ({
       initial={initialCodeInput}
       animate={visibleCodeInput(index)}
     >
-      <motion.div key={index} id={String(index)} animate={{ scale: isFocus ? 1.1 : 1 }}>
+      <motion.div key={index} id={String(index)} animate={{ scale: isFocus ? 1.04 : 1 }}>
         <input
           className={classNames(
             styles.CodeInput,
             isValid !== undefined && !isValid && styles.invalid,
           )}
           ref={inputRef}
-          id={String(index)}
+          id={`otp-digit-${index}`}
+          name={`otp-digit-${index}`}
           type="text"
           inputMode="numeric"
+          pattern="[0-9]*"
+          autoComplete={index === 0 ? 'one-time-code' : 'off'}
+          aria-label={`Цифра ${index + 1} из ${total}`}
           disabled={disabled}
           maxLength={1}
           value={value}

@@ -1,11 +1,9 @@
-﻿import { FC, useEffect, useState } from 'react';
+﻿import { FC, FormEvent, useEffect, useState } from 'react';
+import classNames from 'classnames';
 import styles from './AuthPage.module.scss';
-import VerticalContainer from '../../components/VerticalContainer';
-import { Text } from '@asnefedov/uikit/Text';
-import { TextField } from '@asnefedov/uikit/TextField';
+import CabinetAuthShell from '../../components/CabinetAuthShell';
 import { ReactMaskOpts, useIMask } from 'react-imask';
 import { PhoneValidation } from './types';
-import { Button } from '@asnefedov/uikit/Button';
 import { checkPhoneValidation } from './helpers';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch } from '../../app/hooks/store';
@@ -27,6 +25,7 @@ const AuthPage: FC = () => {
     message: '',
   });
   const [sendError, setSendError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     setPhoneValidation(checkPhoneValidation(unmaskedValue));
@@ -34,8 +33,13 @@ const AuthPage: FC = () => {
   }, [unmaskedValue]);
 
   const handleSendCode = () => {
+    if (!phoneValidation.isValid || isSubmitting) {
+      return;
+    }
+
     if (isOnRequest) {
       setSendError('');
+      setIsSubmitting(true);
       dispatch(sendCodeToPhoneThunk(unmaskedValue))
         .unwrap()
         .then((response) => {
@@ -50,75 +54,74 @@ const AuthPage: FC = () => {
         })
         .catch((error: unknown) => {
           setSendError(getSendCodeErrorMessage(error));
+        })
+        .finally(() => {
+          setIsSubmitting(false);
         });
     } else {
       navigate(buildSmsAuthPath(10, unmaskedValue, 'FLASHCALL', machineSerial));
     }
   };
 
-  const renderHeader = () => (
-    <Text size="2xl" weight="semibold" lineHeight="xs">
-      Авторизация
-    </Text>
-  );
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    handleSendCode();
+  };
 
-  const renderDeliveryHint = () => (
-    <Text className={styles.instructionText} size="m" lineHeight="s" align="center">
-      Мы позвоним на указанный номер — введите 4 последние цифры входящего звонка
-    </Text>
-  );
-
-  const renderPhoneTextField = () => (
-    <TextField
-      view="default"
-      width="full"
-      size="l"
-      label="Введите номер телефона"
-      placeholder="+7"
-      inputRef={ref}
-      type="tel"
-      inputMode="tel"
-      status={unmaskedValue.length > 0 && !phoneValidation.isValid ? 'alert' : undefined}
-      caption={unmaskedValue.length > 0 && !phoneValidation.isValid ? phoneValidation.message : ''}
-    />
-  );
-
-  const renderUserAgreement = () => (
-    <span className={styles.link}>пользовательским соглашением</span>
-  );
-
-  const renderPolicyAgreement = () => (
-    <span className={styles.link}>политикой конфиденциальности</span>
-  );
-
-  const renderAcceptContainer = () => (
-    <VerticalContainer isAutoWidth space="2xs">
-      <Button
-        view={!phoneValidation.isValid ? 'secondary' : 'primary'}
-        label="Подтвердить вход"
-        width="full"
-        size="l"
-        disabled={!phoneValidation.isValid}
-        onClick={handleSendCode}
-      />
-      <Text size="xs" lineHeight="m" align="center">
-        Нажимая кнопку, вы соглашаетесь с {renderUserAgreement()} и {renderPolicyAgreement()}
-      </Text>
-    </VerticalContainer>
-  );
+  const showValidationError = unmaskedValue.length > 0 && !phoneValidation.isValid;
 
   return (
-    <VerticalContainer space="m" isAutoWidth align="center">
-      {renderHeader()}
-      {renderDeliveryHint()}
-      {renderPhoneTextField()}
-      {sendError ? (
-        <Text size="xs" lineHeight="m" align="center" view="alert">
-          {sendError}
-        </Text>
-      ) : null}
-      {renderAcceptContainer()}
-    </VerticalContainer>
+    <CabinetAuthShell
+      title="Авторизация"
+      description="Мы позвоним на указанный номер — введите 4 последние цифры входящего звонка"
+    >
+      <form className={styles.actions} onSubmit={handleSubmit} noValidate>
+        <div className={styles.phoneField}>
+          <label className={styles.phoneLabel} htmlFor="auth-phone-input">
+            Введите номер телефона
+          </label>
+          <input
+            ref={ref}
+            id="auth-phone-input"
+            className={classNames(styles.phoneInput, showValidationError && styles.invalid)}
+            type="tel"
+            inputMode="tel"
+            autoComplete="tel"
+            placeholder="+7"
+            aria-invalid={showValidationError || undefined}
+            aria-describedby={showValidationError ? 'auth-phone-error' : undefined}
+          />
+          <span
+            id="auth-phone-error"
+            className={styles.fieldHint}
+            role={showValidationError ? 'alert' : undefined}
+            aria-live="polite"
+          >
+            {showValidationError ? phoneValidation.message : '\u00a0'}
+          </span>
+        </div>
+
+        {sendError ? (
+          <p className={styles.errorBanner} role="alert" aria-live="assertive">
+            {sendError}
+          </p>
+        ) : null}
+
+        <button
+          type="submit"
+          className={styles.submitButton}
+          disabled={!phoneValidation.isValid || isSubmitting}
+        >
+          {isSubmitting ? 'Отправляем…' : 'Подтвердить вход'}
+        </button>
+
+        <p className={styles.legalCopy}>
+          Нажимая кнопку, вы соглашаетесь с{' '}
+          <span className={styles.link}>пользовательским соглашением</span> и{' '}
+          <span className={styles.link}>политикой конфиденциальности</span>
+        </p>
+      </form>
+    </CabinetAuthShell>
   );
 };
 

@@ -1,13 +1,10 @@
 ﻿import React, { ChangeEvent, FC, useEffect, useRef, useState } from 'react';
-import HorizontalContainer from '../HorizontalContainer';
 import CodeInput from './CodeInput/CodeInput';
+import styles from './CodeInputGroup.module.scss';
 import { animate } from 'motion';
 import { highlightCodeInput, shakeCodeInput } from '../../animations/variants/codeInputVariants';
 import { CodeInputGroupProps } from './types';
 
-/**
- * Группа кодовых полей
- */
 const CodeInputGroup: FC<CodeInputGroupProps> = ({
   count,
   isValid,
@@ -42,14 +39,12 @@ const CodeInputGroup: FC<CodeInputGroupProps> = ({
   }, [resetVersion, count]);
 
   const handleInvalid = async () => {
-    // Активация анимации подсветки и тряски элементов
     const animationInvalid = inputRefs.current.map((item) => {
       if (!item) return Promise.resolve();
 
       item.style.transition = 'none';
 
       return Promise.all([
-        // animate(item, Shake, SpringOption),
         animate(item, shakeCodeInput, shakeCodeInput.transition),
         animate(item, highlightCodeInput, highlightCodeInput.transition),
       ]);
@@ -91,11 +86,17 @@ const CodeInputGroup: FC<CodeInputGroupProps> = ({
   };
 
   return (
-    <HorizontalContainer space="s" isAutoWidth justify="center">
+    <div
+      className={styles.codeGroup}
+      role="group"
+      aria-label="Код подтверждения"
+      aria-invalid={isValid === false || undefined}
+    >
       {code.map((value, index) => (
         <CodeInput
           key={index}
           index={index}
+          total={count}
           inputRef={(item) => (inputRefs.current[index] = item as HTMLInputElement)}
           value={value}
           isValid={isValid}
@@ -104,7 +105,7 @@ const CodeInputGroup: FC<CodeInputGroupProps> = ({
           onKeyDown={handleKeyDown}
         />
       ))}
-    </HorizontalContainer>
+    </div>
   );
 };
 

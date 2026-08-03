@@ -1,34 +1,85 @@
-$instructionWidth: 221px;
-$resendCodeCardBorderRadius: 12px;
-$resendCodeCardPadding: 4px 12px;
-$resendCodeCardHeight: 28px;
-
-.instructionText{
-  width: $instructionWidth;
+.phoneHighlight {
+  color: var(--viwa-text, #f5f5f5);
+  font-weight: 600;
+  white-space: nowrap;
 }
 
-.resendCodeCard {
-  border-radius: $resendCodeCardBorderRadius;
-  height: $resendCodeCardHeight;
-  padding: $resendCodeCardPadding;
+.codeSection {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--viwa-space-md, 1rem);
+}
 
-  background: rgba(124, 58, 237, 0.1);
-  border: 1px solid rgba(124, 58, 237, 0.2);
+.statusRow {
+  display: flex;
+  min-height: 2rem;
+  align-items: center;
+  justify-content: center;
+}
 
-  .text{
-    color: #9090b0;
+.errorBanner {
+  margin: 0;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid rgba(255, 107, 107, 0.35);
+  border-radius: var(--viwa-radius-sm, 8px);
+  background: rgba(255, 107, 107, 0.1);
+  color: #ffb4b4;
+  font-size: 0.875rem;
+  line-height: 1.35;
+  text-align: center;
+}
 
-    &.asButton{
-      color: #9b72f0;
-    }
+.resendButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: var(--viwa-touch-min, 44px);
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(127, 90, 240, 0.35);
+  border-radius: var(--viwa-radius-md, 12px);
+  background: rgba(127, 90, 240, 0.12);
+  color: var(--viwa-accent, #7f5af0);
+  cursor: pointer;
+  font-family: var(--viwa-font-ui, 'Inter', system-ui, sans-serif);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.2;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.1s ease;
+
+  &:hover:not(:disabled) {
+    background: rgba(127, 90, 240, 0.2);
+    border-color: rgba(127, 90, 240, 0.5);
   }
 
-  &.asButton{
-    background: rgba(124, 58, 237, 0.2);
-    border-color: rgba(124, 58, 237, 0.4);
+  &:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--viwa-focus, #7f5af0);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.72;
   }
 }
 
-.link {
-  color: #9b72f0;
+.resendButtonWaiting {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--viwa-muted, #a3a3a3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .resendButton {
+    transition: none;
+  }
 }

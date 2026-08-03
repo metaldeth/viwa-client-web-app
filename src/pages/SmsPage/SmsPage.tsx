@@ -1,11 +1,8 @@
-﻿import { FC, useEffect, useRef, useState } from 'react';
-import VerticalContainer from '../../components/VerticalContainer';
-import { Text } from '@asnefedov/uikit/Text';
-import styles from './SmsPage.module.scss';
-import HorizontalContainer from '../../components/HorizontalContainer';
-import CodeInputGroup from '../../components/CodeInputGroup/CodeInputGroup';
+﻿import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
-import ContentCard from '../../components/ContentCard';
+import styles from './SmsPage.module.scss';
+import CabinetAuthShell from '../../components/CabinetAuthShell';
+import CodeInputGroup from '../../components/CodeInputGroup/CodeInputGroup';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getFormatPhone } from '../../helpers/getFormattedPhone';
 import { useTimer } from '../../hooks/useTimer';
@@ -49,26 +46,28 @@ const SmsPage: FC = () => {
   const isOnRequest = true;
   const isValidRequest = true;
 
+  const channelEyebrow = channel === 'SMS' ? 'SMS' : 'ЗВОНОК';
+
   useEffect(() => {
     setChannel(parseOtpChannel(channelParam));
   }, [channelParam]);
+
+  const handleCompleteTimer = useCallback(() => {
+    setCanRequest(true);
+  }, []);
+
+  const handleStartTimer = useCallback(() => {
+    start(Number(time), handleCompleteTimer);
+  }, [start, time, handleCompleteTimer]);
 
   useEffect(() => {
     if (!canRequest) {
       handleStartTimer();
     }
-  }, [canRequest]);
+  }, [canRequest, handleStartTimer]);
 
   const handleInvalidRequest = () => {
     codeInputGroupInvalidRef.current?.();
-  };
-
-  const handleCompleteTimer = () => {
-    setCanRequest(true);
-  };
-
-  const handleStartTimer = () => {
-    start(Number(time), handleCompleteTimer);
   };
 
   const handleChangeCode = (codeLength: number) => {
@@ -155,121 +154,93 @@ const SmsPage: FC = () => {
     }
   };
 
-  const renderPhoneNumber = () => (
-    <span className={styles.link}>{phone && getFormatPhone(phone, true)}</span>
-  );
+  const renderDescription = () => {
+    const formatted = phone ? getFormatPhone(phone, true) : '';
 
-  const renderInstructionSubtitle = () => {
     if (channel === 'SMS') {
       return (
-        <Text className={styles.instructionText} size="m" lineHeight="s" align="center">
-          Мы отправили SMS на номер телефона {renderPhoneNumber()}
-        </Text>
+        <>
+          Мы отправили SMS на номер <span className={styles.phoneHighlight}>{formatted}</span>
+        </>
       );
     }
 
     return (
-      <Text className={styles.instructionText} size="m" lineHeight="s" align="center">
-        Мы позвоним на номер телефона {renderPhoneNumber()}
-      </Text>
+      <>
+        Мы позвоним на номер <span className={styles.phoneHighlight}>{formatted}</span>
+      </>
     );
   };
 
-  const renderInstructionsContainer = () => (
-    <VerticalContainer isAutoWidth align="center" space="s">
-      <Text size="2xl" weight="semibold" lineHeight="xs" align="center">
-        {getCodeEntryTitle(channel)}
-      </Text>
-      {renderInstructionSubtitle()}
-    </VerticalContainer>
-  );
-
-  const renderCodeEntryContainer = () => (
-    <HorizontalContainer>
-      <CodeInputGroup
-        count={smsCodeLength}
-        resetVersion={resetVersion}
-        isValid={isValidCode}
-        disabled={isLoadRequest}
-        onChangeInput={handleChangeCode}
-        onComplete={handleCompleteCode}
-        onExternalInvalid={(handler) => (codeInputGroupInvalidRef.current = handler)}
-      />
-    </HorizontalContainer>
-  );
-
-  const renderLoader = () => (
-    <motion.div
-      key="loader"
-      style={{ display: 'inherit' }}
-      initial={{ opacity: 0, y: -10 }}
-      animate={{ opacity: 1, y: 0, transition: { ease: 'backOut' } }}
-      exit={{ opacity: 0, y: -10 }}
-    >
-      <Loader view="primary" />
-    </motion.div>
-  );
-
-  const renderResendCodeCard = (id: number, title: string, onClick?: () => void) => (
-    <motion.div
-      key={id}
-      style={{ width: '100%' }}
-      initial={{
-        opacity: 0,
-        y: 10,
-        filter: 'blur(10px)',
-      }}
-      animate={{
-        opacity: 1,
-        y: 0,
-        filter: 'blur(0)',
-        transition: { ease: 'backOut' },
-      }}
-      exit={{
-        opacity: 0,
-        y: 10,
-        filter: 'blur(10px)',
-      }}
-      whileTap={onClick && { scale: 0.95 }}
-      onClick={onClick}
-    >
-      <ContentCard className={classNames(styles.resendCodeCard, onClick && styles.asButton)}>
-        <Text
-          className={classNames(styles.text, onClick && styles.asButton)}
-          size="xs"
-          weight="medium"
-        >
-          {title}
-        </Text>
-      </ContentCard>
-    </motion.div>
-  );
-
-  const renderResendCodeContainer = (canRequest: boolean) => (
-    <AnimatePresence mode="wait">
-      {canRequest
-        ? renderResendCodeCard(0, getResendReadyLabel(channel), handleTryRequestCode)
-        : renderResendCodeCard(1, getResendWaitingLabel(currentTime, channel))}
-    </AnimatePresence>
-  );
-
-  const renderResendError = () =>
-    resendError ? (
-      <Text size="xs" lineHeight="m" align="center" view="alert">
-        {resendError}
-      </Text>
-    ) : null;
+  const resendLabel = canRequest
+    ? getResendReadyLabel(channel)
+    : getResendWaitingLabel(currentTime, channel);
 
   return (
-    <VerticalContainer space="m" isAutoWidth align="center">
-      {renderInstructionsContainer()}
-      <VerticalContainer space="m" isAutoWidth align="center">
-        {renderCodeEntryContainer()}
-        <AnimatePresence mode="wait">{isLoadRequest && renderLoader()}</AnimatePresence>
-        {renderResendError()}
-        {renderResendCodeContainer(canRequest)}
-      </VerticalContainer>
-    </VerticalContainer>
+    <CabinetAuthShell
+      eyebrow={channelEyebrow}
+      title={getCodeEntryTitle(channel)}
+      description={renderDescription()}
+    >
+      <div className={styles.codeSection}>
+        <CodeInputGroup
+          count={smsCodeLength}
+          resetVersion={resetVersion}
+          isValid={isValidCode}
+          disabled={isLoadRequest}
+          onChangeInput={handleChangeCode}
+          onComplete={handleCompleteCode}
+          onExternalInvalid={(handler) => (codeInputGroupInvalidRef.current = handler)}
+        />
+
+        <div className={styles.statusRow} aria-live="polite" aria-busy={isLoadRequest}>
+          <AnimatePresence mode="wait">
+            {isLoadRequest ? (
+              <motion.div
+                key="loader"
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+              >
+                <Loader view="primary" />
+              </motion.div>
+            ) : null}
+          </AnimatePresence>
+        </div>
+
+        {!isValidCode ? (
+          <p className={styles.errorBanner} role="alert" aria-live="assertive">
+            Неверный код. Проверьте цифры и попробуйте снова.
+          </p>
+        ) : null}
+
+        {resendError ? (
+          <p className={styles.errorBanner} role="alert" aria-live="assertive">
+            {resendError}
+          </p>
+        ) : null}
+
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={canRequest ? 'ready' : 'waiting'}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 8 }}
+            transition={{ duration: 0.2 }}
+          >
+            <button
+              type="button"
+              className={classNames(styles.resendButton, !canRequest && styles.resendButtonWaiting)}
+              onClick={canRequest ? handleTryRequestCode : undefined}
+              disabled={!canRequest}
+              aria-live="polite"
+            >
+              {resendLabel}
+            </button>
+          </motion.div>
+        </AnimatePresence>
+      </div>
+    </CabinetAuthShell>
   );
 };
 
