@@ -10,7 +10,7 @@ import { ViwaBrandLogo } from '../ViwaBrandLogo/ViwaBrandLogo';
 import { tSubscription } from '../../locale/subscriptionLocale';
 import styles from './CabinetHeader.module.scss';
 
-/** Cabinet page header with VIWA logo, notifications, and account menu. */
+/** Cabinet page header with VIWA logo and account menu. */
 const CabinetHeader: FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -77,84 +77,51 @@ const CabinetHeader: FC = () => {
       </div>
 
       <div className={styles.trailing}>
-        <div className={styles.titleRow}>
-          <h1 className={styles.title}>{tSubscription('cabinetTitle')}</h1>
-          <div className={styles.menuWrap}>
-            <button
-              ref={menuButtonRef}
-              type="button"
-              className={styles.iconButton}
+        <div className={styles.menuWrap}>
+          <button
+            ref={menuButtonRef}
+            type="button"
+            className={styles.iconButton}
+            aria-label={tSubscription('cabinetMenuAria')}
+            aria-haspopup="menu"
+            aria-expanded={isMenuOpen}
+            aria-controls="cabinet-header-menu"
+            onClick={handleMenuToggle}
+          >
+            <svg className={styles.icon} viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M4 7h16M4 12h16M4 17h16"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.75"
+                strokeLinecap="round"
+              />
+            </svg>
+          </button>
+
+          {isMenuOpen && (
+            <div
+              ref={menuPanelRef}
+              id="cabinet-header-menu"
+              className={styles.menuPanel}
+              role="menu"
               aria-label={tSubscription('cabinetMenuAria')}
-              aria-haspopup="menu"
-              aria-expanded={isMenuOpen}
-              aria-controls="cabinet-header-menu"
-              onClick={handleMenuToggle}
             >
-              <svg className={styles.icon} viewBox="0 0 24 24" aria-hidden="true">
-                <path
-                  d="M4 7h16M4 12h16M4 17h16"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.75"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </button>
-
-            {isMenuOpen && (
-              <div
-                ref={menuPanelRef}
-                id="cabinet-header-menu"
-                className={styles.menuPanel}
-                role="menu"
-                aria-label={tSubscription('cabinetMenuAria')}
-              >
-                {/* Extension point: user profile / account summary */}
-                <ul className={styles.menuList}>
-                  <li role="none">
-                    <button
-                      type="button"
-                      className={styles.menuItem}
-                      role="menuitem"
-                      onClick={handleLogout}
-                    >
-                      {tSubscription('cabinetMenuLogOut')}
-                    </button>
-                  </li>
-                </ul>
-              </div>
-            )}
-          </div>
-        </div>
-
-        <div className={styles.bellRow}>
-          <div className={styles.bellWrap}>
-            <span
-              className={styles.iconButton}
-              role="img"
-              aria-label={tSubscription('cabinetNotificationsDecorative')}
-            >
-              <svg className={styles.icon} viewBox="0 0 24 24" aria-hidden="true">
-                <path
-                  d="M12 3a5 5 0 0 0-5 5v2.5c0 .8-.3 1.6-.8 2.2L5 14.5h14l-1.2-1.8c-.5-.6-.8-1.4-.8-2.2V8a5 5 0 0 0-5-5Z"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M10 18a2 2 0 0 0 4 0"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </span>
-            <span className={styles.badge} aria-hidden="true">
-              3
-            </span>
-          </div>
+              {/* Extension point: user profile / account summary */}
+              <ul className={styles.menuList}>
+                <li role="none">
+                  <button
+                    type="button"
+                    className={styles.menuItem}
+                    role="menuitem"
+                    onClick={handleLogout}
+                  >
+                    {tSubscription('cabinetMenuLogOut')}
+                  </button>
+                </li>
+              </ul>
+            </div>
+          )}
         </div>
       </div>
     </header>

@@ -82,9 +82,7 @@
     "subscription.navAriaLabel": "Main navigation",
     "subscription.brand": "VIWA",
     "subscription.volumeUnit": "ML",
-    "subscription.cabinetTitle": "CABINET",
     "subscription.cabinetMenuAria": "Cabinet menu",
-    "subscription.cabinetMenuLogOut": "Log out",
-    "subscription.cabinetNotificationsDecorative": "Notifications: decorative indicator, feature not available yet"
+    "subscription.cabinetMenuLogOut": "Log out"
   }
 }

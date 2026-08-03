@@ -2,6 +2,7 @@
 import { store } from './app/store';
 import { BrowserRouter } from 'react-router-dom';
 import App from './pages/App';
+import { AppVersionGuard } from './components/AppVersionGuard/AppVersionGuard';
 import './index.css';
 
 import React from 'react';
@@ -25,7 +26,9 @@ root.render(
   <>
     <Provider store={store}>
       <BrowserRouter>
-        <App />
+        <AppVersionGuard>
+          <App />
+        </AppVersionGuard>
       </BrowserRouter>
     </Provider>
   </>,

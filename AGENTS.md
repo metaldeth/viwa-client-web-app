@@ -9,6 +9,7 @@
 | lintCommand | `npm run lint` |
 | testCommand | `npm test` |
 | mrTarget | dev |
+| versionFormat | semver in package.json; emitted to dist/version.json and __APP_VERSION__ |
 | workspace | `c:\viwa` |
 | agentRules | `c:\viwa\.cursor\rules\` (общие правила и скиллы — не дублировать в репозитории) |
 

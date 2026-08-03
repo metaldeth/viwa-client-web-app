@@ -84,10 +84,8 @@ export type SubscriptionLocaleKey =
   | 'navAriaLabel'
   | 'brand'
   | 'volumeUnit'
-  | 'cabinetTitle'
   | 'cabinetMenuAria'
-  | 'cabinetMenuLogOut'
-  | 'cabinetNotificationsDecorative';
+  | 'cabinetMenuLogOut';
 
 type LocaleCatalog = Record<SubscriptionLocaleKey, string>;
 

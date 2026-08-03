@@ -82,9 +82,7 @@
     "subscription.navAriaLabel": "Основная навигация",
     "subscription.brand": "VIWA",
     "subscription.volumeUnit": "МЛ",
-    "subscription.cabinetTitle": "КАБИНЕТ",
     "subscription.cabinetMenuAria": "Меню кабинета",
-    "subscription.cabinetMenuLogOut": "Выйти",
-    "subscription.cabinetNotificationsDecorative": "Уведомления: декоративный индикатор, функция пока недоступна"
+    "subscription.cabinetMenuLogOut": "Выйти"
   }
 }

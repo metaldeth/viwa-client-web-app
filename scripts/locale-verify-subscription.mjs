@@ -93,10 +93,8 @@ const REQUIRED_KEYS = [
   'subscription.navAriaLabel',
   'subscription.brand',
   'subscription.volumeUnit',
-  'subscription.cabinetTitle',
   'subscription.cabinetMenuAria',
   'subscription.cabinetMenuLogOut',
-  'subscription.cabinetNotificationsDecorative',
 ];
 
 function loadTranslation(localeFile) {
