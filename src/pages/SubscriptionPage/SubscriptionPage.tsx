@@ -231,7 +231,8 @@ const SubscriptionPage: FC = () => {
                   />
                   <span className={styles.tierCardGradient} aria-hidden="true" />
                   <span className={styles.tierCardContent}>
-                    <span className={styles.tierCardName}>
+                    <span className={styles.tierCardName}>{level.name}</span>
+                    <span className={styles.tierCardMeta}>
                       {tSubscription('tierFlavoredVolume', {
                         liters: formatLitersFromMl(tierVolumeMl(level)),
                       })}
