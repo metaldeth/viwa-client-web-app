@@ -30,6 +30,21 @@
   text-align: center;
 }
 
+.resendBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.375rem;
+}
+
+.resendHint {
+  margin: 0;
+  color: var(--viwa-muted, #a3a3a3);
+  font-size: 0.8125rem;
+  line-height: 1.35;
+  text-align: center;
+}
+
 .resendButton {
   display: flex;
   align-items: center;

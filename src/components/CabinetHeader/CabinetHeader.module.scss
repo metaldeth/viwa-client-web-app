@@ -1,29 +1,23 @@
 .CabinetHeader {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 10px;
-  padding: calc(env(safe-area-inset-top, 0px) + 8px) var(--viwa-cabinet-header-pad-right, 16px) 6px
+  box-sizing: border-box;
+  min-height: calc(env(safe-area-inset-top, 0px) + 52px);
+  padding: calc(env(safe-area-inset-top, 0px) + 8px) var(--viwa-cabinet-header-pad-right, 16px) 10px
     var(--viwa-cabinet-header-pad-left, 16px);
 }
 
 .leading {
   flex-shrink: 0;
-  transform: translateY(21px);
-}
-
-@media (max-width: 360px) {
-  .leading {
-    transform: translate(9px, 21px);
-  }
 }
 
 .trailing {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  margin-top: 0;
-  transform: translateY(21px);
+  flex-shrink: 0;
 }
 
 .iconButton {

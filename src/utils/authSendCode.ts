@@ -78,12 +78,16 @@ export function getCodeEntryTitle(channel: OtpChannel): string {
     return 'Введите код из SMS';
   }
 
-  return 'Введите 4 последние цифры входящего звонка';
+  return 'Ждём звонок';
+}
+
+export function getFlashcallFallbackHint(): string {
+  return 'Не пришёл звонок?';
 }
 
 export function getResendReadyLabel(currentChannel: OtpChannel): string {
   if (currentChannel === 'FLASHCALL') {
-    return 'Отправить SMS';
+    return 'Получить код по SMS';
   }
 
   return 'Запросить SMS повторно';
@@ -91,8 +95,8 @@ export function getResendReadyLabel(currentChannel: OtpChannel): string {
 
 export function getResendWaitingLabel(seconds: number, currentChannel: OtpChannel): string {
   if (currentChannel === 'FLASHCALL') {
-    return `Отправить SMS через ${seconds} секунд`;
+    return `SMS станет доступно через ${seconds} сек.`;
   }
 
-  return `Запросить SMS повторно через ${seconds} секунд`;
+  return `Запросить SMS повторно через ${seconds} сек.`;
 }

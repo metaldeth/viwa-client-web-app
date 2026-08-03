@@ -33,10 +33,16 @@ const CodeInput: FC<CodeInputProps> = ({
     <motion.div
       key={index}
       id={String(index)}
+      className={styles.slotOuter}
       initial={initialCodeInput}
       animate={visibleCodeInput(index)}
     >
-      <motion.div key={index} id={String(index)} animate={{ scale: isFocus ? 1.04 : 1 }}>
+      <motion.div
+        key={index}
+        id={String(index)}
+        className={styles.slotInner}
+        animate={{ scale: isFocus ? 1.04 : 1 }}
+      >
         <input
           className={classNames(
             styles.CodeInput,

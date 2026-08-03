@@ -15,6 +15,7 @@ import { POST_AUTH_HOME_PATH } from '../../state/auth/navigation';
 import {
   buildSmsAuthPath,
   getCodeEntryTitle,
+  getFlashcallFallbackHint,
   getResendReadyLabel,
   getResendWaitingLabel,
   getSendCodeErrorMessage,
@@ -167,7 +168,8 @@ const SmsPage: FC = () => {
 
     return (
       <>
-        Мы позвоним на номер <span className={styles.phoneHighlight}>{formatted}</span>
+        Ответить не нужно — введите последние 4 цифры номера входящего звонка на{' '}
+        <span className={styles.phoneHighlight}>{formatted}</span>
       </>
     );
   };
@@ -220,25 +222,34 @@ const SmsPage: FC = () => {
           </p>
         ) : null}
 
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={canRequest ? 'ready' : 'waiting'}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 8 }}
-            transition={{ duration: 0.2 }}
-          >
-            <button
-              type="button"
-              className={classNames(styles.resendButton, !canRequest && styles.resendButtonWaiting)}
-              onClick={canRequest ? handleTryRequestCode : undefined}
-              disabled={!canRequest}
-              aria-live="polite"
+        <div className={styles.resendBlock}>
+          {channel === 'FLASHCALL' ? (
+            <p className={styles.resendHint}>{getFlashcallFallbackHint()}</p>
+          ) : null}
+
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={canRequest ? 'ready' : 'waiting'}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 8 }}
+              transition={{ duration: 0.2 }}
             >
-              {resendLabel}
-            </button>
-          </motion.div>
-        </AnimatePresence>
+              <button
+                type="button"
+                className={classNames(
+                  styles.resendButton,
+                  !canRequest && styles.resendButtonWaiting,
+                )}
+                onClick={canRequest ? handleTryRequestCode : undefined}
+                disabled={!canRequest}
+                aria-live="polite"
+              >
+                {resendLabel}
+              </button>
+            </motion.div>
+          </AnimatePresence>
+        </div>
       </div>
     </CabinetAuthShell>
   );

@@ -1,13 +1,21 @@
-$codeInputGap: clamp(0.375rem, 2.5vw, 0.75rem);
 $codeInputSize: clamp(3rem, 18vw, 4rem);
+
+.slotOuter {
+  box-sizing: border-box;
+  flex: 0 1 calc((100% - 3 * var(--code-input-gap, 0.5rem)) / 4);
+  min-width: 44px;
+  max-width: $codeInputSize;
+}
+
+.slotInner {
+  width: 100%;
+}
 
 .CodeInput {
   box-sizing: border-box;
-  flex: 0 1 $codeInputSize;
-  width: $codeInputSize;
-  max-width: calc((100% - 3 * #{$codeInputGap}) / 4);
+  display: block;
+  width: 100%;
   height: $codeInputSize;
-  min-width: 0;
   min-height: var(--viwa-touch-min, 44px);
   padding: 0;
   border: 1px solid rgba(255, 255, 255, 0.12);

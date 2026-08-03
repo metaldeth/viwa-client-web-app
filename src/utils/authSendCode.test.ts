@@ -2,6 +2,7 @@ import {
   buildSmsAuthPath,
   buildSmsAuthRelativePath,
   getCodeEntryTitle,
+  getFlashcallFallbackHint,
   getResendReadyLabel,
   getResendWaitingLabel,
   getSendCodeErrorMessage,
@@ -46,11 +47,18 @@ describe('authSendCode', () => {
   });
 
   it('uses channel-specific copy', () => {
-    expect(getCodeEntryTitle('FLASHCALL')).toContain('звонка');
-    expect(getCodeEntryTitle('SMS')).toContain('SMS');
-    expect(getResendReadyLabel('FLASHCALL')).toBe('Отправить SMS');
+    expect(getCodeEntryTitle('FLASHCALL')).toBe('Ждём звонок');
+    expect(getCodeEntryTitle('SMS')).toBe('Введите код из SMS');
+    expect(getFlashcallFallbackHint()).toBe('Не пришёл звонок?');
+    expect(getResendReadyLabel('FLASHCALL')).toBe('Получить код по SMS');
     expect(getResendReadyLabel('SMS')).toBe('Запросить SMS повторно');
-    expect(getResendWaitingLabel(12, 'FLASHCALL')).toContain('Отправить SMS через 12');
-    expect(getResendWaitingLabel(12, 'SMS')).toContain('Запросить SMS повторно через 12');
+    expect(getResendWaitingLabel(12, 'FLASHCALL')).toBe('SMS станет доступно через 12 сек.');
+    expect(getResendWaitingLabel(12, 'SMS')).toBe('Запросить SMS повторно через 12 сек.');
+  });
+
+  it('does not imply SMS is active during FLASHCALL waiting state', () => {
+    const waiting = getResendWaitingLabel(30, 'FLASHCALL');
+    expect(waiting).not.toContain('Отправить SMS');
+    expect(waiting).toContain('SMS станет доступно');
   });
 });
