@@ -10,6 +10,7 @@ import { checkPhoneValidation } from './helpers';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../app/hooks/store';
 import { sendCodeToPhoneThunk } from '../../state/auth/thunk';
+import { buildSmsAuthRelativePath, getSendCodeErrorMessage } from '../../utils/authSendCode';
 
 const AuthPage: FC = () => {
   const dispatch = useAppDispatch();
@@ -24,32 +25,40 @@ const AuthPage: FC = () => {
     isValid: false,
     message: '',
   });
+  const [sendError, setSendError] = useState('');
 
   useEffect(() => {
     setPhoneValidation(checkPhoneValidation(unmaskedValue));
+    setSendError('');
   }, [unmaskedValue]);
 
   const handleSendCode = () => {
     if (isOnRequest) {
+      setSendError('');
       dispatch(sendCodeToPhoneThunk(unmaskedValue))
         .unwrap()
         .then((response) => {
-          navigate(`sms/${response.cooldownSeconds}/${unmaskedValue}`);
+          navigate(
+            buildSmsAuthRelativePath(response.cooldownSeconds, unmaskedValue, response.channel),
+          );
         })
-        .catch((error: Error) => {
-          setPhoneValidation({
-            isValid: false,
-            message: `Ошибка запроса: ${error.message}`,
-          });
+        .catch((error: unknown) => {
+          setSendError(getSendCodeErrorMessage(error));
         });
     } else {
-      navigate(`sms/${10}/${unmaskedValue}`);
+      navigate(buildSmsAuthRelativePath(10, unmaskedValue, 'FLASHCALL'));
     }
   };
 
   const renderHeader = () => (
     <Text size="2xl" weight="semibold" lineHeight="xs">
       Авторизация
+    </Text>
+  );
+
+  const renderDeliveryHint = () => (
+    <Text className={styles.instructionText} size="m" lineHeight="s" align="center">
+      Мы позвоним на указанный номер — введите 4 последние цифры входящего звонка
     </Text>
   );
 
@@ -95,7 +104,13 @@ const AuthPage: FC = () => {
   return (
     <VerticalContainer space="m" isAutoWidth align="center">
       {renderHeader()}
+      {renderDeliveryHint()}
       {renderPhoneTextField()}
+      {sendError ? (
+        <Text size="xs" lineHeight="m" align="center" view="alert">
+          {sendError}
+        </Text>
+      ) : null}
       {renderAcceptContainer()}
     </VerticalContainer>
   );

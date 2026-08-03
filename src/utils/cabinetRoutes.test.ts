@@ -4,7 +4,7 @@ describe('cabinetRoutes', () => {
   it('matches cabinet and auth shell routes without legacy FLOW header', () => {
     expect(isViwaCabinetShellRoute('/home')).toBe(true);
     expect(isViwaCabinetShellRoute('/auth')).toBe(true);
-    expect(isViwaCabinetShellRoute('/auth/sms/60/79001234567')).toBe(true);
+    expect(isViwaCabinetShellRoute('/auth/sms/30/79001234567/FLASHCALL')).toBe(true);
     expect(isViwaCabinetShellRoute('/register')).toBe(true);
     expect(isViwaCabinetShellRoute('/m/VIWA-000004/home')).toBe(true);
     expect(isViwaCabinetShellRoute('/m/VIWA-000004/auth')).toBe(true);

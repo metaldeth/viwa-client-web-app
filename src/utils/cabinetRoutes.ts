@@ -1,5 +1,5 @@
 const CABINET_SHELL_ROUTE =
-  /^(\/home|\/register|\/auth(?:\/sms\/[^/]+\/[^/]+)?|\/m\/[^/]+\/(?:home|auth(?:\/sms\/[^/]+\/[^/]+)?))$/;
+  /^(\/home|\/register|\/auth(?:\/sms\/[^/]+\/[^/]+(?:\/[^/]+)?)?|\/m\/[^/]+\/(?:home|auth(?:\/sms\/[^/]+\/[^/]+(?:\/[^/]+)?)?))$/;
 
 /**
  * Returns true for cabinet/auth shell routes that hide the legacy FLOW header.

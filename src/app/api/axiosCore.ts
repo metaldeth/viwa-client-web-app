@@ -18,7 +18,9 @@ import { redirectToClientAuth } from '../../pages/ValidationPage/helpers';
 type ApiError = {
   code: string;
   message: string;
-  key: string;
+  key?: string;
+  retryAfterSeconds?: number;
+  status?: number;
 };
 
 export type AxiosRequestConfigWithAuth = AxiosRequestConfig & {
@@ -126,13 +128,20 @@ export class AxiosCoreApi {
           }
         }
 
+        const responseData = error.response?.data as Record<string, unknown> | undefined;
+        const bodyCode = responseData?.code;
+        const bodyMessage = responseData?.message ?? responseData?.key;
+
         return Promise.reject({
           ...error,
-          code: String(status),
-          message: String(
-            error.response?.data?.key || error.response?.data?.message || 'Unauthorized',
-          ),
-        });
+          code: bodyCode != null ? String(bodyCode) : String(status),
+          message: String(bodyMessage ?? 'Unauthorized'),
+          retryAfterSeconds:
+            typeof responseData?.retryAfterSeconds === 'number'
+              ? responseData.retryAfterSeconds
+              : undefined,
+          status,
+        } satisfies ApiError);
       },
     );
   }

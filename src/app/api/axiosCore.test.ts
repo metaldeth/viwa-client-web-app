@@ -242,4 +242,50 @@ describe('AxiosCoreApi auth persistence', () => {
 
     expect(vi.mocked(axios.post)).toHaveBeenCalledTimes(1);
   });
+
+  it('preserves send-code 429 body fields in rejected error', async () => {
+    new AxiosCoreApi({ baseURL: 'http://localhost:4000' });
+
+    const rateLimitError = {
+      response: {
+        status: 429,
+        data: {
+          code: 'RATE_LIMIT',
+          retryAfterSeconds: 30,
+          message: 'Too many requests',
+        },
+      },
+      config: { url: '/client/auth/send-code', skipAuth: true },
+      isAxiosError: true,
+    };
+
+    await expect(interceptorHandlers.responseError!(rateLimitError)).rejects.toMatchObject({
+      code: 'RATE_LIMIT',
+      retryAfterSeconds: 30,
+      message: 'Too many requests',
+      status: 429,
+    });
+  });
+
+  it('preserves DAILY_LIMIT code from 429 body', async () => {
+    new AxiosCoreApi({ baseURL: 'http://localhost:4000' });
+
+    const dailyLimitError = {
+      response: {
+        status: 429,
+        data: {
+          code: 'DAILY_LIMIT',
+          retryAfterSeconds: 86400,
+        },
+      },
+      config: { url: '/client/auth/send-code', skipAuth: true },
+      isAxiosError: true,
+    };
+
+    await expect(interceptorHandlers.responseError!(dailyLimitError)).rejects.toMatchObject({
+      code: 'DAILY_LIMIT',
+      retryAfterSeconds: 86400,
+      status: 429,
+    });
+  });
 });

@@ -61,6 +61,15 @@ export const App: FC = () => {
             />
 
             <Route
+              path="/auth/sms/:time/:phone/:channel"
+              element={
+                <ReturningAuthGuard>
+                  <SmsPage />
+                </ReturningAuthGuard>
+              }
+            />
+
+            <Route
               path="/auth/sms/:time/:phone"
               element={
                 <ReturningAuthGuard>
@@ -84,6 +93,15 @@ export const App: FC = () => {
                 element={
                   <ReturningAuthGuard>
                     <AuthPage />
+                  </ReturningAuthGuard>
+                }
+              />
+
+              <Route
+                path="auth/sms/:time/:phone/:channel"
+                element={
+                  <ReturningAuthGuard>
+                    <SmsPage />
                   </ReturningAuthGuard>
                 }
               />

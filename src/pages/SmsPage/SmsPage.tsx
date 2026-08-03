@@ -15,19 +15,31 @@ import { CheckCodeResponse } from '../../types/serverInterface/clientDTO';
 import { AnimatePresence, motion } from 'framer-motion';
 import { checkCodeAndCreateClientThunk, sendCodeToPhoneThunk } from '../../state/auth/thunk';
 import { POST_AUTH_HOME_PATH } from '../../state/auth/navigation';
+import {
+  buildSmsAuthRelativePath,
+  getCodeEntryTitle,
+  getResendReadyLabel,
+  getResendWaitingLabel,
+  getSendCodeErrorMessage,
+  OtpChannel,
+  parseOtpChannel,
+  parseSendCodeApiError,
+} from '../../utils/authSendCode';
 
 const smsCodeLength = 4;
 
 const SmsPage: FC = () => {
   const dispatch = useAppDispatch();
 
-  const { machineSerial, time, phone } = useParams();
+  const { machineSerial, time, phone, channel: channelParam } = useParams();
   const navigate = useNavigate();
 
+  const [channel, setChannel] = useState<OtpChannel>(() => parseOtpChannel(channelParam));
   const [canRequest, setCanRequest] = useState(false);
   const [isLoadRequest, setIsLoadRequest] = useState(false);
   const [isValidCode, setIsValidCode] = useState(true);
   const [resetVersion, setResetVersion] = useState(0);
+  const [resendError, setResendError] = useState('');
 
   const codeInputGroupInvalidRef = useRef<() => void>();
 
@@ -36,6 +48,10 @@ const SmsPage: FC = () => {
   const formattedPhone = String(phone);
   const isOnRequest = true;
   const isValidRequest = true;
+
+  useEffect(() => {
+    setChannel(parseOtpChannel(channelParam));
+  }, [channelParam]);
 
   useEffect(() => {
     if (!canRequest) {
@@ -105,15 +121,30 @@ const SmsPage: FC = () => {
   const handleTryRequestCode = () => {
     setCanRequest(false);
     setIsValidCode(true);
+    setResendError('');
     setResetVersion((v) => v + 1);
 
     if (isOnRequest) {
       dispatch(sendCodeToPhoneThunk(formattedPhone))
         .unwrap()
         .then((response) => {
+          setChannel(response.channel);
+          navigate(
+            buildSmsAuthRelativePath(response.cooldownSeconds, formattedPhone, response.channel),
+            { replace: true },
+          );
           start(response.cooldownSeconds, handleCompleteTimer);
         })
-        .catch(() => {
+        .catch((error: unknown) => {
+          const parsed = parseSendCodeApiError(error);
+          setResendError(getSendCodeErrorMessage(error));
+
+          if (parsed.retryAfterSeconds != null && parsed.retryAfterSeconds > 0) {
+            start(parsed.retryAfterSeconds, handleCompleteTimer);
+            setCanRequest(false);
+            return;
+          }
+
           setCanRequest(true);
         });
     }
@@ -123,14 +154,28 @@ const SmsPage: FC = () => {
     <span className={styles.link}>{phone && getFormatPhone(phone, true)}</span>
   );
 
-  const renderInstructionsContainer = () => (
-    <VerticalContainer isAutoWidth align="center" space="s">
-      <Text size="2xl" weight="semibold" lineHeight="xs" align="center">
-        Введите 4 последние цифры входящего звонка
-      </Text>
+  const renderInstructionSubtitle = () => {
+    if (channel === 'SMS') {
+      return (
+        <Text className={styles.instructionText} size="m" lineHeight="s" align="center">
+          Мы отправили SMS на номер телефона {renderPhoneNumber()}
+        </Text>
+      );
+    }
+
+    return (
       <Text className={styles.instructionText} size="m" lineHeight="s" align="center">
         Мы позвоним на номер телефона {renderPhoneNumber()}
       </Text>
+    );
+  };
+
+  const renderInstructionsContainer = () => (
+    <VerticalContainer isAutoWidth align="center" space="s">
+      <Text size="2xl" weight="semibold" lineHeight="xs" align="center">
+        {getCodeEntryTitle(channel)}
+      </Text>
+      {renderInstructionSubtitle()}
     </VerticalContainer>
   );
 
@@ -198,10 +243,17 @@ const SmsPage: FC = () => {
   const renderResendCodeContainer = (canRequest: boolean) => (
     <AnimatePresence mode="wait">
       {canRequest
-        ? renderResendCodeCard(0, 'Запросить код повторно', handleTryRequestCode)
-        : renderResendCodeCard(1, `Запросить звонок повторно через ${currentTime} секунд`)}
+        ? renderResendCodeCard(0, getResendReadyLabel(channel), handleTryRequestCode)
+        : renderResendCodeCard(1, getResendWaitingLabel(currentTime, channel))}
     </AnimatePresence>
   );
+
+  const renderResendError = () =>
+    resendError ? (
+      <Text size="xs" lineHeight="m" align="center" view="alert">
+        {resendError}
+      </Text>
+    ) : null;
 
   return (
     <VerticalContainer space="m" isAutoWidth align="center">
@@ -209,6 +261,7 @@ const SmsPage: FC = () => {
       <VerticalContainer space="m" isAutoWidth align="center">
         {renderCodeEntryContainer()}
         <AnimatePresence mode="wait">{isLoadRequest && renderLoader()}</AnimatePresence>
+        {renderResendError()}
         {renderResendCodeContainer(canRequest)}
       </VerticalContainer>
     </VerticalContainer>

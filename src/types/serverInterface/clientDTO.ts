@@ -62,11 +62,14 @@ export type CheckCodeResponse = {
   client: ClientProfileDTO;
 };
 
+export type OtpDeliveryChannel = 'FLASHCALL' | 'SMS';
+
 /**
  * Viwa Telemetry POST /client/auth/send-code response
  */
 export type SendCodeResult = {
   cooldownSeconds: number;
+  channel: OtpDeliveryChannel;
 };
 
 /**
