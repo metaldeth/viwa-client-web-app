@@ -73,6 +73,7 @@ const REQUIRED_KEYS = [
   'subscription.subscribeCta',
   'subscription.subscribeModalTitle',
   'subscription.subscribePay',
+  'subscription.subscribeDowngradeNotAllowed',
   'subscription.subscribeWait',
   'subscription.subscribeAwaitPayment',
   'subscription.subscribeAwaitActivation',

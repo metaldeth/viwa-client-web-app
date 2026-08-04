@@ -22,8 +22,17 @@ import { useClientSubscriptionWs } from '../../hooks/useClientSubscriptionWs';
 import { formatLitersFromMl, formatPriceRub, tSubscription } from '../../locale/subscriptionLocale';
 import { resolveMonthlyProgress } from '../../utils/monthlyProgress';
 import { resolvePlanSummaryDisplay } from '../../utils/planSummary';
+import {
+  isSubscriptionLevelSelectable,
+  levelVolumeMl,
+  normalizeSelectedSubscriptionLevelId,
+  resolveSelectableSubscriptionLevels,
+  sortLevelsByOrder,
+  type SubscriptionProfileInput,
+} from '../../utils/subscriptionLevels';
+import { resolveSubscriptionPaymentErrorMessage } from '../../utils/subscriptionPaymentError';
 import { resolveUnlimitedWaterBenefitVariant } from '../../utils/unlimitedWaterBenefit';
-import { resolveTierCardBackground } from '../../utils/tierCardBackground';
+import { resolveTierCardBackgroundForLevel } from '../../utils/tierCardBackground';
 
 type PayPhase =
   | 'idle'
@@ -57,10 +66,6 @@ const LoyaltyQrCode = memo(function LoyaltyQrCode({
   );
 });
 
-function tierVolumeMl(level: SubscriptionLevelDTO): number {
-  return level.monthlyVolumeMl ?? level.dailyVolumeMl ?? 0;
-}
-
 function isPaymentFlowActive(payPhase: PayPhase, paymentUrl: string | null): boolean {
   return Boolean(paymentUrl) || PAYMENT_ACTIVE_PHASES.includes(payPhase);
 }
@@ -86,7 +91,40 @@ const SubscriptionPage: FC = () => {
   const [isScanModalOpen, setIsScanModalOpen] = useState(false);
   const [isDescriptionModalOpen, setIsDescriptionModalOpen] = useState(false);
 
-  const planSummary = useMemo(() => resolvePlanSummaryDisplay(client, levels), [client, levels]);
+  const subscriptionProfile = useMemo(
+    (): SubscriptionProfileInput => ({
+      tierName: client?.tierName ?? null,
+      subscriptionEndsAt: client?.subscriptionEndsAt ?? null,
+      monthlyLimitMl: client?.monthlyLimitMl,
+      dailyLimitMl: client?.dailyLimitMl,
+      active: client?.active,
+    }),
+    [
+      client?.tierName,
+      client?.subscriptionEndsAt,
+      client?.monthlyLimitMl,
+      client?.dailyLimitMl,
+      client?.active,
+    ],
+  );
+
+  const planSummary = useMemo(
+    () => resolvePlanSummaryDisplay(subscriptionProfile, levels),
+    [subscriptionProfile, levels],
+  );
+  const selectableLevels = useMemo(
+    () => resolveSelectableSubscriptionLevels(subscriptionProfile, levels),
+    [subscriptionProfile, levels],
+  );
+
+  useEffect(() => {
+    setSelectedLevelId((current) => {
+      if (isSubscriptionLevelSelectable(current, selectableLevels)) {
+        return current;
+      }
+      return normalizeSelectedSubscriptionLevelId(current, selectableLevels, planSummary?.levelId);
+    });
+  }, [selectableLevels, planSummary?.levelId]);
 
   const refreshProfile = useCallback(() => {
     if (isAuthed) {
@@ -108,7 +146,7 @@ const SubscriptionPage: FC = () => {
       .fetchSubscriptionLevels()
       .then((response) => {
         if (cancelled) return;
-        const sorted = [...(response.items || [])].sort((a, b) => a.sortOrder - b.sortOrder);
+        const sorted = sortLevelsByOrder(response.items || []);
         setLevels(sorted);
         setPayPhase('ready');
       })
@@ -125,14 +163,15 @@ const SubscriptionPage: FC = () => {
   }, [isAuthed]);
 
   const handlePurchase = useCallback(async () => {
-    if (!selectedLevelId) return;
+    const levelId = selectedLevelId;
+    if (!levelId || !isSubscriptionLevelSelectable(levelId, selectableLevels)) return;
 
     setPayError(null);
     setPayPhase('init');
 
     try {
       const init = await api.billing.initSubscriptionPayment({
-        subscriptionLevelId: selectedLevelId,
+        subscriptionLevelId: levelId,
         requestUuid: crypto.randomUUID(),
       });
 
@@ -144,21 +183,22 @@ const SubscriptionPage: FC = () => {
       setPayPhase('done');
       dispatch(getCurrentClientProfileAction());
     } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : tSubscription('planError');
-      setPayError(msg);
+      setPayError(resolveSubscriptionPaymentErrorMessage(e));
       setPayPhase('ready');
     }
-  }, [selectedLevelId, dispatch]);
+  }, [selectedLevelId, selectableLevels, dispatch]);
 
   const openSubscribeModal = useCallback(
     (levelId?: string | null) => {
-      const nextLevelId = levelId ?? planSummary?.levelId ?? levels[0]?.id ?? null;
-      if (nextLevelId) {
-        setSelectedLevelId(nextLevelId);
-      }
+      const nextLevelId = normalizeSelectedSubscriptionLevelId(
+        levelId ?? selectedLevelId,
+        selectableLevels,
+        planSummary?.levelId,
+      );
+      setSelectedLevelId(nextLevelId);
       setIsDescriptionModalOpen(true);
     },
-    [levels, planSummary?.levelId],
+    [selectableLevels, planSummary?.levelId, selectedLevelId],
   );
 
   const handleDescriptionModalClose = () => {
@@ -170,7 +210,7 @@ const SubscriptionPage: FC = () => {
 
   const showTariffSelection = !isPaymentFlowActive(payPhase, paymentUrl);
   const isPayButtonDisabled =
-    !selectedLevelId ||
+    !isSubscriptionLevelSelectable(selectedLevelId, selectableLevels) ||
     payPhase === 'init' ||
     payPhase === 'await_payment' ||
     payPhase === 'await_subscription' ||
@@ -180,7 +220,7 @@ const SubscriptionPage: FC = () => {
     <div className={styles.subscribeModalBody}>
       {showTariffSelection && (
         <div className={styles.tierSelection}>
-          {payPhase !== 'loading_levels' && levels.length > 0 ? (
+          {payPhase !== 'loading_levels' && selectableLevels.length > 0 ? (
             <Text size="s" view="secondary" className={styles.tierSelectionHint}>
               {tSubscription('planSelect')}
             </Text>
@@ -192,7 +232,7 @@ const SubscriptionPage: FC = () => {
             </Text>
           )}
 
-          {levels.length === 0 && payPhase === 'ready' && (
+          {selectableLevels.length === 0 && payPhase === 'ready' && (
             <Text size="m" view="secondary">
               {tSubscription('planEmpty')}
             </Text>
@@ -209,7 +249,7 @@ const SubscriptionPage: FC = () => {
             role="radiogroup"
             aria-label={tSubscription('planSelect')}
           >
-            {levels.map((level, index) => {
+            {selectableLevels.map((level) => {
               const isSelected = selectedLevelId === level.id;
 
               return (
@@ -226,7 +266,9 @@ const SubscriptionPage: FC = () => {
                   />
                   <span
                     className={styles.tierCardBackground}
-                    style={{ backgroundImage: `url(${resolveTierCardBackground(index)})` }}
+                    style={{
+                      backgroundImage: `url(${resolveTierCardBackgroundForLevel(level.id, levels)})`,
+                    }}
                     aria-hidden="true"
                   />
                   <span className={styles.tierCardGradient} aria-hidden="true" />
@@ -234,7 +276,7 @@ const SubscriptionPage: FC = () => {
                     <span className={styles.tierCardName}>{level.name}</span>
                     <span className={styles.tierCardMeta}>
                       {tSubscription('tierFlavoredVolume', {
-                        liters: formatLitersFromMl(tierVolumeMl(level)),
+                        liters: formatLitersFromMl(levelVolumeMl(level)),
                       })}
                     </span>
                     <span

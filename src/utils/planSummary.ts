@@ -1,5 +1,10 @@
-import type { ClientProfileDTO } from '../types/serverInterface/clientDTO';
 import type { SubscriptionLevelDTO } from '../types/subscriptionLevel';
+import {
+  findLevelByTierName,
+  levelVolumeMl,
+  sortLevelsByOrder,
+  type SubscriptionProfileInput,
+} from './subscriptionLevels';
 import { isActiveSubscriptionProfile } from './subscriptionStatus';
 
 export type PlanSummaryVariant = 'offer' | 'current';
@@ -15,28 +20,12 @@ export type PlanSummaryDisplay = {
   subscriptionEndsAt: string | null;
 };
 
-function levelVolumeMl(level: SubscriptionLevelDTO): number {
-  return level.monthlyVolumeMl ?? level.dailyVolumeMl ?? 0;
-}
-
-function findLevelByTierName(
-  levels: SubscriptionLevelDTO[],
-  tierName: string,
-): SubscriptionLevelDTO | undefined {
-  return (
-    levels.find((level) => level.name === tierName) ??
-    levels.find((level) => level.name.toLowerCase() === tierName.toLowerCase())
-  );
-}
-
 /** Lowest `sortOrder` tier — used as recommended plan for trial/inactive clients. */
 export function resolveRecommendedLevel(
   levels: SubscriptionLevelDTO[],
 ): SubscriptionLevelDTO | null {
-  if (levels.length === 0) {
-    return null;
-  }
-  return [...levels].sort((a, b) => a.sortOrder - b.sortOrder)[0] ?? null;
+  const sorted = sortLevelsByOrder(levels);
+  return sorted[0] ?? null;
 }
 
 /**
@@ -44,7 +33,7 @@ export function resolveRecommendedLevel(
  * otherwise the recommended lowest-sort tier from the public levels API.
  */
 export function resolvePlanSummaryDisplay(
-  profile: ClientProfileDTO | null | undefined,
+  profile: SubscriptionProfileInput | null | undefined,
   levels: SubscriptionLevelDTO[],
 ): PlanSummaryDisplay | null {
   if (profile && isActiveSubscriptionProfile(profile) && profile.tierName) {

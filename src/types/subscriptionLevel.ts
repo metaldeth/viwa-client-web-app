@@ -8,7 +8,7 @@ export type SubscriptionLevelDTO = {
   /** @deprecated one-release alias — prefer monthlyVolumeMl */
   dailyVolumeMl?: number;
   priceKopecks: number;
-  sortOrder: number;
+  sortOrder: number | null;
 };
 
 export type SubscriptionLevelsResponse = {

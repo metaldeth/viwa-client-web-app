@@ -11,3 +11,12 @@ export function resolveTierCardBackground(sortedIndex: number): string {
 
   return TIER_CARD_BACKGROUNDS[sortedIndex % TIER_CARD_BACKGROUNDS.length];
 }
+
+/** Background tied to tier identity in the full catalog (stable after filtering). */
+export function resolveTierCardBackgroundForLevel(
+  levelId: string,
+  catalogLevels: readonly { id: string }[],
+): string {
+  const index = catalogLevels.findIndex((level) => level.id === levelId);
+  return resolveTierCardBackground(index);
+}

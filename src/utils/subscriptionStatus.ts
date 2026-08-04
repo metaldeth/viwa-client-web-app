@@ -1,9 +1,10 @@
-import type { ClientProfileDTO } from '../types/serverInterface/clientDTO';
-
-export type SubscriptionStatusInput = Pick<
-  ClientProfileDTO,
-  'tierName' | 'subscriptionEndsAt' | 'monthlyLimitMl' | 'dailyLimitMl' | 'active'
->;
+export type SubscriptionStatusInput = {
+  tierName?: string | null;
+  subscriptionEndsAt?: string | null;
+  monthlyLimitMl?: number;
+  dailyLimitMl?: number;
+  active?: boolean;
+};
 
 export function isSubscriptionEndDateActive(
   subscriptionEndsAt: string | null | undefined,

@@ -64,6 +64,7 @@ export type SubscriptionLocaleKey =
   | 'subscribeCta'
   | 'subscribeModalTitle'
   | 'subscribePay'
+  | 'subscribeDowngradeNotAllowed'
   | 'subscribeWait'
   | 'subscribeAwaitPayment'
   | 'subscribeAwaitActivation'

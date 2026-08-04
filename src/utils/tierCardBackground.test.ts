@@ -1,4 +1,4 @@
-import { resolveTierCardBackground } from './tierCardBackground';
+import { resolveTierCardBackground, resolveTierCardBackgroundForLevel } from './tierCardBackground';
 
 describe('resolveTierCardBackground', () => {
   it('maps sorted indices to stable card backgrounds', () => {
@@ -10,5 +10,18 @@ describe('resolveTierCardBackground', () => {
 
   it('falls back to the first background for negative indices', () => {
     expect(resolveTierCardBackground(-1)).toBe('/assets/viwa/plans/viwa-tier-card-01.webp');
+  });
+});
+
+describe('resolveTierCardBackgroundForLevel', () => {
+  it('keeps background stable by level id in full catalog', () => {
+    const catalog = [{ id: 'tier-12' }, { id: 'tier-18' }];
+
+    expect(resolveTierCardBackgroundForLevel('tier-18', catalog)).toBe(
+      '/assets/viwa/plans/viwa-tier-card-02.webp',
+    );
+    expect(resolveTierCardBackgroundForLevel('tier-18', [{ id: 'tier-18' }])).toBe(
+      '/assets/viwa/plans/viwa-tier-card-01.webp',
+    );
   });
 });
