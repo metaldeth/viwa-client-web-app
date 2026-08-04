@@ -2,6 +2,11 @@ export const APP_VERSION = __APP_VERSION__;
 
 export const RELOAD_RETURN_PATH_KEY = 'viwa_reload_return_path';
 export const RELOAD_TARGET_VERSION_KEY = 'viwa_reload_target_version';
+export const VERSION_FETCH_TIMEOUT_MS = 4_000;
+
+export type FetchServerVersionOptions = {
+  timeoutMs?: number;
+};
 
 export const saveReloadReturnPath = (): void => {
   if (typeof sessionStorage === 'undefined' || typeof window === 'undefined') {
@@ -44,10 +49,21 @@ export const hasAlreadyReloadedForVersion = (serverVersion: string): boolean => 
   return sessionStorage.getItem(RELOAD_TARGET_VERSION_KEY) === serverVersion;
 };
 
-export const fetchServerVersion = async (): Promise<string | null> => {
+export const fetchServerVersion = async (
+  options: FetchServerVersionOptions = {},
+): Promise<string | null> => {
+  const timeoutMs = options.timeoutMs ?? VERSION_FETCH_TIMEOUT_MS;
+
+  if (typeof window === 'undefined' || typeof fetch !== 'function') {
+    return null;
+  }
+
+  const controller = new AbortController();
+  const timeoutId = window.setTimeout(() => controller.abort(), timeoutMs);
+
   try {
     const url = `${import.meta.env.BASE_URL}version.json?_=${Date.now()}`;
-    const response = await fetch(url, { cache: 'no-store' });
+    const response = await fetch(url, { cache: 'no-store', signal: controller.signal });
 
     if (!response.ok) {
       return null;
@@ -57,5 +73,7 @@ export const fetchServerVersion = async (): Promise<string | null> => {
     return typeof data.version === 'string' ? data.version : null;
   } catch {
     return null;
+  } finally {
+    window.clearTimeout(timeoutId);
   }
 };

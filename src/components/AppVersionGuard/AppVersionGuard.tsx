@@ -1,14 +1,11 @@
 import { FC, ReactNode, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  APP_VERSION,
   consumeReloadReturnPath,
-  fetchServerVersion,
   hasAlreadyReloadedForVersion,
   isSafeReturnPath,
-  markReloadTargetVersion,
-  saveReloadReturnPath,
 } from '../../utils/appVersion';
+import { runBackgroundVersionCheck, runInitialVersionBoot } from '../../utils/appVersionBoot';
 
 const POLL_INTERVAL_MS = 60_000;
 
@@ -28,11 +25,10 @@ export const AppVersionGuard: FC<AppVersionGuardProps> = ({ children }) => {
   }, [navigate]);
 
   useEffect(() => {
-    if (import.meta.env.DEV) {
-      return;
-    }
+    let cancelled = false;
+    let pollIntervalId: number | undefined;
 
-    const checkVersion = async () => {
+    const checkVersionInBackground = async (): Promise<void> => {
       if (checkingRef.current) {
         return;
       }
@@ -40,38 +36,51 @@ export const AppVersionGuard: FC<AppVersionGuardProps> = ({ children }) => {
       checkingRef.current = true;
 
       try {
-        const serverVersion = await fetchServerVersion();
-
-        if (!serverVersion || serverVersion === APP_VERSION) {
-          return;
-        }
-
-        if (hasAlreadyReloadedForVersion(serverVersion)) {
-          return;
-        }
-
-        markReloadTargetVersion(serverVersion);
-        saveReloadReturnPath();
-        window.location.reload();
+        await runBackgroundVersionCheck({
+          hasReloaded: hasAlreadyReloadedForVersion,
+        });
       } finally {
         checkingRef.current = false;
       }
     };
 
-    void checkVersion();
-
-    const onVisibilityChange = () => {
-      if (document.visibilityState === 'visible') {
-        void checkVersion();
+    const startBackgroundPolling = (): (() => void) => {
+      if (import.meta.env.DEV) {
+        return () => undefined;
       }
+
+      const onVisibilityChange = () => {
+        if (document.visibilityState === 'visible') {
+          void checkVersionInBackground();
+        }
+      };
+
+      document.addEventListener('visibilitychange', onVisibilityChange);
+      pollIntervalId = window.setInterval(() => void checkVersionInBackground(), POLL_INTERVAL_MS);
+
+      return () => {
+        document.removeEventListener('visibilitychange', onVisibilityChange);
+        if (pollIntervalId !== undefined) {
+          window.clearInterval(pollIntervalId);
+        }
+      };
     };
 
-    document.addEventListener('visibilitychange', onVisibilityChange);
-    const intervalId = window.setInterval(() => void checkVersion(), POLL_INTERVAL_MS);
+    let stopPolling: (() => void) | undefined;
+
+    void runInitialVersionBoot().then((result) => {
+      if (cancelled) {
+        return;
+      }
+
+      if (result === 'ready') {
+        stopPolling = startBackgroundPolling();
+      }
+    });
 
     return () => {
-      document.removeEventListener('visibilitychange', onVisibilityChange);
-      window.clearInterval(intervalId);
+      cancelled = true;
+      stopPolling?.();
     };
   }, []);
 

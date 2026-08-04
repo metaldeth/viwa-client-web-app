@@ -19,5 +19,12 @@ export default defineConfig({
     environment: 'node',
     pool: 'forks',
     include: ['src/**/*.{test,spec}.{ts,tsx}'],
+    env: {
+      DEV: 'false',
+    },
+  },
+  define: {
+    '__APP_VERSION__': JSON.stringify('1.0.0-test'),
+    'import.meta.env.DEV': false,
   },
 });
