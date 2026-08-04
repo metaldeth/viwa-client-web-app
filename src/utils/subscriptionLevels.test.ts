@@ -2,7 +2,7 @@ import {
   findCurrentSubscriptionLevel,
   isSubscriptionLevelDisabled,
   normalizeSelectedSubscriptionLevelId,
-  resolveDisabledTierMessage,
+  resolveDisabledTierCopy,
   resolveSelectableSubscriptionLevels,
   resolveSubscriptionTierAvailability,
   resolveVisibleSubscriptionLevels,
@@ -247,25 +247,82 @@ describe('resolveSubscriptionTierAvailability disabled tiers', () => {
   });
 });
 
-describe('resolveDisabledTierMessage', () => {
+describe('resolveDisabledTierCopy', () => {
   /** Local noon avoids UTC midnight day-shift in formatDateDDMMYYYY. */
   const stableEndDate = '2099-06-15T12:00:00';
 
-  it('formats active subscription end date in RU', () => {
-    expect(resolveDisabledTierMessage(stableEndDate, 'ru')).toBe('Недоступен до 15.06.2099');
+  const activeProProfile = {
+    tierName: 'Pro',
+    subscriptionEndsAt: stableEndDate,
+  };
+
+  const startLevel = startProLevels[0]!;
+
+  it('returns status and exact RU explanation for Pro/current + Start/target/date', () => {
+    expect(resolveDisabledTierCopy(activeProProfile, startLevel, 'ru')).toEqual({
+      status: 'Недоступен сейчас',
+      explanation:
+        'У вас действует тариф Pro до 15.06.2099. После этой даты Start станет доступен.',
+    });
   });
 
-  it('formats active subscription end date in EN', () => {
-    expect(resolveDisabledTierMessage(stableEndDate, 'en')).toBe('Unavailable until 15.06.2099');
+  it('returns status and EN explanation for Pro/current + Start/target/date', () => {
+    expect(resolveDisabledTierCopy(activeProProfile, startLevel, 'en')).toEqual({
+      status: 'Unavailable now',
+      explanation:
+        'Your Pro plan is active until 15.06.2099. After that date, Start will become available.',
+    });
   });
 
-  it('falls back to generic copy when date is missing', () => {
-    expect(resolveDisabledTierMessage(null, 'ru')).toBe('Недоступен при текущем тарифе');
-    expect(resolveDisabledTierMessage(null, 'en')).toBe('Unavailable on your current plan');
+  it('falls back to generic copy when end date is missing', () => {
+    expect(
+      resolveDisabledTierCopy({ tierName: 'Pro', subscriptionEndsAt: null }, startLevel, 'ru'),
+    ).toEqual({
+      status: 'Недоступен сейчас',
+      explanation:
+        'У вас действует более высокий тариф. После его окончания этот тариф станет доступен.',
+    });
   });
 
-  it('falls back to generic copy when date is invalid', () => {
-    expect(resolveDisabledTierMessage('not-a-date', 'ru')).toBe('Недоступен при текущем тарифе');
+  it('falls back to generic copy when end date is invalid', () => {
+    expect(
+      resolveDisabledTierCopy(
+        { tierName: 'Pro', subscriptionEndsAt: 'not-a-date' },
+        startLevel,
+        'en',
+      ),
+    ).toEqual({
+      status: 'Unavailable now',
+      explanation: 'You have a higher plan active. Once it ends, this plan will become available.',
+    });
+  });
+
+  it('falls back to generic copy when current tier name is missing', () => {
+    expect(
+      resolveDisabledTierCopy(
+        { tierName: null, subscriptionEndsAt: stableEndDate },
+        startLevel,
+        'ru',
+      ),
+    ).toEqual({
+      status: 'Недоступен сейчас',
+      explanation:
+        'У вас действует более высокий тариф. После его окончания этот тариф станет доступен.',
+    });
+  });
+
+  it('keeps XSS-like tier names as literal text in locale interpolation', () => {
+    const maliciousTier = '<img src=x onerror=alert(1)>';
+    const copy = resolveDisabledTierCopy(
+      { tierName: maliciousTier, subscriptionEndsAt: stableEndDate },
+      { name: maliciousTier },
+      'ru',
+    );
+
+    expect(copy.explanation).toBe(
+      `У вас действует тариф ${maliciousTier} до 15.06.2099. После этой даты ${maliciousTier} станет доступен.`,
+    );
+    expect(typeof copy.explanation).toBe('string');
   });
 });
 

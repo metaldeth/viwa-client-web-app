@@ -182,20 +182,59 @@ export function isSubscriptionLevelDisabled(
   return !isSubscriptionLevelSelectable(levelId, selectable);
 }
 
-/** Localized hint for tiers disabled while current subscription is active. */
-export function resolveDisabledTierMessage(
-  subscriptionEndsAt: string | null | undefined,
-  locale: 'ru' | 'en' = getSubscriptionLocale(),
-): string {
-  if (subscriptionEndsAt) {
-    const endMs = new Date(subscriptionEndsAt).getTime();
-    const formatted = formatDateDDMMYYYY(subscriptionEndsAt);
-    if (Number.isFinite(endMs) && formatted) {
-      return tSubscription('tierDisabledUntilDate', { date: formatted }, locale);
-    }
+export type DisabledTierCopy = {
+  status: string;
+  explanation: string;
+};
+
+export type DisabledTierCopyInput = {
+  tierName: string | null;
+  subscriptionEndsAt: string | null;
+};
+
+function hasDisabledTierExplanationParams(
+  profile: DisabledTierCopyInput,
+  targetLevel: Pick<SubscriptionLevelDTO, 'name'>,
+): profile is DisabledTierCopyInput & { tierName: string; subscriptionEndsAt: string } {
+  const currentTier = profile.tierName?.trim();
+  const targetTier = targetLevel.name?.trim();
+  if (!currentTier || !targetTier || !profile.subscriptionEndsAt) {
+    return false;
   }
 
-  return tSubscription('tierDisabledGeneric', undefined, locale);
+  const endMs = new Date(profile.subscriptionEndsAt).getTime();
+  const formatted = formatDateDDMMYYYY(profile.subscriptionEndsAt);
+  return Number.isFinite(endMs) && Boolean(formatted);
+}
+
+/** Status badge + explanation for tiers disabled while current subscription is active. */
+export function resolveDisabledTierCopy(
+  profile: DisabledTierCopyInput,
+  targetLevel: Pick<SubscriptionLevelDTO, 'name'>,
+  locale: 'ru' | 'en' = getSubscriptionLocale(),
+): DisabledTierCopy {
+  const status = tSubscription('tierDisabledStatus', undefined, locale);
+
+  if (hasDisabledTierExplanationParams(profile, targetLevel)) {
+    const formatted = formatDateDDMMYYYY(profile.subscriptionEndsAt)!;
+    return {
+      status,
+      explanation: tSubscription(
+        'tierDisabledExplanation',
+        {
+          currentTier: profile.tierName.trim(),
+          date: formatted,
+          targetTier: targetLevel.name.trim(),
+        },
+        locale,
+      ),
+    };
+  }
+
+  return {
+    status,
+    explanation: tSubscription('tierDisabledExplanationGeneric', undefined, locale),
+  };
 }
 
 /** Keeps selection within available tiers; prefers explicit hint, then first available. */

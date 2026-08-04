@@ -27,7 +27,7 @@ import {
   isSubscriptionLevelSelectable,
   levelVolumeMl,
   normalizeSelectedSubscriptionLevelId,
-  resolveDisabledTierMessage,
+  resolveDisabledTierCopy,
   resolveSubscriptionTierAvailability,
   sortLevelsByOrder,
   type SubscriptionProfileInput,
@@ -260,7 +260,11 @@ const SubscriptionPage: FC = () => {
                 selectableLevels,
               );
               const isSelected = !isDisabled && selectedLevelId === level.id;
-              const disabledHintId = `tier-disabled-hint-${level.id}`;
+              const disabledStatusId = `tier-disabled-status-${level.id}`;
+              const disabledExplanationId = `tier-disabled-explanation-${level.id}`;
+              const disabledCopy = isDisabled
+                ? resolveDisabledTierCopy(subscriptionProfile, level)
+                : null;
 
               return (
                 <label
@@ -278,7 +282,9 @@ const SubscriptionPage: FC = () => {
                     className={styles.tierCardInput}
                     checked={isSelected}
                     disabled={isDisabled}
-                    aria-describedby={isDisabled ? disabledHintId : undefined}
+                    aria-describedby={
+                      isDisabled ? `${disabledStatusId} ${disabledExplanationId}` : undefined
+                    }
                     onChange={() => {
                       if (!isDisabled) {
                         setSelectedLevelId(level.id);
@@ -306,18 +312,22 @@ const SubscriptionPage: FC = () => {
                     >
                       {tSubscription('tierUnlimitedWaterBenefit')}
                     </span>
+                    {disabledCopy ? (
+                      <span className={styles.tierCardDisabledCopy}>
+                        <span id={disabledStatusId} className={styles.tierCardDisabledStatus}>
+                          {disabledCopy.status}
+                        </span>
+                        <span
+                          id={disabledExplanationId}
+                          className={styles.tierCardDisabledExplanation}
+                        >
+                          {disabledCopy.explanation}
+                        </span>
+                      </span>
+                    ) : null}
                     <span className={styles.tierCardPrice}>
                       {formatPriceRub(level.priceKopecks)} ₽
                     </span>
-                    {isDisabled ? (
-                      <span
-                        id={disabledHintId}
-                        className={styles.tierCardDisabledBadge}
-                        role="note"
-                      >
-                        {resolveDisabledTierMessage(subscriptionProfile.subscriptionEndsAt)}
-                      </span>
-                    ) : null}
                   </span>
                   {isSelected ? (
                     <span className={styles.tierCardCheck} aria-hidden="true">
