@@ -70,6 +70,8 @@ const REQUIRED_KEYS = [
   'subscription.planUnlimitedWaterOffer',
   'subscription.tierFlavoredVolume',
   'subscription.tierUnlimitedWaterBenefit',
+  'subscription.tierDisabledUntilDate',
+  'subscription.tierDisabledGeneric',
   'subscription.subscribeCta',
   'subscription.subscribeModalTitle',
   'subscription.subscribePay',

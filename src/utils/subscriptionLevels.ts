@@ -1,3 +1,5 @@
+import { formatDateDDMMYYYY } from '../helpers/transformDateDDMMYYY';
+import { getSubscriptionLocale, tSubscription } from '../locale/subscriptionLocale';
 import type { SubscriptionLevelDTO } from '../types/subscriptionLevel';
 import { isActiveSubscriptionProfile } from './subscriptionStatus';
 
@@ -123,6 +125,18 @@ function resolveActivePaidSelectableLevels(
   return sorted.filter((level) => levelVolumeMl(level) >= limitMl);
 }
 
+export type SubscriptionTierAvailability = {
+  catalog: SubscriptionLevelDTO[];
+  selectable: SubscriptionLevelDTO[];
+};
+
+/** Full sorted catalog for modal display (never filtered by subscription state). */
+export function resolveVisibleSubscriptionLevels(
+  levels: SubscriptionLevelDTO[],
+): SubscriptionLevelDTO[] {
+  return sortLevelsByOrder(levels);
+}
+
 /**
  * Active paid subscription: current tier + stronger ranks for renew/upgrade.
  * Unmatched legacy active: volume floor (no weaker tiers); empty when none qualify.
@@ -133,7 +147,7 @@ export function resolveSelectableSubscriptionLevels(
   levels: SubscriptionLevelDTO[],
   nowMs: number = Date.now(),
 ): SubscriptionLevelDTO[] {
-  const sorted = sortLevelsByOrder(levels);
+  const sorted = resolveVisibleSubscriptionLevels(levels);
   if (sorted.length === 0) {
     return [];
   }
@@ -143,6 +157,45 @@ export function resolveSelectableSubscriptionLevels(
   }
 
   return resolveActivePaidSelectableLevels(profile!, sorted);
+}
+
+/** Visible catalog vs selectable subset for tier modal. */
+export function resolveSubscriptionTierAvailability(
+  profile: SubscriptionProfileInput | null | undefined,
+  levels: SubscriptionLevelDTO[],
+  nowMs: number = Date.now(),
+): SubscriptionTierAvailability {
+  const catalog = resolveVisibleSubscriptionLevels(levels);
+  const selectable = resolveSelectableSubscriptionLevels(profile, levels, nowMs);
+  return { catalog, selectable };
+}
+
+/** True when tier is shown in catalog but blocked by active paid / legacy floor rules. */
+export function isSubscriptionLevelDisabled(
+  levelId: string,
+  catalog: SubscriptionLevelDTO[],
+  selectable: SubscriptionLevelDTO[],
+): boolean {
+  if (!catalog.some((level) => level.id === levelId)) {
+    return false;
+  }
+  return !isSubscriptionLevelSelectable(levelId, selectable);
+}
+
+/** Localized hint for tiers disabled while current subscription is active. */
+export function resolveDisabledTierMessage(
+  subscriptionEndsAt: string | null | undefined,
+  locale: 'ru' | 'en' = getSubscriptionLocale(),
+): string {
+  if (subscriptionEndsAt) {
+    const endMs = new Date(subscriptionEndsAt).getTime();
+    const formatted = formatDateDDMMYYYY(subscriptionEndsAt);
+    if (Number.isFinite(endMs) && formatted) {
+      return tSubscription('tierDisabledUntilDate', { date: formatted }, locale);
+    }
+  }
+
+  return tSubscription('tierDisabledGeneric', undefined, locale);
 }
 
 /** Keeps selection within available tiers; prefers explicit hint, then first available. */

@@ -23,10 +23,12 @@ import { formatLitersFromMl, formatPriceRub, tSubscription } from '../../locale/
 import { resolveMonthlyProgress } from '../../utils/monthlyProgress';
 import { resolvePlanSummaryDisplay } from '../../utils/planSummary';
 import {
+  isSubscriptionLevelDisabled,
   isSubscriptionLevelSelectable,
   levelVolumeMl,
   normalizeSelectedSubscriptionLevelId,
-  resolveSelectableSubscriptionLevels,
+  resolveDisabledTierMessage,
+  resolveSubscriptionTierAvailability,
   sortLevelsByOrder,
   type SubscriptionProfileInput,
 } from '../../utils/subscriptionLevels';
@@ -112,10 +114,12 @@ const SubscriptionPage: FC = () => {
     () => resolvePlanSummaryDisplay(subscriptionProfile, levels),
     [subscriptionProfile, levels],
   );
-  const selectableLevels = useMemo(
-    () => resolveSelectableSubscriptionLevels(subscriptionProfile, levels),
+  const tierAvailability = useMemo(
+    () => resolveSubscriptionTierAvailability(subscriptionProfile, levels),
     [subscriptionProfile, levels],
   );
+  const catalogLevels = tierAvailability.catalog;
+  const selectableLevels = tierAvailability.selectable;
 
   useEffect(() => {
     setSelectedLevelId((current) => {
@@ -220,7 +224,7 @@ const SubscriptionPage: FC = () => {
     <div className={styles.subscribeModalBody}>
       {showTariffSelection && (
         <div className={styles.tierSelection}>
-          {payPhase !== 'loading_levels' && selectableLevels.length > 0 ? (
+          {payPhase !== 'loading_levels' && catalogLevels.length > 0 ? (
             <Text size="s" view="secondary" className={styles.tierSelectionHint}>
               {tSubscription('planSelect')}
             </Text>
@@ -232,7 +236,7 @@ const SubscriptionPage: FC = () => {
             </Text>
           )}
 
-          {selectableLevels.length === 0 && payPhase === 'ready' && (
+          {catalogLevels.length === 0 && payPhase === 'ready' && (
             <Text size="m" view="secondary">
               {tSubscription('planEmpty')}
             </Text>
@@ -249,20 +253,37 @@ const SubscriptionPage: FC = () => {
             role="radiogroup"
             aria-label={tSubscription('planSelect')}
           >
-            {selectableLevels.map((level) => {
-              const isSelected = selectedLevelId === level.id;
+            {catalogLevels.map((level) => {
+              const isDisabled = isSubscriptionLevelDisabled(
+                level.id,
+                catalogLevels,
+                selectableLevels,
+              );
+              const isSelected = !isDisabled && selectedLevelId === level.id;
+              const disabledHintId = `tier-disabled-hint-${level.id}`;
 
               return (
                 <label
                   key={level.id}
-                  className={classNames(styles.tierCard, isSelected && styles.tierCardSelected)}
+                  className={classNames(
+                    styles.tierCard,
+                    isSelected && styles.tierCardSelected,
+                    isDisabled && styles.tierCardDisabled,
+                  )}
+                  aria-disabled={isDisabled || undefined}
                 >
                   <input
                     type="radio"
                     name="subscription-tier"
                     className={styles.tierCardInput}
                     checked={isSelected}
-                    onChange={() => setSelectedLevelId(level.id)}
+                    disabled={isDisabled}
+                    aria-describedby={isDisabled ? disabledHintId : undefined}
+                    onChange={() => {
+                      if (!isDisabled) {
+                        setSelectedLevelId(level.id);
+                      }
+                    }}
                   />
                   <span
                     className={styles.tierCardBackground}
@@ -288,6 +309,15 @@ const SubscriptionPage: FC = () => {
                     <span className={styles.tierCardPrice}>
                       {formatPriceRub(level.priceKopecks)} ₽
                     </span>
+                    {isDisabled ? (
+                      <span
+                        id={disabledHintId}
+                        className={styles.tierCardDisabledBadge}
+                        role="note"
+                      >
+                        {resolveDisabledTierMessage(subscriptionProfile.subscriptionEndsAt)}
+                      </span>
+                    ) : null}
                   </span>
                   {isSelected ? (
                     <span className={styles.tierCardCheck} aria-hidden="true">

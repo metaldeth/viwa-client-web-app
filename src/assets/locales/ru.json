@@ -59,6 +59,8 @@
     "subscription.planUnlimitedWaterOffer": "+ вода безлимитно (обычная, холодная, газированная)",
     "subscription.tierFlavoredVolume": "{{liters}} л вкусовых напитков",
     "subscription.tierUnlimitedWaterBenefit": "Вода бесплатно",
+    "subscription.tierDisabledUntilDate": "Недоступен до {{date}}",
+    "subscription.tierDisabledGeneric": "Недоступен при текущем тарифе",
     "subscription.subscribeCta": "Оформить абонемент",
     "subscription.subscribeModalTitle": "Оформление абонемента",
     "subscription.subscribePay": "Оформить",

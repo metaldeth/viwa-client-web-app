@@ -59,6 +59,8 @@
     "subscription.planUnlimitedWaterOffer": "+ unlimited water (still, chilled, sparkling)",
     "subscription.tierFlavoredVolume": "{{liters}} L flavored drinks",
     "subscription.tierUnlimitedWaterBenefit": "Free water",
+    "subscription.tierDisabledUntilDate": "Unavailable until {{date}}",
+    "subscription.tierDisabledGeneric": "Unavailable on your current plan",
     "subscription.subscribeCta": "Subscribe",
     "subscription.subscribeModalTitle": "Subscribe",
     "subscription.subscribePay": "Subscribe",

@@ -61,6 +61,8 @@ export type SubscriptionLocaleKey =
   | 'planUnlimitedWaterOffer'
   | 'tierFlavoredVolume'
   | 'tierUnlimitedWaterBenefit'
+  | 'tierDisabledUntilDate'
+  | 'tierDisabledGeneric'
   | 'subscribeCta'
   | 'subscribeModalTitle'
   | 'subscribePay'
@@ -108,6 +110,10 @@ const ruCatalog = extractSubscriptionCatalog(ruLocale.translation);
 const enCatalog = extractSubscriptionCatalog(enLocale.translation);
 
 let activeLocale: 'ru' | 'en' = 'ru';
+
+export function getSubscriptionLocale(): 'ru' | 'en' {
+  return activeLocale;
+}
 
 export function setSubscriptionLocale(locale: 'ru' | 'en'): void {
   activeLocale = locale;
