@@ -106,7 +106,25 @@ export type SubscriptionLocaleKey =
   | 'legalReqBik'
   | 'legalReqCorrAccount'
   | 'legalAuthAgreement'
-  | 'legalAuthPrivacy';
+  | 'legalAuthPrivacy'
+  | 'priceNoticeTitle'
+  | 'priceNoticeTierContext'
+  | 'priceNoticePendingLead'
+  | 'priceNoticeCurrentPriceLabel'
+  | 'priceNoticeNewPriceLabel'
+  | 'priceNoticePriceValue'
+  | 'priceNoticeAccept'
+  | 'priceNoticeDecline'
+  | 'priceNoticeAcceptedTitle'
+  | 'priceNoticeAcceptedSummary'
+  | 'priceNoticeChangeDecision'
+  | 'priceNoticeDeclinedTitle'
+  | 'priceNoticeDeclinedSummary'
+  | 'priceNoticeAcceptAfterDecline'
+  | 'priceNoticeSubmitError'
+  | 'priceNoticeFetchError'
+  | 'priceNoticeRetry'
+  | 'priceNoticeAriaLabel';
 
 type LocaleCatalog = Record<SubscriptionLocaleKey, string>;
 

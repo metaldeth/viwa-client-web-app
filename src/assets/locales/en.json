@@ -104,6 +104,24 @@
     "subscription.legalReqBik": "BIC",
     "subscription.legalReqCorrAccount": "Correspondent account",
     "subscription.legalAuthAgreement": "User agreement",
-    "subscription.legalAuthPrivacy": "Privacy policy"
+    "subscription.legalAuthPrivacy": "Privacy policy",
+    "subscription.priceNoticeTitle": "Subscription price change",
+    "subscription.priceNoticeTierContext": "Plan «{{tier}}»",
+    "subscription.priceNoticePendingLead": "From {{date}}, your subscription price will change. Please choose whether you accept the new price.",
+    "subscription.priceNoticeCurrentPriceLabel": "Current",
+    "subscription.priceNoticeNewPriceLabel": "From {{date}}",
+    "subscription.priceNoticePriceValue": "{{price}} ₽ / mo",
+    "subscription.priceNoticeAccept": "I agree",
+    "subscription.priceNoticeDecline": "I decline",
+    "subscription.priceNoticeAcceptedTitle": "New price accepted",
+    "subscription.priceNoticeAcceptedSummary": "From {{date}}, renewals will be charged {{price}} ₽ / mo.",
+    "subscription.priceNoticeChangeDecision": "Change decision",
+    "subscription.priceNoticeDeclinedTitle": "Renewal at new price declined",
+    "subscription.priceNoticeDeclinedSummary": "Your current subscription remains active until the end of the paid period. Renewal after {{date}} will be blocked until you accept the new price.",
+    "subscription.priceNoticeAcceptAfterDecline": "Accept",
+    "subscription.priceNoticeSubmitError": "Could not save your decision. Please try again.",
+    "subscription.priceNoticeFetchError": "Could not load the price change notice.",
+    "subscription.priceNoticeRetry": "Retry",
+    "subscription.priceNoticeAriaLabel": "Subscription price change notice"
   }
 }

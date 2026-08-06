@@ -9,6 +9,7 @@ import LoyaltyModule from './modules/loyalty';
 import AuthModule from './modules/auth';
 import BillingModule from './modules/billing';
 import PublicModule from './modules/public';
+import SubscriptionPriceNoticeModule from './modules/subscriptionPriceNotice';
 
 const SNACK_API_BASE_URL = import.meta.env.VITE_APP_SNACK_API_URL ?? 'http://localhost:4000';
 
@@ -18,6 +19,7 @@ export class Api {
   public readonly auth: AuthModule;
   public readonly billing: BillingModule;
   public readonly publicApi: PublicModule;
+  public readonly subscriptionPriceNotice: SubscriptionPriceNoticeModule;
 
   constructor() {
     this.request = new AxiosCoreApi({
@@ -28,6 +30,7 @@ export class Api {
     this.auth = new AuthModule(this.request);
     this.billing = new BillingModule(this.request);
     this.publicApi = new PublicModule(this.request);
+    this.subscriptionPriceNotice = new SubscriptionPriceNoticeModule(this.request);
   }
 
   clearTokens(): void {

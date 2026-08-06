@@ -1,0 +1,242 @@
+.panel {
+  box-sizing: border-box;
+  margin: 8px var(--viwa-cabinet-main-pad-right, 16px) var(--viwa-cabinet-gap, 10px)
+    var(--viwa-cabinet-main-pad-left, 16px);
+  padding: var(--viwa-cabinet-card-padding-y, 12px) var(--viwa-cabinet-card-padding-x, 12px);
+  border-radius: var(--viwa-cabinet-card-radius, 12px);
+  background: var(--viwa-cabinet-card-bg, #0b0b0b);
+  border: 1px solid rgba(255, 107, 107, 0.55);
+  box-shadow:
+    0 0 0 1px rgba(255, 107, 107, 0.12),
+    0 8px 24px rgba(255, 107, 107, 0.08);
+  color: var(--viwa-text, #f5f5f5);
+  font-family: var(--viwa-font-ui, inherit);
+}
+
+.panelCompact {
+  border-color: rgba(255, 107, 107, 0.35);
+  box-shadow: 0 0 0 1px rgba(255, 107, 107, 0.08);
+}
+
+.panelAccepted {
+  border-color: rgba(127, 90, 240, 0.45);
+  box-shadow: 0 0 0 1px rgba(127, 90, 240, 0.1);
+}
+
+.panelDeclined {
+  border-color: rgba(255, 107, 107, 0.45);
+}
+
+.title {
+  margin: 0 0 6px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #ff8a80;
+}
+
+.titleAccepted {
+  color: var(--viwa-accent, #7f5af0);
+}
+
+.lead {
+  margin: 0 0 12px;
+  font-size: 0.875rem;
+  line-height: 1.35;
+  color: var(--viwa-text, #f5f5f5);
+  overflow-wrap: anywhere;
+}
+
+.tierContext {
+  margin: 0 0 8px;
+  font-size: 0.8125rem;
+  color: var(--viwa-muted, #a3a3a3);
+  overflow-wrap: anywhere;
+}
+
+.priceRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 14px;
+  max-width: 100%;
+}
+
+.priceBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.priceBlockNew {
+  text-align: right;
+}
+
+.priceLabel {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--viwa-muted, #a3a3a3);
+  overflow-wrap: anywhere;
+}
+
+.priceValue {
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--viwa-text, #f5f5f5);
+  overflow-wrap: anywhere;
+}
+
+.priceValueNew {
+  color: #ff8a80;
+}
+
+.priceArrow {
+  flex-shrink: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: rgba(255, 138, 128, 0.85);
+  text-align: center;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.actionsSingle {
+  grid-template-columns: 1fr;
+}
+
+.button {
+  box-sizing: border-box;
+  min-height: var(--viwa-touch-min, 44px);
+  padding: 10px 12px;
+  border-radius: var(--viwa-radius-md, 12px);
+  border: 1px solid transparent;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.2;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    opacity 0.15s ease;
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--viwa-focus, #7f5af0);
+    outline-offset: 2px;
+  }
+}
+
+.buttonAccept {
+  background: rgba(255, 107, 107, 0.18);
+  border-color: rgba(255, 107, 107, 0.65);
+  color: #ffeceb;
+
+  &:hover:not(:disabled) {
+    background: rgba(255, 107, 107, 0.28);
+  }
+}
+
+.buttonDecline {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: var(--viwa-text, #f5f5f5);
+
+  &:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.08);
+  }
+}
+
+.buttonSecondary {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.16);
+  color: var(--viwa-muted, #a3a3a3);
+  min-height: var(--viwa-touch-min, 44px);
+
+  &:hover:not(:disabled) {
+    color: var(--viwa-text, #f5f5f5);
+    border-color: rgba(255, 255, 255, 0.28);
+  }
+}
+
+.compactSummary {
+  margin: 0 0 10px;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: var(--viwa-muted, #a3a3a3);
+}
+
+.error {
+  margin: 0 0 10px;
+  font-size: 0.8125rem;
+  line-height: 1.35;
+  color: var(--viwa-error, #ff6b6b);
+}
+
+.fetchErrorPanel {
+  box-sizing: border-box;
+  margin: 8px var(--viwa-cabinet-main-pad-right, 16px) var(--viwa-cabinet-gap, 10px)
+    var(--viwa-cabinet-main-pad-left, 16px);
+  padding: var(--viwa-cabinet-card-padding-y, 12px) var(--viwa-cabinet-card-padding-x, 12px);
+  border-radius: var(--viwa-cabinet-card-radius, 12px);
+  background: var(--viwa-cabinet-card-bg, #0b0b0b);
+  border: 1px solid rgba(255, 107, 107, 0.55);
+  box-shadow:
+    0 0 0 1px rgba(255, 107, 107, 0.12),
+    0 8px 24px rgba(255, 107, 107, 0.08);
+  color: var(--viwa-text, #f5f5f5);
+  font-family: var(--viwa-font-ui, inherit);
+}
+
+.fetchErrorActions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+@media (max-width: 360px) {
+  .panel,
+  .fetchErrorPanel {
+    margin-right: var(--viwa-cabinet-main-pad-right, 17px);
+    margin-left: var(--viwa-cabinet-main-pad-left, 9px);
+  }
+
+  .priceRow {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+    align-items: stretch;
+  }
+
+  .priceBlockNew {
+    text-align: left;
+  }
+
+  .priceArrow {
+    justify-self: center;
+    line-height: 1;
+  }
+
+  .actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    transition: none;
+  }
+}

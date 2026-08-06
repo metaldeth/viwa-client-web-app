@@ -9,6 +9,9 @@ import BottomSheetModal from '../../components/BottomSheetModal';
 import SbpPaymentQr from '../../components/SbpPaymentQr';
 import CabinetHeader from '../../components/CabinetHeader';
 import CabinetLegalFooter from '../../components/CabinetLegalFooter';
+import SubscriptionPriceConsentPanel, {
+  SubscriptionPriceNoticeFetchError,
+} from '../../components/SubscriptionPriceConsentPanel/SubscriptionPriceConsentPanel';
 import MonthlyProgressCard from '../../components/MonthlyProgressCard';
 import QrPromoCard from '../../components/QrPromoCard';
 import FavoriteTastesRow from '../../components/FavoriteTastesRow';
@@ -20,6 +23,7 @@ import { api } from '../../app/api';
 import type { SubscriptionLevelDTO } from '../../types/subscriptionLevel';
 import { hasAuthTokens } from '../ValidationPage/helpers';
 import { useClientSubscriptionWs } from '../../hooks/useClientSubscriptionWs';
+import { useSubscriptionPriceNotice } from '../../hooks/useSubscriptionPriceNotice';
 import { formatLitersFromMl, formatPriceRub, tSubscription } from '../../locale/subscriptionLocale';
 import { resolveMonthlyProgress } from '../../utils/monthlyProgress';
 import { resolvePlanSummaryDisplay } from '../../utils/planSummary';
@@ -79,6 +83,18 @@ const SubscriptionPage: FC = () => {
 
   const isAuthed = hasAuthTokens();
   useClientSubscriptionWs(isAuthed);
+
+  const {
+    notice: priceNotice,
+    fetchState: priceNoticeFetchState,
+    fetchError: priceNoticeFetchError,
+    submitting: priceNoticeSubmitting,
+    submitError: priceNoticeSubmitError,
+    isRetrying: priceNoticeIsRetrying,
+    load: reloadPriceNotice,
+    submitDecision: submitPriceNoticeDecision,
+    clearSubmitError: clearPriceNoticeSubmitError,
+  } = useSubscriptionPriceNotice(isAuthed, client?.tierName ?? null);
 
   const monthlyProgress = useMemo(() => resolveMonthlyProgress(client), [client]);
   const waterBenefitVariant = useMemo(() => resolveUnlimitedWaterBenefitVariant(client), [client]);
@@ -448,6 +464,25 @@ const SubscriptionPage: FC = () => {
   return (
     <div className={styles.pageShell}>
       <CabinetHeader />
+
+      {priceNoticeFetchState === 'error' && priceNoticeFetchError ? (
+        <SubscriptionPriceNoticeFetchError
+          message={priceNoticeFetchError}
+          isRetrying={priceNoticeIsRetrying}
+          onRetry={() => void reloadPriceNotice()}
+        />
+      ) : null}
+
+      {priceNotice ? (
+        <SubscriptionPriceConsentPanel
+          notice={priceNotice}
+          submitting={priceNoticeSubmitting}
+          submitError={priceNoticeSubmitError}
+          onAccept={() => void submitPriceNoticeDecision('ACCEPTED')}
+          onDecline={() => void submitPriceNoticeDecision('DECLINED')}
+          onReviewStart={clearPriceNoticeSubmitError}
+        />
+      ) : null}
 
       <main className={styles.main}>
         <MonthlyProgressCard

@@ -104,6 +104,24 @@
     "subscription.legalReqBik": "БИК",
     "subscription.legalReqCorrAccount": "Корр. счёт",
     "subscription.legalAuthAgreement": "пользовательским соглашением",
-    "subscription.legalAuthPrivacy": "политикой конфиденциальности"
+    "subscription.legalAuthPrivacy": "политикой конфиденциальности",
+    "subscription.priceNoticeTitle": "Изменение цены абонемента",
+    "subscription.priceNoticeTierContext": "Тариф «{{tier}}»",
+    "subscription.priceNoticePendingLead": "С {{date}} стоимость вашего абонемента изменится. Выберите, согласны ли вы с новой ценой.",
+    "subscription.priceNoticeCurrentPriceLabel": "Сейчас",
+    "subscription.priceNoticeNewPriceLabel": "С {{date}}",
+    "subscription.priceNoticePriceValue": "{{price}} ₽ / мес",
+    "subscription.priceNoticeAccept": "Согласен",
+    "subscription.priceNoticeDecline": "Отказываюсь",
+    "subscription.priceNoticeAcceptedTitle": "Новая цена принята",
+    "subscription.priceNoticeAcceptedSummary": "С {{date}} абонемент будет продлеваться за {{price}} ₽ / мес.",
+    "subscription.priceNoticeChangeDecision": "Изменить решение",
+    "subscription.priceNoticeDeclinedTitle": "Продление по новой цене отклонено",
+    "subscription.priceNoticeDeclinedSummary": "Текущий абонемент действует до конца оплаченного периода. Продление после {{date}} будет недоступно, пока вы не согласитесь с новой ценой.",
+    "subscription.priceNoticeAcceptAfterDecline": "Согласиться",
+    "subscription.priceNoticeSubmitError": "Не удалось сохранить решение. Попробуйте ещё раз.",
+    "subscription.priceNoticeFetchError": "Не удалось загрузить уведомление об изменении цены.",
+    "subscription.priceNoticeRetry": "Повторить",
+    "subscription.priceNoticeAriaLabel": "Уведомление об изменении цены абонемента"
   }
 }
