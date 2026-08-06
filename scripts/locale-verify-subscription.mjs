@@ -99,6 +99,21 @@ const REQUIRED_KEYS = [
   'subscription.volumeUnit',
   'subscription.cabinetMenuAria',
   'subscription.cabinetMenuLogOut',
+  'subscription.legalFooterAria',
+  'subscription.legalRequisites',
+  'subscription.legalOffer',
+  'subscription.legalPersonalData',
+  'subscription.legalMadeBy',
+  'subscription.legalReqInn',
+  'subscription.legalReqName',
+  'subscription.legalReqAddress',
+  'subscription.legalReqOgrn',
+  'subscription.legalReqAccount',
+  'subscription.legalReqBank',
+  'subscription.legalReqBik',
+  'subscription.legalReqCorrAccount',
+  'subscription.legalAuthAgreement',
+  'subscription.legalAuthPrivacy',
 ];
 
 function loadTranslation(localeFile) {

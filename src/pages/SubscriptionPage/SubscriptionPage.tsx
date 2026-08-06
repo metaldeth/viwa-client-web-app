@@ -8,6 +8,7 @@ import styles from './SubscriptionPage.module.scss';
 import BottomSheetModal from '../../components/BottomSheetModal';
 import SbpPaymentQr from '../../components/SbpPaymentQr';
 import CabinetHeader from '../../components/CabinetHeader';
+import CabinetLegalFooter from '../../components/CabinetLegalFooter';
 import MonthlyProgressCard from '../../components/MonthlyProgressCard';
 import QrPromoCard from '../../components/QrPromoCard';
 import FavoriteTastesRow from '../../components/FavoriteTastesRow';
@@ -465,6 +466,8 @@ const SubscriptionPage: FC = () => {
         />
         <FavoriteTastesRow favoriteKeys={favoriteKeys} />
       </main>
+
+      <CabinetLegalFooter />
 
       <BottomSheetModal
         isOpen={isScanModalOpen}

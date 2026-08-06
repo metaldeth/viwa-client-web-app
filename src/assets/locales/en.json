@@ -89,6 +89,21 @@
     "subscription.brand": "VIWA",
     "subscription.volumeUnit": "ML",
     "subscription.cabinetMenuAria": "Cabinet menu",
-    "subscription.cabinetMenuLogOut": "Log out"
+    "subscription.cabinetMenuLogOut": "Log out",
+    "subscription.legalFooterAria": "Legal information",
+    "subscription.legalRequisites": "Company details",
+    "subscription.legalOffer": "Public offer",
+    "subscription.legalPersonalData": "Personal data processing",
+    "subscription.legalMadeBy": "Made by COWASPORT © {{year}}",
+    "subscription.legalReqInn": "Tax ID (INN)",
+    "subscription.legalReqName": "Legal name",
+    "subscription.legalReqAddress": "Registered address",
+    "subscription.legalReqOgrn": "OGRN/OGRNIP",
+    "subscription.legalReqAccount": "Settlement account",
+    "subscription.legalReqBank": "Bank name",
+    "subscription.legalReqBik": "BIC",
+    "subscription.legalReqCorrAccount": "Correspondent account",
+    "subscription.legalAuthAgreement": "User agreement",
+    "subscription.legalAuthPrivacy": "Privacy policy"
   }
 }

@@ -1,0 +1,100 @@
+.footer {
+  border-top: 1px solid var(--viwa-cabinet-card-border, rgba(255, 255, 255, 0.1));
+  padding: 24px var(--viwa-cabinet-main-pad-right, 16px)
+    calc(24px + env(safe-area-inset-bottom, 0px)) var(--viwa-cabinet-main-pad-left, 16px);
+  background: #000000;
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+}
+
+.legal {
+  width: 100%;
+}
+
+.links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.links li {
+  margin: 0;
+}
+
+.link,
+.linkButton {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: var(--viwa-text, #f5f5f5);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+  text-decoration-color: rgba(255, 255, 255, 0.45);
+  cursor: pointer;
+}
+
+.link:hover,
+.linkButton:hover {
+  color: var(--viwa-muted, #a3a3a3);
+  text-decoration-color: rgba(255, 255, 255, 0.65);
+}
+
+.link:focus-visible,
+.linkButton:focus-visible {
+  outline: 2px solid var(--viwa-focus, #7f5af0);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.requisitesBody {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 8px;
+}
+
+.requisitesList {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.requisitesRow {
+  margin: 0;
+}
+
+.requisitesTerm {
+  margin: 0 0 4px;
+  font-size: 0.75rem;
+  line-height: 1.35;
+  color: var(--viwa-muted, #a3a3a3);
+  font-weight: 500;
+}
+
+.requisitesDetail {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--viwa-text, #f5f5f5);
+}

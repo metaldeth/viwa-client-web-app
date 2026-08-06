@@ -89,6 +89,21 @@
     "subscription.brand": "VIWA",
     "subscription.volumeUnit": "МЛ",
     "subscription.cabinetMenuAria": "Меню кабинета",
-    "subscription.cabinetMenuLogOut": "Выйти"
+    "subscription.cabinetMenuLogOut": "Выйти",
+    "subscription.legalFooterAria": "Юридическая информация",
+    "subscription.legalRequisites": "Реквизиты",
+    "subscription.legalOffer": "Оферта",
+    "subscription.legalPersonalData": "Обработка персональных данных",
+    "subscription.legalMadeBy": "Made by COWASPORT © {{year}}",
+    "subscription.legalReqInn": "ИНН",
+    "subscription.legalReqName": "Наименование",
+    "subscription.legalReqAddress": "Юридический адрес",
+    "subscription.legalReqOgrn": "ОГРН/ОГРНИП",
+    "subscription.legalReqAccount": "Расчётный счёт",
+    "subscription.legalReqBank": "Название банка",
+    "subscription.legalReqBik": "БИК",
+    "subscription.legalReqCorrAccount": "Корр. счёт",
+    "subscription.legalAuthAgreement": "пользовательским соглашением",
+    "subscription.legalAuthPrivacy": "политикой конфиденциальности"
   }
 }

@@ -91,7 +91,22 @@ export type SubscriptionLocaleKey =
   | 'brand'
   | 'volumeUnit'
   | 'cabinetMenuAria'
-  | 'cabinetMenuLogOut';
+  | 'cabinetMenuLogOut'
+  | 'legalFooterAria'
+  | 'legalRequisites'
+  | 'legalOffer'
+  | 'legalPersonalData'
+  | 'legalMadeBy'
+  | 'legalReqInn'
+  | 'legalReqName'
+  | 'legalReqAddress'
+  | 'legalReqOgrn'
+  | 'legalReqAccount'
+  | 'legalReqBank'
+  | 'legalReqBik'
+  | 'legalReqCorrAccount'
+  | 'legalAuthAgreement'
+  | 'legalAuthPrivacy';
 
 type LocaleCatalog = Record<SubscriptionLocaleKey, string>;
 
