@@ -64,6 +64,8 @@
     "subscription.tierDisabledExplanationGeneric": "У вас действует более высокий тариф. После его окончания этот тариф станет доступен.",
     "subscription.subscribeCta": "Оформить абонемент",
     "subscription.subscribeModalTitle": "Оформление абонемента",
+    "subscription.autoRenewLabel": "Автопродление",
+    "subscription.autoRenewSoon": "Скоро",
     "subscription.subscribePay": "Оформить",
     "subscription.subscribeDowngradeNotAllowed": "Нельзя перейти на тариф ниже текущего. Выберите свой тариф или более высокий.",
     "subscription.subscribeWait": "Подождите…",

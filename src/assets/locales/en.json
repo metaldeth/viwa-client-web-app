@@ -64,6 +64,8 @@
     "subscription.tierDisabledExplanationGeneric": "You have a higher plan active. Once it ends, this plan will become available.",
     "subscription.subscribeCta": "Subscribe",
     "subscription.subscribeModalTitle": "Subscribe",
+    "subscription.autoRenewLabel": "Auto-renewal",
+    "subscription.autoRenewSoon": "Coming soon",
     "subscription.subscribePay": "Subscribe",
     "subscription.subscribeDowngradeNotAllowed": "You can't switch to a lower plan. Choose your current plan or a higher one.",
     "subscription.subscribeWait": "Please wait…",

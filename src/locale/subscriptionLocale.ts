@@ -66,6 +66,8 @@ export type SubscriptionLocaleKey =
   | 'tierDisabledExplanationGeneric'
   | 'subscribeCta'
   | 'subscribeModalTitle'
+  | 'autoRenewLabel'
+  | 'autoRenewSoon'
   | 'subscribePay'
   | 'subscribeDowngradeNotAllowed'
   | 'subscribeWait'

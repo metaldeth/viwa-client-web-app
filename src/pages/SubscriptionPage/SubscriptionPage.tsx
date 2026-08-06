@@ -343,6 +343,29 @@ const SubscriptionPage: FC = () => {
         </div>
       )}
 
+      {!paymentUrl && (
+        <div
+          className={styles.autoRenewRow}
+          aria-disabled="true"
+          data-testid="auto-renew-placeholder"
+        >
+          <div className={styles.autoRenewCopy}>
+            <span className={styles.autoRenewLabel}>{tSubscription('autoRenewLabel')}</span>
+            <span className={styles.autoRenewHint}>{tSubscription('autoRenewSoon')}</span>
+          </div>
+          <button
+            type="button"
+            className={styles.autoRenewSwitch}
+            role="switch"
+            aria-checked="true"
+            aria-label={tSubscription('autoRenewLabel')}
+            disabled
+          >
+            <span className={styles.autoRenewThumb} aria-hidden="true" />
+          </button>
+        </div>
+      )}
+
       {paymentUrl && (
         <div className={styles.paymentStage}>
           <p className={styles.paymentStageLabel}>{tSubscription('subscribeSbp')}</p>
@@ -433,7 +456,6 @@ const SubscriptionPage: FC = () => {
           limitExhausted={client?.limitExhausted}
         />
         <QrPromoCard qrPayload={qrPayload} onOpen={() => setIsScanModalOpen(true)} />
-        <FavoriteTastesRow favoriteKeys={favoriteKeys} />
         <PlanSummaryCard
           plan={planSummary}
           isLoading={payPhase === 'loading_levels'}
@@ -441,6 +463,7 @@ const SubscriptionPage: FC = () => {
           waterBenefitVariant={waterBenefitVariant}
           onOpen={() => openSubscribeModal(planSummary?.levelId)}
         />
+        <FavoriteTastesRow favoriteKeys={favoriteKeys} />
       </main>
 
       <BottomSheetModal
