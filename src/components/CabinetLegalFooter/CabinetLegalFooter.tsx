@@ -5,8 +5,6 @@ import {
   LEGAL_CONTACT_EMAIL,
   LEGAL_CONTACT_PHONE,
   LEGAL_CONTACT_PHONE_DISPLAY,
-  LEGAL_MADE_BY_URL,
-  LEGAL_MADE_BY_YEAR,
   LEGAL_OFFER_URL,
   LEGAL_PERSONAL_DATA_URL,
   LEGAL_REQUISITES,
@@ -55,16 +53,6 @@ const CabinetLegalFooter: FC = () => {
               <li>
                 <a className={styles.link} href={LEGAL_PERSONAL_DATA_URL}>
                   {tSubscription('legalPersonalData')}
-                </a>
-              </li>
-              <li>
-                <a
-                  className={styles.link}
-                  href={LEGAL_MADE_BY_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {tSubscription('legalMadeBy', { year: LEGAL_MADE_BY_YEAR })}
                 </a>
               </li>
             </ul>

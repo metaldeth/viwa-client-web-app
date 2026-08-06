@@ -3,8 +3,6 @@ export const LEGAL_PERSONAL_DATA_URL = '/legal/personal_data_rule.docx';
 export const LEGAL_CONTACT_EMAIL = 'klukin1988@mail.ru';
 export const LEGAL_CONTACT_PHONE = '+79045449783';
 export const LEGAL_CONTACT_PHONE_DISPLAY = '+7 904 544-97-83';
-export const LEGAL_MADE_BY_URL = 'https://cowasport.com';
-export const LEGAL_MADE_BY_YEAR = 2026;
 
 export type LegalRequisiteFieldKey =
   | 'legalReqInn'
