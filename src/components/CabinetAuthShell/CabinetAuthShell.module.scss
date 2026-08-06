@@ -63,6 +63,17 @@
   min-height: 0;
 }
 
+.pageShell > footer {
+  position: relative;
+  z-index: 1;
+  margin-top: var(--viwa-space-xl, 2rem);
+  margin-right: calc(0px - var(--viwa-auth-pad-x, 16px));
+  margin-bottom: calc(
+    0px - env(safe-area-inset-bottom, 0px) - var(--viwa-auth-pad-bottom, 24px)
+  );
+  margin-left: calc(0px - var(--viwa-auth-pad-x, 16px));
+}
+
 .card {
   box-sizing: border-box;
   width: 100%;

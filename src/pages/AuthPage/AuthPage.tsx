@@ -9,8 +9,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch } from '../../app/hooks/store';
 import { sendCodeToPhoneThunk } from '../../state/auth/thunk';
 import { buildSmsAuthPath, getSendCodeErrorMessage } from '../../utils/authSendCode';
-import { LEGAL_OFFER_URL, LEGAL_PERSONAL_DATA_URL } from '../../constants/legalLinks';
-import { tSubscription } from '../../locale/subscriptionLocale';
 
 const AuthPage: FC = () => {
   const dispatch = useAppDispatch();
@@ -116,17 +114,6 @@ const AuthPage: FC = () => {
         >
           {isSubmitting ? 'Отправляем…' : 'Подтвердить вход'}
         </button>
-
-        <p className={styles.legalCopy}>
-          Нажимая кнопку, вы соглашаетесь с{' '}
-          <a className={styles.link} href={LEGAL_OFFER_URL}>
-            {tSubscription('legalAuthAgreement')}
-          </a>{' '}
-          и{' '}
-          <a className={styles.link} href={LEGAL_PERSONAL_DATA_URL}>
-            {tSubscription('legalAuthPrivacy')}
-          </a>
-        </p>
       </form>
     </CabinetAuthShell>
   );

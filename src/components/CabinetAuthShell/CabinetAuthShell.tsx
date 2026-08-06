@@ -1,5 +1,6 @@
 import { FC, ReactNode } from 'react';
 import { ViwaBrandLogo } from '../ViwaBrandLogo/ViwaBrandLogo';
+import CabinetLegalFooter from '../CabinetLegalFooter';
 import styles from './CabinetAuthShell.module.scss';
 
 export type CabinetAuthShellProps = {
@@ -39,6 +40,7 @@ const CabinetAuthShell: FC<CabinetAuthShellProps> = ({
           <div className={styles.cardBody}>{children}</div>
         </section>
       </main>
+      <CabinetLegalFooter />
     </div>
   );
 };
