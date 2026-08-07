@@ -9,6 +9,7 @@ import BottomSheetModal from '../../components/BottomSheetModal';
 import SbpPaymentQr from '../../components/SbpPaymentQr';
 import CabinetHeader from '../../components/CabinetHeader';
 import CabinetLegalFooter from '../../components/CabinetLegalFooter';
+import PwaInstallPrompt from '../../components/PwaInstallPrompt';
 import SubscriptionPriceConsentPanel, {
   SubscriptionPriceNoticeFetchError,
 } from '../../components/SubscriptionPriceConsentPanel/SubscriptionPriceConsentPanel';
@@ -501,6 +502,8 @@ const SubscriptionPage: FC = () => {
         />
         <FavoriteTastesRow favoriteKeys={favoriteKeys} />
       </main>
+
+      <PwaInstallPrompt variant="section" className={styles.pwaInstallSection} />
 
       <CabinetLegalFooter />
 

@@ -1,13 +1,13 @@
 {
   "name": "viwa-client-web-app",
   "private": true,
-  "version": "0.1.36",
+  "version": "0.1.41",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "test": "vitest run --config vitest.config.ts && node --test scripts/projectRoot.test.mjs",
+    "test": "vitest run --config vitest.config.ts && node --test scripts/projectRoot.test.mjs scripts/cabinet-site-assets.test.mjs scripts/verify-site-metadata.test.mjs",
     "test:watch": "vitest --config vitest.config.ts",
     "locale:verify": "node scripts/locale-verify-subscription.mjs",
     "locale:sync": "node scripts/locale-verify-subscription.mjs",

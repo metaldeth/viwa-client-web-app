@@ -2,14 +2,53 @@
 <html lang="ru">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <title>Viwa — личный кабинет</title>
     <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+      name="description"
+      content="Личный кабинет VIWA: подписка, литры и профиль. Вход по номеру телефона."
     />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="canonical" href="https://cabinet.vitamin-water.ru/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Viwa" />
+    <meta property="og:locale" content="ru_RU" />
+    <meta property="og:title" content="Viwa — личный кабинет" />
+    <meta
+      property="og:description"
+      content="Личный кабинет VIWA: подписка, литры и профиль. Вход по номеру телефона."
+    />
+    <meta property="og:url" content="https://cabinet.vitamin-water.ru/" />
+    <meta
+      property="og:image"
+      content="https://cabinet.vitamin-water.ru/assets/social/og-card.png?v=0.1.40"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Viwa — личный кабинет" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Viwa — личный кабинет" />
+    <meta
+      name="twitter:description"
+      content="Личный кабинет VIWA: подписка, литры и профиль. Вход по номеру телефона."
+    />
+    <meta
+      name="twitter:image"
+      content="https://cabinet.vitamin-water.ru/assets/social/og-card.png?v=0.1.40"
+    />
+    <meta name="twitter:image:alt" content="Viwa — личный кабинет" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=0.1.40" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png?v=0.1.40" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png?v=0.1.40" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png?v=0.1.40" />
+    <link rel="manifest" href="/manifest.webmanifest?v=0.1.40" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#000000" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="application-name" content="Viwa" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Viwa" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="format-detection" content="telephone=no" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -21,14 +60,13 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@400;500;600&display=swap"
       media="print"
-      onload="this.media='all'"
+      onload="this.media = 'all'"
     />
     <noscript
       ><link
         rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@400;500;600&display=swap"
     /></noscript>
-    <title>Viwa</title>
     <style>
       html,
       body {
@@ -56,8 +94,8 @@
         padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom)
           env(safe-area-inset-left);
         background: #000;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
-          sans-serif;
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         -webkit-font-smoothing: antialiased;
         overflow-x: hidden;
         overflow-y: auto;
@@ -67,7 +105,9 @@
         opacity: 1;
         visibility: visible;
         pointer-events: auto;
-        transition: opacity 0.275s ease, visibility 0s linear 0s;
+        transition:
+          opacity 0.275s ease,
+          visibility 0s linear 0s;
       }
 
       #viwa-app-boot.viwa-app-boot--fade-out {
@@ -79,7 +119,9 @@
         opacity: 0;
         visibility: hidden;
         pointer-events: none;
-        transition: opacity 0.275s ease, visibility 0s linear 0.275s;
+        transition:
+          opacity 0.275s ease,
+          visibility 0s linear 0.275s;
       }
 
       @media (prefers-reduced-motion: reduce) {
@@ -89,7 +131,9 @@
         }
 
         #viwa-app-boot.viwa-app-boot--hidden {
-          transition: opacity 0.1s ease, visibility 0s linear 0.1s;
+          transition:
+            opacity 0.1s ease,
+            visibility 0s linear 0.1s;
         }
       }
 
@@ -244,13 +288,7 @@
     </style>
   </head>
   <body>
-    <div
-      id="viwa-app-boot"
-      role="status"
-      aria-live="polite"
-      aria-busy="true"
-      aria-label="Загрузка"
-    >
+    <div id="viwa-app-boot" role="status" aria-live="polite" aria-busy="true" aria-label="Загрузка">
       <div class="viwa-app-boot__inner">
         <svg
           class="viwa-app-boot__logo"
@@ -282,10 +320,10 @@
           hidden
         >
           <p class="viwa-app-boot__error-title">Не удалось загрузить кабинет</p>
-          <p class="viwa-app-boot__error-hint">Проверьте подключение к интернету и попробуйте снова.</p>
-          <button type="button" class="viwa-app-boot__retry" data-boot-retry>
-            Повторить
-          </button>
+          <p class="viwa-app-boot__error-hint">
+            Проверьте подключение к интернету и попробуйте снова.
+          </p>
+          <button type="button" class="viwa-app-boot__retry" data-boot-retry>Повторить</button>
         </div>
       </div>
     </div>

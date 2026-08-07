@@ -1,7 +1,10 @@
 import { FC, ReactNode } from 'react';
+import classNames from 'classnames';
 import { ViwaBrandLogo } from '../ViwaBrandLogo/ViwaBrandLogo';
 import CabinetLegalFooter from '../CabinetLegalFooter';
 import styles from './CabinetAuthShell.module.scss';
+
+export type CabinetAuthShellMainLayout = 'centered' | 'scroll';
 
 export type CabinetAuthShellProps = {
   eyebrow?: string;
@@ -9,6 +12,8 @@ export type CabinetAuthShellProps = {
   description?: ReactNode;
   children: ReactNode;
   className?: string;
+  /** Default centers short auth flows; scroll keeps long AuthPage top-aligned. */
+  mainLayout?: CabinetAuthShellMainLayout;
 };
 
 const CabinetAuthShell: FC<CabinetAuthShellProps> = ({
@@ -17,6 +22,7 @@ const CabinetAuthShell: FC<CabinetAuthShellProps> = ({
   description,
   children,
   className,
+  mainLayout = 'centered',
 }) => {
   return (
     <div className={[styles.pageShell, className].filter(Boolean).join(' ')}>
@@ -26,7 +32,7 @@ const CabinetAuthShell: FC<CabinetAuthShellProps> = ({
           <ViwaBrandLogo size="lg" />
         </div>
       </header>
-      <main className={styles.main}>
+      <main className={classNames(styles.main, mainLayout === 'scroll' && styles.mainScroll)}>
         <section className={styles.card} aria-labelledby="cabinet-auth-title">
           {eyebrow ? (
             <span className={styles.eyebrow} aria-hidden="true">

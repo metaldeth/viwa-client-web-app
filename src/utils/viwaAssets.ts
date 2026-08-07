@@ -99,13 +99,17 @@ export function getTastePlaceholderLabel(nameRu: string): string {
 /** Diagonal-cut VIWA wordmark — SVG primary, PNG raster fallback, text fallback in UI on error. */
 export function getLogoImagePaths(): LogoImagePaths {
   if (logoAsset?.files.svg?.path && logoAsset.files.png?.path) {
+    const width = logoAsset.files.svg.width ?? logoAsset.files.png.width ?? 277;
+    const height = logoAsset.files.svg.height ?? logoAsset.files.png.height ?? 150;
     return {
       svg: `${VIWA_ASSETS_BASE}/${logoAsset.files.svg.path}`,
+      webp: logoAsset.files.webp?.path
+        ? `${VIWA_ASSETS_BASE}/${logoAsset.files.webp.path}`
+        : undefined,
       png: `${VIWA_ASSETS_BASE}/${logoAsset.files.png.path}`,
       altRu: logoAsset.altRu,
-      // Corrected wordmark aspect (~1.85); ignore stale manifest 277×243 if present
-      width: 277,
-      height: 150,
+      width,
+      height,
     };
   }
 

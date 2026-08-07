@@ -8,6 +8,8 @@ import { checkPhoneValidation } from './helpers';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch } from '../../app/hooks/store';
 import { sendCodeToPhoneThunk } from '../../state/auth/thunk';
+import AuthMarketingSection from '../../components/AuthMarketingSection';
+import PwaInstallPrompt from '../../components/PwaInstallPrompt';
 import { buildSmsAuthPath, getSendCodeErrorMessage } from '../../utils/authSendCode';
 
 const AuthPage: FC = () => {
@@ -72,6 +74,7 @@ const AuthPage: FC = () => {
 
   return (
     <CabinetAuthShell
+      mainLayout="scroll"
       title="Авторизация"
       description="Мы позвоним на указанный номер — введите 4 последние цифры входящего звонка"
     >
@@ -114,7 +117,10 @@ const AuthPage: FC = () => {
         >
           {isSubmitting ? 'Отправляем…' : 'Подтвердить вход'}
         </button>
+
+        <PwaInstallPrompt />
       </form>
+      <AuthMarketingSection />
     </CabinetAuthShell>
   );
 };

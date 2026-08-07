@@ -16,6 +16,8 @@ export type PublicSubscriptionLevelDTO = {
   monthlyVolumeMl: number;
   priceKopecks: number;
   sortOrder: number;
+  /** Marketing copy when provided by public API; null/absent on older backends */
+  description?: string | null;
 };
 
 export type PublicSubscriptionLevelsResponse = {

@@ -38,6 +38,10 @@ const RegisterPage: FC = () => {
     return <Navigate to={`/m/${encodeURIComponent(serial)}/auth`} replace />;
   }
 
+  if (queryParams.entry === 'website') {
+    return <Navigate to="/auth" replace />;
+  }
+
   return <SerialCapturePage />;
 };
 

@@ -68,4 +68,42 @@ describe('checkCodeAndCreateClientThunk', () => {
     expect(window.location.pathname).toBe('/home');
     expect(sessionStorage.getItem(VIWA_SERIAL_STORAGE_KEY)).toBeNull();
   });
+
+  it('CW05-6: website registration without serial navigates to /home', async () => {
+    sessionStorage.setItem(VIWA_ENTRY_STORAGE_KEY, 'website');
+    installHistoryMock('/auth/sms/60/79991234567/FLASHCALL');
+
+    const store = configureStore({ reducer: { auth: authReducer } });
+
+    await store.dispatch(
+      checkCodeAndCreateClientThunk({
+        phoneNumber: '79991234567',
+        code: '1234',
+      }),
+    );
+
+    expect(checkCodeMock).toHaveBeenCalledWith('79991234567', '1234', {
+      registrationHint: 'website',
+    });
+    expect(window.location.pathname).toBe('/home');
+    expect(sessionStorage.getItem(VIWA_SERIAL_STORAGE_KEY)).toBeNull();
+  });
+
+  it('returning auth without website hint still navigates to /home', async () => {
+    installHistoryMock('/auth/sms/60/79991234567/FLASHCALL');
+
+    const store = configureStore({ reducer: { auth: authReducer } });
+
+    await store.dispatch(
+      checkCodeAndCreateClientThunk({
+        phoneNumber: '79991234567',
+        code: '1234',
+      }),
+    );
+
+    expect(checkCodeMock).toHaveBeenCalledWith('79991234567', '1234', {
+      registrationHint: undefined,
+    });
+    expect(window.location.pathname).toBe('/home');
+  });
 });

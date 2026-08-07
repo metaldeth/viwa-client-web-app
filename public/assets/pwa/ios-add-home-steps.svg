@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 140" role="img" aria-hidden="true">
+  <rect width="240" height="140" rx="16" fill="#111"/>
+  <rect x="16" y="16" width="208" height="108" rx="10" fill="#1a1a1a" stroke="#333" stroke-width="2"/>
+  <rect x="28" y="28" width="120" height="10" rx="5" fill="#444"/>
+  <rect x="28" y="46" width="80" height="8" rx="4" fill="#333"/>
+  <rect x="170" y="24" width="40" height="24" rx="8" fill="#222" stroke="#7f5af0" stroke-width="2"/>
+  <path d="M182 36h16M190 28v16" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+  <rect x="36" y="72" width="168" height="40" rx="10" fill="#151515" stroke="#444" stroke-width="1.5"/>
+  <path d="M52 92h32M52 102h48" stroke="#666" stroke-width="3" stroke-linecap="round"/>
+  <rect x="132" y="84" width="56" height="16" rx="8" fill="#7f5af0"/>
+  <text x="160" y="95" text-anchor="middle" fill="#fff" font-family="Inter, sans-serif" font-size="9">Add</text>
+</svg>

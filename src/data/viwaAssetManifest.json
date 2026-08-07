@@ -1,7 +1,7 @@
 {
   "version": "1.1.0",
   "conceptRef": "concept-bento-station-first",
-  "generatedAt": "2026-07-29T19:21:37Z",
+  "generatedAt": "2026-08-06T14:13:34Z",
   "assets": [
     {
       "id": "hero-bottle",
@@ -681,17 +681,17 @@
         "webp": {
           "path": "logo/logo-viwa-mark.webp",
           "width": 277,
-          "height": 243
+          "height": 150
         },
         "png": {
           "path": "logo/logo-viwa-mark.png",
           "width": 277,
-          "height": 243
+          "height": 150
         },
         "svg": {
           "path": "logo/logo-viwa-mark.svg",
           "width": 277,
-          "height": 243
+          "height": 150
         }
       },
       "altRu": "VIWA"

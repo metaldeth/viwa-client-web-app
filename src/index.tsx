@@ -8,17 +8,22 @@ import './index.css';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import reportWebVitals from './reportWebVitals';
+import { registerMinimalServiceWorker } from './pwa/registerServiceWorker';
 
-const link = document.createElement('link');
-link.rel = 'icon';
-link.type = 'image/svg+xml';
-link.href = '/favicon-dev.svg';
+registerMinimalServiceWorker();
 
-const existingFavicon = document.querySelector("link[rel*='icon']");
-if (existingFavicon) {
-  document.head.removeChild(existingFavicon);
+if (import.meta.env.DEV) {
+  const link = document.createElement('link');
+  link.rel = 'icon';
+  link.type = 'image/svg+xml';
+  link.href = '/assets/viwa/logo/logo-viwa-mark.svg';
+
+  const existingFavicon = document.querySelector("link[rel='icon']");
+  if (existingFavicon) {
+    document.head.removeChild(existingFavicon);
+  }
+  document.head.appendChild(link);
 }
-document.head.appendChild(link);
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 

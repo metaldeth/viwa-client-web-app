@@ -9,6 +9,8 @@ export type SubscriptionLevelDTO = {
   dailyVolumeMl?: number;
   priceKopecks: number;
   sortOrder: number | null;
+  /** Marketing copy when provided by client API; null/absent on older backends */
+  description?: string | null;
 };
 
 export type SubscriptionLevelsResponse = {

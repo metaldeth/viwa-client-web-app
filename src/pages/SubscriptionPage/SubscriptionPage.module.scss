@@ -38,6 +38,13 @@
   scroll-padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
+.pwaInstallSection {
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: 100%;
+  margin: 0 var(--viwa-cabinet-main-pad-x, 16px) calc(8px + env(safe-area-inset-bottom, 0px));
+}
+
 @media (max-width: 360px) {
   .pageShell {
     --viwa-cabinet-main-pad-x: 9px;

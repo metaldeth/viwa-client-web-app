@@ -22,7 +22,7 @@ export const checkCodeAndCreateClientThunk = createAsyncThunk<
     registrationHint,
   });
 
-  if (machineSerial) {
+  if (machineSerial || registrationHint === 'website') {
     completeFirstRegistrationNavigation();
   } else {
     completeReturningAuthNavigation();
