@@ -149,6 +149,7 @@ describe('PwaInstallPrompt', () => {
     expect(pwaInstallPromptScss).toMatch(/\.installButton[\s\S]*width:\s*100%/);
     expect(pwaInstallPromptScss).toMatch(/overflow-wrap:\s*anywhere/);
 
+    expect(subscriptionPageScss).toMatch(/\.pwaInstallSection[\s\S]*flex-shrink:\s*0/);
     expect(subscriptionPageScss).toMatch(/\.pwaInstallSection[\s\S]*max-width:\s*100%/);
     expect(subscriptionPageScss).toMatch(
       /\.pageShell[\s\S]*max-width:\s*var\(--viwa-cabinet-max,\s*430px\)/,

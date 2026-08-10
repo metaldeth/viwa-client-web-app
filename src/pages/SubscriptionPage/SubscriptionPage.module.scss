@@ -8,7 +8,7 @@
   background: #000000;
   color: var(--viwa-text, #f5f5f5);
   font-family: var(--viwa-font-ui, inherit);
-  overflow-x: hidden;
+  overflow-x: clip;
 
   /* Round 4 cabinet geometry tokens — inherited by card modules */
   --viwa-cabinet-gap: 10px;
@@ -30,19 +30,25 @@
 .main {
   display: flex;
   flex-direction: column;
-  flex: 1;
+  flex: 1 0 auto;
+  flex-shrink: 0;
   gap: var(--viwa-cabinet-gap);
   padding: var(--viwa-cabinet-main-pad-top) var(--viwa-cabinet-main-pad-right)
-    calc(var(--viwa-cabinet-main-pad-bottom) + env(safe-area-inset-bottom, 0px))
-    var(--viwa-cabinet-main-pad-left);
+    var(--viwa-cabinet-main-pad-bottom) var(--viwa-cabinet-main-pad-left);
   scroll-padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.pageShell > footer {
+  flex-shrink: 0;
+  margin-top: var(--viwa-cabinet-gap, 10px);
 }
 
 .pwaInstallSection {
   box-sizing: border-box;
+  flex-shrink: 0;
   min-width: 0;
   max-width: 100%;
-  margin: 0 var(--viwa-cabinet-main-pad-x, 16px) calc(8px + env(safe-area-inset-bottom, 0px));
+  margin: 0;
 }
 
 @media (max-width: 360px) {

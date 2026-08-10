@@ -602,9 +602,8 @@ const SubscriptionPage: FC = () => {
           onOpen={() => openSubscribeModal(planSummary?.levelId)}
         />
         <FavoriteTastesRow favoriteKeys={favoriteKeys} />
+        <PwaInstallPrompt variant="section" className={styles.pwaInstallSection} />
       </main>
-
-      <PwaInstallPrompt variant="section" className={styles.pwaInstallSection} />
 
       <CabinetLegalFooter />
 
