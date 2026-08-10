@@ -21,6 +21,7 @@ export default defineConfig({
     include: ['src/**/*.{test,spec}.{ts,tsx}'],
     env: {
       DEV: 'false',
+      VITE_VIWA_TELEMETRY_API_URL: 'http://localhost:3000/api/v1',
     },
   },
   define: {

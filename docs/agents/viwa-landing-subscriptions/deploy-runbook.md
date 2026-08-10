@@ -53,11 +53,13 @@ ssh wiva-server
 | `viwa-client-web-app` | `main` | `npm run lint` → `npm run locale:verify` → `npm test` → `npm run build` | **42** total tests (40 Vitest + 2 node regression); lint **0 errors**; locale 47 keys; build **0** |
 | `viwa-site` | `master` | `powershell -File scripts/static-regression-check.ps1` | static regression **PASS**; `useMockApi: false`; no hardcoded tier prices in HTML |
 
-Production client build env (from `.env.production`):
+Production client build env (from `.env.production` or inline export; **build fails without valid value**):
 
 ```text
 VITE_VIWA_TELEMETRY_API_URL=https://cabinet.vitamin-water.ru/api/v1
 ```
+
+Copy `.env.production.example` → `.env.production` for local production builds. The Vite config validates this at `npm run build` time (https URL, path ends with `/api/v1`, no localhost) to prevent shipping `undefinedapi/v1` bundles.
 
 Site public fetch (browser CORS to telemetry origin):
 

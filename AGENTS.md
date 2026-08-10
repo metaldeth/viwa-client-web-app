@@ -38,5 +38,5 @@
 
 | Variable | Purpose |
 |----------|---------|
-| `VITE_VIWA_TELEMETRY_API_URL` | Base URL for viwa-telemetry client/public REST (e.g. `http://localhost:3000/api/v1`). Required for local loyalty dev; production build must set to deployed telemetry API. |
+| `VITE_VIWA_TELEMETRY_API_URL` | Base URL for viwa-telemetry client/public REST (e.g. `http://localhost:3000/api/v1`). **Required for production builds** — `npm run build` fails if missing/blank/invalid (https, path `/api/v1`, no localhost). See `.env.production.example`. |
 | `VITE_APP_BASE_URL` | Legacy gateway prefix for dashboard modules only — **not** client-web loyalty flows. |

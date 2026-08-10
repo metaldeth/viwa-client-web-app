@@ -1,10 +1,11 @@
 import fs from 'fs';
 import path from 'path';
 import { readFileSync } from 'fs';
-import { defineConfig, type Plugin } from 'vite';
+import { defineConfig, loadEnv, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import checker from 'vite-plugin-checker';
 import { projectRoot, resolveFromRoot } from './scripts/projectRoot.mjs';
+import { assertProductionTelemetryApiUrl } from './scripts/telemetry-api-url.mjs';
 
 process.chdir(projectRoot);
 
@@ -25,26 +26,31 @@ const versionJsonPlugin = (appVersion: string): Plugin => ({
   },
 });
 
-export default defineConfig({
-  root: projectRoot,
-  base: '/',
-  define: {
-    __APP_VERSION__: JSON.stringify(version),
-  },
-  plugins: [react(), checker({ typescript: true }), versionJsonPlugin(version)],
-  // Avoid /assets/ clash when served on same host as viwa-telemetry dashboard.
-  build: {
-    assetsDir: 'client-assets',
-  },
-  server: {
-    port: 3000,
-    strictPort: false,
-  },
-  resolve: {
-    alias: {
-      '@': resolveFromRoot('src'),
-      '@consta/uikit': resolveFromRoot('node_modules/@asnefedov/uikit'),
-      '@consta/icons': resolveFromRoot('node_modules/@asnefedov/icons'),
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, projectRoot, '');
+  assertProductionTelemetryApiUrl(env, { mode });
+
+  return {
+    root: projectRoot,
+    base: '/',
+    define: {
+      __APP_VERSION__: JSON.stringify(version),
     },
-  },
+    plugins: [react(), checker({ typescript: true }), versionJsonPlugin(version)],
+    // Avoid /assets/ clash when served on same host as viwa-telemetry dashboard.
+    build: {
+      assetsDir: 'client-assets',
+    },
+    server: {
+      port: 3000,
+      strictPort: false,
+    },
+    resolve: {
+      alias: {
+        '@': resolveFromRoot('src'),
+        '@consta/uikit': resolveFromRoot('node_modules/@asnefedov/uikit'),
+        '@consta/icons': resolveFromRoot('node_modules/@asnefedov/icons'),
+      },
+    },
+  };
 });

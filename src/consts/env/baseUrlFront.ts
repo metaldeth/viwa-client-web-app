@@ -19,11 +19,32 @@ export const organizationBaseUrl = `${import.meta.env.VITE_APP_BASE_URL}telemetr
 // export const machineControlBaseUrl = `http://localhost:8310`;
 export const machineControlBaseUrl = `${import.meta.env.VITE_APP_BASE_URL}telemetry-machine-control`;
 
+/** Local dev/test fallback when env files omit telemetry URL (production builds validate env in vite.config). */
+const DEV_TELEMETRY_API_FALLBACK = 'http://localhost:3000/api/v1';
+
+function joinLegacyApiV1(baseUrl: string): string {
+  const normalized = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
+  return `${normalized}api/v1`;
+}
+
+function resolveViwaTelemetryApiUrl(): string {
+  const explicit = import.meta.env.VITE_VIWA_TELEMETRY_API_URL?.trim();
+  if (explicit) {
+    return explicit;
+  }
+
+  const legacyBase = import.meta.env.VITE_APP_BASE_URL?.trim();
+  if (legacyBase && legacyBase !== 'undefined') {
+    return joinLegacyApiV1(legacyBase);
+  }
+
+  return DEV_TELEMETRY_API_FALLBACK;
+}
+
 /**
  * Viwa Telemetry API (loyalty client web: auth, profile, billing, public entry)
  */
-export const viwaTelemetryApiUrl =
-  import.meta.env.VITE_VIWA_TELEMETRY_API_URL ?? `${import.meta.env.VITE_APP_BASE_URL}api/v1`;
+export const viwaTelemetryApiUrl = resolveViwaTelemetryApiUrl();
 
 /**
  * Базовый url модуля "Клиенты" (legacy dashboard/admin)
