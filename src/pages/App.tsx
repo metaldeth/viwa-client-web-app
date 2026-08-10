@@ -28,6 +28,10 @@ import ReturningAuthGuard from './ReturningAuthGuard';
 
 import HomeAuthGuard from './HomeAuthGuard';
 
+import PaymentSuccessPage from './PaymentSuccessPage';
+
+import PaymentFailedPage from './PaymentFailedPage';
+
 import { isViwaCabinetShellRoute } from '../utils/cabinetRoutes';
 
 export const App: FC = () => {
@@ -83,6 +87,24 @@ export const App: FC = () => {
               element={
                 <HomeAuthGuard>
                   <SubscriptionPage />
+                </HomeAuthGuard>
+              }
+            />
+
+            <Route
+              path="/payment/success"
+              element={
+                <HomeAuthGuard>
+                  <PaymentSuccessPage />
+                </HomeAuthGuard>
+              }
+            />
+
+            <Route
+              path="/payment/failed"
+              element={
+                <HomeAuthGuard>
+                  <PaymentFailedPage />
                 </HomeAuthGuard>
               }
             />

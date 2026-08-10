@@ -5,10 +5,14 @@
 | project | viwa-client-web-app |
 | productName | Viwa |
 | stack | React, TypeScript, Vite, Redux |
+| branch | main |
+| workBranch | main |
+| commitTarget | main |
+| deployBranch | main |
 | buildCommand | `npm run build` |
 | lintCommand | `npm run lint` |
 | testCommand | `npm test` |
-| mrTarget | dev |
+| mrTarget | main |
 | versionFormat | semver in package.json; emitted to dist/version.json and __APP_VERSION__ |
 | workspace | `c:\viwa` |
 | agentRules | `c:\viwa\.cursor\rules\` (общие правила и скиллы — не дублировать в репозитории) |

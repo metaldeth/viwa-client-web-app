@@ -1,0 +1,21 @@
+.loaderWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 0 4px;
+}
+
+.statusText {
+  margin: 0;
+  text-align: center;
+  color: var(--color-typo-secondary);
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}

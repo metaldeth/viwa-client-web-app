@@ -46,7 +46,7 @@
 | Репозиторий | Назначение | AGENTS.md |
 |-------------|------------|-----------|
 | `c:\wiva\viwa-site` | Статический маркетинговый сайт **vitamin-water.ru** | отсутствует; README — static HTML/CSS/JS |
-| `c:\wiva\viwa-client-web-app` | React/Vite кабинет **cabinet.vitamin-water.ru** | build `npm run build`, lint `npm run lint`, test `npm test`, target `dev` |
+| `c:\wiva\viwa-client-web-app` | React/Vite кабинет **cabinet.vitamin-water.ru** | build `npm run build`, lint `npm run lint`, test `npm test`, target `main` |
 | `c:\wiva\viwa-telemetry` | NestJS/Prisma/React телеметрия + loyalty API | lint/typecheck/test/build, target `main`, deploy runbook `docs/deployment/server.md` |
 
 ## Референсы

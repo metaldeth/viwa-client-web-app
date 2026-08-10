@@ -50,7 +50,7 @@ ssh wiva-server
 | Repo | Branch target | Commands | Required result (2026-07-29 baseline) |
 |------|---------------|----------|--------------------------------------|
 | `viwa-telemetry` | `main` | `npm run lint` → `npm run typecheck` → `npm test` → `npm run build` | API **335** pass (+ integration skip without `DATABASE_URL`); web **502** pass; lint/typecheck/build **0** |
-| `viwa-client-web-app` | `dev` | `npm run lint` → `npm run locale:verify` → `npm test` → `npm run build` | **42** total tests (40 Vitest + 2 node regression); lint **0 errors**; locale 47 keys; build **0** |
+| `viwa-client-web-app` | `main` | `npm run lint` → `npm run locale:verify` → `npm test` → `npm run build` | **42** total tests (40 Vitest + 2 node regression); lint **0 errors**; locale 47 keys; build **0** |
 | `viwa-site` | `master` | `powershell -File scripts/static-regression-check.ps1` | static regression **PASS**; `useMockApi: false`; no hardcoded tier prices in HTML |
 
 Production client build env (from `.env.production`):
@@ -159,7 +159,7 @@ Disk / — ~22% used (~28G VPS)
 ## Pre-flight checklist (day of deploy)
 
 - [ ] All gates A–E green
-- [ ] `git fetch --all --prune` in each repo; on target branch (`main` / `dev` / `master`)
+- [ ] `git fetch --all --prune` in each repo; on target branch (`main` / `master` for site)
 - [ ] Version bump per repo `AGENTS.md` / `commits.mdc` (done in `/task-completion`, not task-11)
 - [ ] Maintenance window communicated (telemetry API restart ~ seconds; site swap ~ seconds)
 - [ ] **M1 — PostgreSQL dump** captured **before** `prisma migrate deploy` (see below)

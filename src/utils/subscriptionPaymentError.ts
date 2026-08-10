@@ -44,6 +44,14 @@ export function resolveSubscriptionPaymentErrorMessage(
     return translate('subscribeDowngradeNotAllowed');
   }
 
+  if (code === 'PRICE_CHANGE_CONSENT_REQUIRED') {
+    return translate('priceNoticePendingLead');
+  }
+
+  if (code === 'RECURRING_PARENT_REQUIRED') {
+    return translate('recurringRequiresAction');
+  }
+
   if (error instanceof Error && error.message && error.message !== '[object Object]') {
     return error.message;
   }

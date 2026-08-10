@@ -5,6 +5,8 @@
 **Trigger:** `/complex` (multi-repo: landing + cabinet + telemetry)  
 **Status:** **COMPLETE** — production deploy executed 2026-07-29 via `/task-completion`
 
+> **Branch policy (2026-08-10):** `viwa-client-web-app` work/commit/deploy — **`main`** (`origin/main`). Ветка `dev` — temporary archive до успешного production deploy с `main`; исторические упоминания `dev` в task/session docs ниже относятся к периоду до cutover.
+
 ---
 
 ## Outcome (executive)

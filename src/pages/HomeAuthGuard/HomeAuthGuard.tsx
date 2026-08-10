@@ -1,14 +1,21 @@
 import { FC, memo, ReactNode } from 'react';
-import { Navigate } from 'react-router-dom';
-import { hasAuthTokens } from '../ValidationPage/helpers';
+import { Navigate, useLocation } from 'react-router-dom';
+import { resolvePaymentReturnAuthRedirect } from '../../constants/pendingPayment';
+import { getReturningAuthPath, hasAuthTokens } from '../ValidationPage/helpers';
 
 type HomeAuthGuardProps = {
   children: ReactNode;
 };
 
 const HomeAuthGuard: FC<HomeAuthGuardProps> = memo(function HomeAuthGuard({ children }) {
+  const location = useLocation();
+
   if (!hasAuthTokens()) {
-    return <Navigate to="/auth" replace />;
+    const redirectTo = location.pathname.startsWith('/payment/')
+      ? resolvePaymentReturnAuthRedirect()
+      : getReturningAuthPath();
+
+    return <Navigate to={redirectTo} replace />;
   }
 
   return <>{children}</>;

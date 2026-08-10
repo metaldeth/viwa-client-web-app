@@ -1,18 +1,21 @@
-import { FC, memo, useCallback, useEffect, useMemo, useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { FC, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Navigate, useLocation } from 'react-router-dom';
 import { Button } from '@asnefedov/uikit/Button';
 import { Text } from '@asnefedov/uikit/Text';
 import classNames from 'classnames';
 import { QRCodeSVG } from 'qrcode.react';
 import styles from './SubscriptionPage.module.scss';
 import BottomSheetModal from '../../components/BottomSheetModal';
-import SbpPaymentQr from '../../components/SbpPaymentQr';
 import CabinetHeader from '../../components/CabinetHeader';
 import CabinetLegalFooter from '../../components/CabinetLegalFooter';
 import PwaInstallPrompt from '../../components/PwaInstallPrompt';
 import SubscriptionPriceConsentPanel, {
   SubscriptionPriceNoticeFetchError,
 } from '../../components/SubscriptionPriceConsentPanel/SubscriptionPriceConsentPanel';
+import RecurringConsentModal, {
+  type RecurringConsentModalVariant,
+} from '../../components/RecurringConsentModal';
+import RecurringStatusBlock from '../../components/RecurringStatusBlock';
 import MonthlyProgressCard from '../../components/MonthlyProgressCard';
 import QrPromoCard from '../../components/QrPromoCard';
 import FavoriteTastesRow from '../../components/FavoriteTastesRow';
@@ -22,9 +25,16 @@ import { getCurrentClientProfileAction } from '../../state/loyalty/actions';
 import { selectClientProfile } from '../../state/loyalty/selectors';
 import { api } from '../../app/api';
 import type { SubscriptionLevelDTO } from '../../types/subscriptionLevel';
-import { hasAuthTokens } from '../ValidationPage/helpers';
+import { hasAuthTokens, getMachineSerialFromPath } from '../ValidationPage/helpers';
 import { useClientSubscriptionWs } from '../../hooks/useClientSubscriptionWs';
+import { useRecurringAgreement } from '../../hooks/useRecurringAgreement';
 import { useSubscriptionPriceNotice } from '../../hooks/useSubscriptionPriceNotice';
+import { RECURRING_CONSENT_VERSION } from '../../constants/recurringConsent';
+import {
+  resolveCheckoutReturnPath,
+  sanitizeMachineSerial,
+  writePendingPayment,
+} from '../../constants/pendingPayment';
 import { formatLitersFromMl, formatPriceRub, tSubscription } from '../../locale/subscriptionLocale';
 import { resolveMonthlyProgress } from '../../utils/monthlyProgress';
 import { resolvePlanSummaryDisplay } from '../../utils/planSummary';
@@ -39,20 +49,11 @@ import {
   type SubscriptionProfileInput,
 } from '../../utils/subscriptionLevels';
 import { resolveSubscriptionPaymentErrorMessage } from '../../utils/subscriptionPaymentError';
+import { isActiveSubscriptionProfile } from '../../utils/subscriptionStatus';
 import { resolveUnlimitedWaterBenefitVariant } from '../../utils/unlimitedWaterBenefit';
 import { resolveTierCardBackgroundForLevel } from '../../utils/tierCardBackground';
 
-type PayPhase =
-  | 'idle'
-  | 'loading_levels'
-  | 'ready'
-  | 'init'
-  | 'await_payment'
-  | 'await_subscription'
-  | 'done'
-  | 'error';
-
-const PAYMENT_ACTIVE_PHASES: PayPhase[] = ['init', 'await_payment', 'await_subscription'];
+type PayPhase = 'idle' | 'loading_levels' | 'ready' | 'init' | 'error';
 
 const LoyaltyQrCode = memo(function LoyaltyQrCode({
   value,
@@ -74,16 +75,41 @@ const LoyaltyQrCode = memo(function LoyaltyQrCode({
   );
 });
 
-function isPaymentFlowActive(payPhase: PayPhase, paymentUrl: string | null): boolean {
-  return Boolean(paymentUrl) || PAYMENT_ACTIVE_PHASES.includes(payPhase);
-}
-
 const SubscriptionPage: FC = () => {
   const dispatch = useAppDispatch();
+  const location = useLocation();
   const { state: client, isReject } = useAppSelector(selectClientProfile());
 
   const isAuthed = hasAuthTokens();
   useClientSubscriptionWs(isAuthed);
+
+  const subscriptionProfile = useMemo(
+    (): SubscriptionProfileInput => ({
+      tierName: client?.tierName ?? null,
+      subscriptionEndsAt: client?.subscriptionEndsAt ?? null,
+      monthlyLimitMl: client?.monthlyLimitMl,
+      dailyLimitMl: client?.dailyLimitMl,
+      active: client?.active,
+    }),
+    [
+      client?.tierName,
+      client?.subscriptionEndsAt,
+      client?.monthlyLimitMl,
+      client?.dailyLimitMl,
+      client?.active,
+    ],
+  );
+
+  const hasActiveSubscription = isActiveSubscriptionProfile(subscriptionProfile);
+
+  const {
+    data: recurringData,
+    loading: recurringLoading,
+    error: recurringError,
+    patching: recurringPatching,
+    refetch: refetchRecurring,
+    patchAgreement,
+  } = useRecurringAgreement(isAuthed && hasActiveSubscription);
 
   const {
     notice: priceNotice,
@@ -106,27 +132,29 @@ const SubscriptionPage: FC = () => {
   const [selectedLevelId, setSelectedLevelId] = useState<string | null>(null);
   const [payPhase, setPayPhase] = useState<PayPhase>('idle');
   const [payError, setPayError] = useState<string | null>(null);
-  const [paymentUrl, setPaymentUrl] = useState<string | null>(null);
+  const [autoRenew, setAutoRenew] = useState(false);
+  const [isConsentModalOpen, setIsConsentModalOpen] = useState(false);
+  const [consentModalVariant, setConsentModalVariant] =
+    useState<RecurringConsentModalVariant>('checkout');
+  const [recurringActionError, setRecurringActionError] = useState<string | null>(null);
 
   const [isScanModalOpen, setIsScanModalOpen] = useState(false);
   const [isDescriptionModalOpen, setIsDescriptionModalOpen] = useState(false);
 
-  const subscriptionProfile = useMemo(
-    (): SubscriptionProfileInput => ({
-      tierName: client?.tierName ?? null,
-      subscriptionEndsAt: client?.subscriptionEndsAt ?? null,
-      monthlyLimitMl: client?.monthlyLimitMl,
-      dailyLimitMl: client?.dailyLimitMl,
-      active: client?.active,
-    }),
-    [
-      client?.tierName,
-      client?.subscriptionEndsAt,
-      client?.monthlyLimitMl,
-      client?.dailyLimitMl,
-      client?.active,
-    ],
-  );
+  /** Synchronous guard — blocks same-frame double-clicks before React re-render disables the CTA. */
+  const purchaseInFlightRef = useRef(false);
+
+  const releasePurchaseLock = useCallback(() => {
+    purchaseInFlightRef.current = false;
+  }, []);
+
+  const tryAcquirePurchaseLock = useCallback((): boolean => {
+    if (purchaseInFlightRef.current) {
+      return false;
+    }
+    purchaseInFlightRef.current = true;
+    return true;
+  }, []);
 
   const planSummary = useMemo(
     () => resolvePlanSummaryDisplay(subscriptionProfile, levels),
@@ -184,31 +212,91 @@ const SubscriptionPage: FC = () => {
     };
   }, [isAuthed]);
 
-  const handlePurchase = useCallback(async () => {
-    const levelId = selectedLevelId;
-    if (!levelId || !isSubscriptionLevelSelectable(levelId, selectableLevels)) return;
+  const handleRobokassaPurchase = useCallback(
+    async (consentAccepted: boolean) => {
+      const levelId = selectedLevelId;
+      if (!levelId || !isSubscriptionLevelSelectable(levelId, selectableLevels)) return;
 
-    setPayError(null);
-    setPayPhase('init');
+      if (autoRenew && !consentAccepted) {
+        setConsentModalVariant('checkout');
+        setIsConsentModalOpen(true);
+        return;
+      }
+
+      if (!tryAcquirePurchaseLock()) return;
+
+      setPayError(null);
+      setPayPhase('init');
+
+      try {
+        const init = await api.billing.initRobokassaPayment({
+          subscriptionLevelId: levelId,
+          requestUuid: crypto.randomUUID(),
+          autoRenew,
+          ...(autoRenew ? { consentVersion: RECURRING_CONSENT_VERSION } : {}),
+        });
+
+        const returnPath = resolveCheckoutReturnPath(location.pathname);
+        const machineSerial =
+          sanitizeMachineSerial(getMachineSerialFromPath(location.pathname)) ?? undefined;
+
+        writePendingPayment({
+          paymentId: init.paymentId,
+          startedAt: Date.now(),
+          returnPath,
+          ...(machineSerial ? { machineSerial } : {}),
+        });
+
+        window.location.href = init.paymentUrl;
+      } catch (e: unknown) {
+        releasePurchaseLock();
+        setPayError(resolveSubscriptionPaymentErrorMessage(e));
+        setPayPhase('ready');
+      }
+    },
+    [
+      autoRenew,
+      location.pathname,
+      releasePurchaseLock,
+      selectedLevelId,
+      selectableLevels,
+      tryAcquirePurchaseLock,
+    ],
+  );
+
+  const handlePurchase = useCallback(() => {
+    void handleRobokassaPurchase(false);
+  }, [handleRobokassaPurchase]);
+
+  const handleConsentAccept = useCallback(async () => {
+    setIsConsentModalOpen(false);
+
+    if (consentModalVariant === 'checkout') {
+      void handleRobokassaPurchase(true);
+      return;
+    }
+
+    setRecurringActionError(null);
 
     try {
-      const init = await api.billing.initSubscriptionPayment({
-        subscriptionLevelId: levelId,
-        requestUuid: crypto.randomUUID(),
+      await patchAgreement({
+        enabled: true,
+        consentVersion: RECURRING_CONSENT_VERSION,
       });
-
-      setPaymentUrl(init.sbpQrUrl);
-      setPayPhase('await_payment');
-      await api.billing.pollPaymentUntilPaid(init.paymentId);
-      setPayPhase('await_subscription');
-      await api.billing.pollSubscriptionUntilCompleted(init.paymentId);
-      setPayPhase('done');
-      dispatch(getCurrentClientProfileAction());
     } catch (e: unknown) {
-      setPayError(resolveSubscriptionPaymentErrorMessage(e));
-      setPayPhase('ready');
+      setRecurringActionError(resolveSubscriptionPaymentErrorMessage(e));
     }
-  }, [selectedLevelId, selectableLevels, dispatch]);
+  }, [consentModalVariant, handleRobokassaPurchase, patchAgreement]);
+
+  const handleRecurringDisable = useCallback(async () => {
+    setRecurringActionError(null);
+
+    try {
+      await patchAgreement({ enabled: false });
+    } catch (e: unknown) {
+      setRecurringActionError(resolveSubscriptionPaymentErrorMessage(e));
+    }
+  }, [patchAgreement]);
 
   const openSubscribeModal = useCallback(
     (levelId?: string | null) => {
@@ -223,20 +311,57 @@ const SubscriptionPage: FC = () => {
     [selectableLevels, planSummary?.levelId, selectedLevelId],
   );
 
+  const handleEnableNewParent = useCallback(() => {
+    setAutoRenew(true);
+    openSubscribeModal(planSummary?.levelId);
+  }, [openSubscribeModal, planSummary?.levelId]);
+
+  const handleRecurringReEnable = useCallback(() => {
+    setConsentModalVariant('reenable');
+    setIsConsentModalOpen(true);
+  }, []);
+
   const handleDescriptionModalClose = () => {
+    releasePurchaseLock();
     setIsDescriptionModalOpen(false);
-    setPaymentUrl(null);
     setPayError(null);
     setPayPhase('ready');
+    setAutoRenew(false);
   };
 
-  const showTariffSelection = !isPaymentFlowActive(payPhase, paymentUrl);
+  const showTariffSelection = payPhase !== 'init';
+  const isPayFlowBusy = payPhase === 'init';
   const isPayButtonDisabled =
     !isSubscriptionLevelSelectable(selectedLevelId, selectableLevels) ||
-    payPhase === 'init' ||
-    payPhase === 'await_payment' ||
-    payPhase === 'await_subscription' ||
+    isPayFlowBusy ||
     payPhase === 'loading_levels';
+
+  const renderAutoRenewRow = () => {
+    if (!showTariffSelection) {
+      return null;
+    }
+
+    return (
+      <div className={styles.autoRenewRow} data-testid="checkout-auto-renew-row">
+        <div className={styles.autoRenewCopy}>
+          <span className={styles.autoRenewLabel}>{tSubscription('autoRenewLabel')}</span>
+          <span className={styles.autoRenewHint}>{tSubscription('autoRenewSoon')}</span>
+        </div>
+        <button
+          type="button"
+          className={styles.autoRenewSwitch}
+          role="switch"
+          aria-checked={autoRenew}
+          aria-label={tSubscription('autoRenewLabel')}
+          disabled={isPayFlowBusy}
+          data-testid="checkout-auto-renew-switch"
+          onClick={() => setAutoRenew((current) => !current)}
+        >
+          <span className={styles.autoRenewThumb} aria-hidden="true" />
+        </button>
+      </div>
+    );
+  };
 
   const renderDescriptionModalBody = () => (
     <div className={styles.subscribeModalBody}>
@@ -361,72 +486,35 @@ const SubscriptionPage: FC = () => {
         </div>
       )}
 
-      {!paymentUrl && (
-        <div
-          className={styles.autoRenewRow}
-          aria-disabled="true"
-          data-testid="auto-renew-placeholder"
-        >
-          <div className={styles.autoRenewCopy}>
-            <span className={styles.autoRenewLabel}>{tSubscription('autoRenewLabel')}</span>
-            <span className={styles.autoRenewHint}>{tSubscription('autoRenewSoon')}</span>
-          </div>
-          <button
-            type="button"
-            className={styles.autoRenewSwitch}
-            role="switch"
-            aria-checked="true"
-            aria-label={tSubscription('autoRenewLabel')}
-            disabled
-          >
-            <span className={styles.autoRenewThumb} aria-hidden="true" />
-          </button>
-        </div>
-      )}
+      {renderAutoRenewRow()}
 
-      {paymentUrl && (
-        <div className={styles.paymentStage}>
-          <p className={styles.paymentStageLabel}>{tSubscription('subscribeSbp')}</p>
-          <div className={styles.paymentQrPad}>
-            <SbpPaymentQr value={paymentUrl} ariaLabel={tSubscription('subscribeSbp')} />
-          </div>
-          <a href={paymentUrl} target="_blank" rel="noopener noreferrer" className={styles.payLink}>
-            {tSubscription('subscribeOpenBank')}
-          </a>
-        </div>
-      )}
+      {isPayFlowBusy ? (
+        <Text size="s" view="secondary" align="center" className={styles.robokassaHint}>
+          {tSubscription('paymentChecking')}
+        </Text>
+      ) : null}
 
       <div className={styles.subscribeActions}>
         <Button
           size="l"
-          label={
-            payPhase === 'init' || payPhase === 'await_payment' || payPhase === 'await_subscription'
-              ? tSubscription('subscribeWait')
-              : tSubscription('subscribePay')
-          }
+          label={isPayFlowBusy ? tSubscription('subscribeWait') : tSubscription('subscribePay')}
           disabled={isPayButtonDisabled}
+          data-testid="subscription-pay-button"
           onClick={() => void handlePurchase()}
         />
-        {payPhase === 'await_payment' && (
-          <Text size="s" weight="medium" align="center" view="secondary">
-            {tSubscription('subscribeAwaitPayment')}
-          </Text>
-        )}
-        {payPhase === 'await_subscription' ? (
-          <Text size="s" weight="medium" align="center" view="secondary">
-            {tSubscription('subscribeAwaitActivation')}
-          </Text>
-        ) : null}
-        {payPhase === 'done' && (
-          <Text size="m" weight="medium" align="center">
-            {tSubscription('subscribeDone')}
-          </Text>
-        )}
         {payError && payPhase !== 'error' && (
           <Text size="m" weight="medium" align="center" view="alert">
             {payError}
           </Text>
         )}
+        {payError && payPhase === 'ready' ? (
+          <Button
+            size="s"
+            view="secondary"
+            label={tSubscription('paymentReturnRetryCheck')}
+            onClick={() => void handlePurchase()}
+          />
+        ) : null}
       </div>
     </div>
   );
@@ -436,7 +524,7 @@ const SubscriptionPage: FC = () => {
       <button
         type="button"
         className={styles.scanSheetClose}
-        aria-label="Закрыть"
+        aria-label={tSubscription('subscribeModalClose')}
         onClick={onClose}
       >
         <svg viewBox="0 0 20 20" aria-hidden="true">
@@ -492,6 +580,19 @@ const SubscriptionPage: FC = () => {
           waterBenefitVariant={waterBenefitVariant}
           limitExhausted={client?.limitExhausted}
         />
+        {hasActiveSubscription ? (
+          <RecurringStatusBlock
+            agreement={recurringData?.agreement ?? null}
+            capabilities={recurringData?.capabilities ?? null}
+            loading={recurringLoading}
+            error={recurringActionError ?? recurringError}
+            patching={recurringPatching}
+            onDisable={() => void handleRecurringDisable()}
+            onReEnable={handleRecurringReEnable}
+            onEnableNewParent={handleEnableNewParent}
+            onRetry={() => void refetchRecurring()}
+          />
+        ) : null}
         <QrPromoCard qrPayload={qrPayload} onOpen={() => setIsScanModalOpen(true)} />
         <PlanSummaryCard
           plan={planSummary}
@@ -524,6 +625,14 @@ const SubscriptionPage: FC = () => {
       >
         {renderDescriptionModalBody()}
       </BottomSheetModal>
+
+      <RecurringConsentModal
+        isOpen={isConsentModalOpen}
+        variant={consentModalVariant}
+        submitting={recurringPatching || payPhase === 'init'}
+        onClose={() => setIsConsentModalOpen(false)}
+        onAccept={() => void handleConsentAccept()}
+      />
     </div>
   );
 };

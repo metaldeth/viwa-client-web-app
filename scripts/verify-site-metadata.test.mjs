@@ -18,37 +18,37 @@ const manifest = readFileSync(join(root, 'public', 'manifest.webmanifest'), 'utf
 
 describe('cabinet site metadata cache-bust', () => {
   it('uses package.json release version for branding query', () => {
-    assert.equal(releaseVersion, '0.1.40');
-    assert.equal(brandingCacheQuery(releaseVersion), '?v=0.1.40');
+    assert.equal(releaseVersion, '0.1.42');
+    assert.equal(brandingCacheQuery(releaseVersion), '?v=0.1.42');
   });
 
   it('builds absolute OG preview URL with release query', () => {
     assert.equal(
       resolveStaticOgImageUrl(releaseVersion),
-      'https://cabinet.vitamin-water.ru/assets/social/og-card.png?v=0.1.40',
+      'https://cabinet.vitamin-water.ru/assets/social/og-card.png?v=0.1.42',
     );
   });
 
   it('indexes versioned favicon, apple-touch, manifest and OG URLs in index.html', () => {
-    assert.match(indexHtml, /href="\/favicon\.svg\?v=0\.1\.40"/);
-    assert.match(indexHtml, /href="\/icons\/favicon-32\.png\?v=0\.1\.40"/);
-    assert.match(indexHtml, /href="\/icons\/icon-192\.png\?v=0\.1\.40"/);
-    assert.match(indexHtml, /href="\/icons\/apple-touch-icon\.png\?v=0\.1\.40"/);
-    assert.match(indexHtml, /href="\/manifest\.webmanifest\?v=0\.1\.40"/);
+    assert.match(indexHtml, /href="\/favicon\.svg\?v=0\.1\.42"/);
+    assert.match(indexHtml, /href="\/icons\/favicon-32\.png\?v=0\.1\.42"/);
+    assert.match(indexHtml, /href="\/icons\/icon-192\.png\?v=0\.1\.42"/);
+    assert.match(indexHtml, /href="\/icons\/apple-touch-icon\.png\?v=0\.1\.42"/);
+    assert.match(indexHtml, /href="\/manifest\.webmanifest\?v=0\.1\.42"/);
     assert.match(
       indexHtml,
-      /property="og:image"\s+content="https:\/\/cabinet\.vitamin-water\.ru\/assets\/social\/og-card\.png\?v=0\.1\.40"/,
+      /property="og:image"\s+content="https:\/\/cabinet\.vitamin-water\.ru\/assets\/social\/og-card\.png\?v=0\.1\.42"/,
     );
     assert.match(
       indexHtml,
-      /name="twitter:image"\s+content="https:\/\/cabinet\.vitamin-water\.ru\/assets\/social\/og-card\.png\?v=0\.1\.40"/,
+      /name="twitter:image"\s+content="https:\/\/cabinet\.vitamin-water\.ru\/assets\/social\/og-card\.png\?v=0\.1\.42"/,
     );
     assert.doesNotMatch(indexHtml, /\/sw\.js\?v=/);
   });
 
   it('indexes versioned PWA icon src entries in manifest.webmanifest', () => {
-    assert.match(manifest, /"src": "\/icons\/icon-192\.png\?v=0\.1\.40"/);
-    assert.match(manifest, /"src": "\/icons\/icon-512\.png\?v=0\.1\.40"/g);
+    assert.match(manifest, /"src": "\/icons\/icon-192\.png\?v=0\.1\.42"/);
+    assert.match(manifest, /"src": "\/icons\/icon-512\.png\?v=0\.1\.42"/g);
   });
 
   it('keeps canonical and og:url without cache-bust query', () => {
@@ -71,8 +71,8 @@ describe('cabinet site metadata cache-bust', () => {
 
   it('replaces stale query when re-syncing branding URLs', () => {
     assert.equal(
-      withBrandingCacheBust('/icons/icon-192.png?v=0.1.39', releaseVersion),
-      '/icons/icon-192.png?v=0.1.40',
+      withBrandingCacheBust('/icons/icon-192.png?v=0.1.41', releaseVersion),
+      '/icons/icon-192.png?v=0.1.42',
     );
   });
 });
