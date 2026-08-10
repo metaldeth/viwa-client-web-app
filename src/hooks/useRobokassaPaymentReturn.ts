@@ -9,6 +9,7 @@ import {
   clearPendingPayment,
   DEFAULT_SAFE_CABINET_RETURN_PATH,
   readPendingPayment,
+  renewPendingPaymentPollWindow,
   resolveSafeReturnPath,
   type PendingPaymentSession,
 } from '../constants/pendingPayment';
@@ -56,13 +57,48 @@ export function useRobokassaPaymentReturn({
   const [pendingSession, setPendingSession] = useState<PendingPaymentSession | null>(null);
   const [runId, setRunId] = useState(0);
   const cancelledRef = useRef(false);
+  const sleepTimeoutIdsRef = useRef<Set<ReturnType<typeof setTimeout>>>(new Set());
+
+  const clearSleepTimeouts = useCallback(() => {
+    for (const timeoutId of sleepTimeoutIdsRef.current) {
+      clearTimeout(timeoutId);
+    }
+    sleepTimeoutIdsRef.current.clear();
+  }, []);
+
+  const waitForPollInterval = useCallback(() => {
+    return new Promise<void>((resolve) => {
+      if (cancelledRef.current) {
+        resolve();
+        return;
+      }
+
+      const timeoutId = setTimeout(() => {
+        sleepTimeoutIdsRef.current.delete(timeoutId);
+        resolve();
+      }, BILLING_POLL_INTERVAL_MS);
+
+      sleepTimeoutIdsRef.current.add(timeoutId);
+    });
+  }, []);
 
   const retry = useCallback(() => {
+    const renewed = renewPendingPaymentPollWindow();
+
+    if (!renewed) {
+      return;
+    }
+
+    setPendingSession(renewed);
+    setReturnPath(resolveSafeReturnPath(renewed));
+    setPhase('checking');
+    setErrorMessage(null);
     setRunId((value) => value + 1);
   }, []);
 
   useEffect(() => {
     cancelledRef.current = false;
+    const pollRunId = runId;
 
     const session = readPendingPayment();
 
@@ -73,6 +109,7 @@ export function useRobokassaPaymentReturn({
       setErrorMessage(tSubscription('paymentReturnMissingSession'));
       return () => {
         cancelledRef.current = true;
+        clearSleepTimeouts();
       };
     }
 
@@ -87,6 +124,7 @@ export function useRobokassaPaymentReturn({
       setErrorMessage(tSubscription('paymentReturnFailedDescription'));
       return () => {
         cancelledRef.current = true;
+        clearSleepTimeouts();
       };
     }
 
@@ -96,16 +134,24 @@ export function useRobokassaPaymentReturn({
 
       const deadline = session.startedAt + BILLING_POLL_MAX_MS;
 
-      while (!cancelledRef.current && Date.now() < deadline) {
+      while (!cancelledRef.current && pollRunId === runId && Date.now() < deadline) {
         try {
           const response = await api.billing.getPaymentStatus(session.paymentId);
+
+          if (cancelledRef.current || pollRunId !== runId) {
+            return;
+          }
 
           if (response.status === 'PAID') {
             setPhase('await_subscription');
 
-            while (!cancelledRef.current && Date.now() < deadline) {
+            while (!cancelledRef.current && pollRunId === runId && Date.now() < deadline) {
               try {
                 const subscription = await api.billing.getSubscriptionStatus(session.paymentId);
+
+                if (cancelledRef.current || pollRunId !== runId) {
+                  return;
+                }
 
                 if (subscription.status === 'COMPLETED') {
                   clearPendingPayment();
@@ -133,11 +179,13 @@ export function useRobokassaPaymentReturn({
                 }
               }
 
-              await new Promise((resolve) => setTimeout(resolve, BILLING_POLL_INTERVAL_MS));
+              await waitForPollInterval();
             }
 
-            setPhase('error');
-            setErrorMessage(tSubscription('paymentReturnActivationTimeout'));
+            if (!cancelledRef.current && pollRunId === runId) {
+              setPhase('error');
+              setErrorMessage(tSubscription('paymentReturnActivationTimeout'));
+            }
             return;
           }
 
@@ -159,10 +207,10 @@ export function useRobokassaPaymentReturn({
           }
         }
 
-        await new Promise((resolve) => setTimeout(resolve, BILLING_POLL_INTERVAL_MS));
+        await waitForPollInterval();
       }
 
-      if (!cancelledRef.current) {
+      if (!cancelledRef.current && pollRunId === runId) {
         setPhase('error');
         setErrorMessage(tSubscription('paymentReturnCheckTimeout'));
       }
@@ -172,8 +220,9 @@ export function useRobokassaPaymentReturn({
 
     return () => {
       cancelledRef.current = true;
+      clearSleepTimeouts();
     };
-  }, [mode, navigate, runId]);
+  }, [clearSleepTimeouts, mode, navigate, runId, waitForPollInterval]);
 
   return {
     phase,

@@ -1,5 +1,6 @@
 import {
   DEFAULT_SAFE_CABINET_RETURN_PATH,
+  renewPendingPaymentPollWindow,
   resolveCheckoutReturnPath,
   resolvePaymentReturnAuthRedirect,
   resolveSafeReturnPath,
@@ -84,5 +85,36 @@ describe('pendingPayment return path helpers', () => {
     expect(resolveCheckoutReturnPath('/m/ABC123/home')).toBe('/m/ABC123/home');
     expect(resolveCheckoutReturnPath('//evil')).toBe('/home');
     expect(resolveCheckoutReturnPath('/m/BAD!')).toBe('/home');
+  });
+
+  it('renewPendingPaymentPollWindow preserves payment context and resets startedAt', () => {
+    const originalStartedAt = Date.now() - 180_000;
+    sessionStorage.setItem(
+      VIWA_PENDING_PAYMENT_KEY,
+      JSON.stringify({
+        paymentId: 'pay-retry',
+        startedAt: originalStartedAt,
+        returnPath: '/m/VIWA-001/home',
+        machineSerial: 'VIWA-001',
+      }),
+    );
+
+    const renewed = renewPendingPaymentPollWindow();
+
+    expect(renewed).toEqual({
+      paymentId: 'pay-retry',
+      startedAt: expect.any(Number),
+      returnPath: '/m/VIWA-001/home',
+      machineSerial: 'VIWA-001',
+    });
+    expect(renewed?.startedAt).toBeGreaterThan(originalStartedAt);
+
+    const persisted = JSON.parse(sessionStorage.getItem(VIWA_PENDING_PAYMENT_KEY) || '{}');
+    expect(persisted.paymentId).toBe('pay-retry');
+    expect(persisted.startedAt).toBe(renewed?.startedAt);
+  });
+
+  it('renewPendingPaymentPollWindow returns null when session is missing', () => {
+    expect(renewPendingPaymentPollWindow()).toBeNull();
   });
 });

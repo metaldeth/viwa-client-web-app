@@ -1,7 +1,7 @@
 /**
  * @vitest-environment jsdom
  */
-import { renderHook, waitFor } from '@testing-library/react';
+import { act, renderHook, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import {
   BILLING_POLL_INTERVAL_MS,
@@ -43,6 +43,10 @@ describe('useRobokassaPaymentReturn', () => {
     navigateMock.mockReset();
     vi.mocked(api.billing.getPaymentStatus).mockReset();
     vi.mocked(api.billing.getSubscriptionStatus).mockReset();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   it('exposes polling interval and max duration constants', () => {
@@ -222,5 +226,125 @@ describe('useRobokassaPaymentReturn', () => {
     await new Promise((resolve) => setTimeout(resolve, 100));
 
     expect(navigateMock).not.toHaveBeenCalled();
+  });
+
+  it('retry after timeout starts a fresh poll window and can succeed', async () => {
+    const expiredStartedAt = Date.now() - BILLING_POLL_MAX_MS - 5_000;
+    sessionStorage.setItem(
+      VIWA_PENDING_PAYMENT_KEY,
+      JSON.stringify({
+        paymentId: 'pay-retry-success',
+        startedAt: expiredStartedAt,
+        returnPath: '/m/VIWA-001/home',
+        machineSerial: 'VIWA-001',
+      }),
+    );
+
+    const { result } = renderReturnHook('success');
+
+    await waitFor(() => {
+      expect(result.current.phase).toBe('error');
+    });
+    expect(api.billing.getPaymentStatus).not.toHaveBeenCalled();
+    expect(sessionStorage.getItem(VIWA_PENDING_PAYMENT_KEY)).toBeTruthy();
+
+    vi.mocked(api.billing.getPaymentStatus).mockResolvedValue({
+      status: 'PAID',
+      provider: 'ROBOKASSA',
+    });
+    vi.mocked(api.billing.getSubscriptionStatus).mockResolvedValue({
+      status: 'COMPLETED',
+    });
+
+    result.current.retry();
+
+    const renewedStartedAt = JSON.parse(
+      sessionStorage.getItem(VIWA_PENDING_PAYMENT_KEY) || '{}',
+    ).startedAt;
+    expect(renewedStartedAt).toBeGreaterThan(expiredStartedAt);
+
+    await waitFor(() => {
+      expect(result.current.phase).toBe('done');
+    });
+
+    expect(api.billing.getPaymentStatus).toHaveBeenCalledTimes(1);
+    expect(api.billing.getSubscriptionStatus).toHaveBeenCalledWith('pay-retry-success');
+    expect(navigateMock).toHaveBeenCalledWith('/m/VIWA-001/home', { replace: true });
+    expect(sessionStorage.getItem(VIWA_PENDING_PAYMENT_KEY)).toBeNull();
+  }, 10_000);
+
+  it('repeated retry clicks do not run concurrent payment polls', async () => {
+    sessionStorage.setItem(
+      VIWA_PENDING_PAYMENT_KEY,
+      JSON.stringify({
+        paymentId: 'pay-retry-race',
+        startedAt: Date.now() - BILLING_POLL_MAX_MS - 1_000,
+        returnPath: '/home',
+      }),
+    );
+
+    let resolvePaymentStatus:
+      | ((value: { status: 'PENDING'; provider: 'ROBOKASSA' }) => void)
+      | null = null;
+
+    vi.mocked(api.billing.getPaymentStatus).mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          resolvePaymentStatus = resolve;
+        }),
+    );
+
+    const { result } = renderReturnHook('success');
+
+    await waitFor(() => {
+      expect(result.current.phase).toBe('error');
+    });
+
+    result.current.retry();
+    result.current.retry();
+    result.current.retry();
+
+    await waitFor(() => {
+      expect(api.billing.getPaymentStatus).toHaveBeenCalledTimes(1);
+    });
+
+    resolvePaymentStatus?.({ status: 'PENDING', provider: 'ROBOKASSA' });
+
+    await waitFor(() => {
+      expect(result.current.phase).toBe('checking');
+    });
+
+    expect(api.billing.getPaymentStatus).toHaveBeenCalledTimes(1);
+  }, 10_000);
+
+  it('keeps pending session across reload after timeout until success clears it', async () => {
+    sessionStorage.setItem(
+      VIWA_PENDING_PAYMENT_KEY,
+      JSON.stringify({
+        paymentId: 'pay-reload',
+        startedAt: Date.now() - BILLING_POLL_MAX_MS - 1_000,
+        returnPath: '/home',
+      }),
+    );
+
+    const firstMount = renderReturnHook('success');
+
+    await waitFor(() => {
+      expect(firstMount.result.current.phase).toBe('error');
+    });
+
+    const persistedAfterTimeout = sessionStorage.getItem(VIWA_PENDING_PAYMENT_KEY);
+    expect(persistedAfterTimeout).toBeTruthy();
+
+    firstMount.unmount();
+
+    const secondMount = renderReturnHook('success');
+
+    await waitFor(() => {
+      expect(secondMount.result.current.phase).toBe('error');
+    });
+
+    expect(sessionStorage.getItem(VIWA_PENDING_PAYMENT_KEY)).toBe(persistedAfterTimeout);
+    expect(api.billing.getPaymentStatus).not.toHaveBeenCalled();
   });
 });

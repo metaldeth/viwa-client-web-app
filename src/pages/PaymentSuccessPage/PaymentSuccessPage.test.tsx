@@ -76,4 +76,17 @@ describe('PaymentSuccessPage', () => {
     screen.getByText('Проверить снова').click();
     expect(retryMock).toHaveBeenCalledTimes(1);
   });
+
+  it('hides retry action while checking', () => {
+    hookState.phase = 'checking';
+
+    render(
+      <MemoryRouter initialEntries={['/payment/success']}>
+        <PaymentSuccessPage />
+      </MemoryRouter>,
+    );
+
+    expect(screen.queryByText('Проверить снова')).toBeNull();
+    expect(screen.getByText('Проверяем оплату…')).toBeTruthy();
+  });
 });

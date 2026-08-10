@@ -141,6 +141,23 @@ export function writePendingPayment(session: PendingPaymentSession): void {
   );
 }
 
+/** Resets the bounded poll window while preserving payment context for manual retry. */
+export function renewPendingPaymentPollWindow(): PendingPaymentSession | null {
+  const session = readPendingPayment();
+
+  if (!session) {
+    return null;
+  }
+
+  const renewed: PendingPaymentSession = {
+    ...session,
+    startedAt: Date.now(),
+  };
+
+  writePendingPayment(renewed);
+  return renewed;
+}
+
 export function clearPendingPayment(): void {
   if (typeof sessionStorage === 'undefined') {
     return;
