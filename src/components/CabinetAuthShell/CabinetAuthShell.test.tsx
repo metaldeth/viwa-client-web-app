@@ -28,4 +28,15 @@ describe('CabinetAuthShell', () => {
     const main = container.querySelector('main');
     expect(main?.className).toContain(styles.mainScroll);
   });
+
+  it('renders legal footer while keyboard is closed', () => {
+    const { container } = render(
+      <CabinetAuthShell title="SMS">
+        <div>child</div>
+      </CabinetAuthShell>,
+    );
+
+    expect(container.querySelector('footer')).not.toBeNull();
+    expect(container.firstElementChild?.className).not.toContain(styles.pageShellKeyboard);
+  });
 });

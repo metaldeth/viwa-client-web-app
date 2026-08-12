@@ -13,9 +13,17 @@
 
 .statusRow {
   display: flex;
-  min-height: 2rem;
+  min-height: 1.25rem;
   align-items: center;
   justify-content: center;
+}
+
+:global(.vv-keyboard-open) .codeSection {
+  gap: 0.5rem;
+}
+
+:global(.vv-keyboard-open) .resendHint {
+  display: none;
 }
 
 .errorBanner {

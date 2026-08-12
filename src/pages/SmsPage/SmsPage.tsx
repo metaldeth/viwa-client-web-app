@@ -183,6 +183,7 @@ const SmsPage: FC = () => {
       eyebrow={channelEyebrow}
       title={getCodeEntryTitle(channel)}
       description={renderDescription()}
+      mainLayout="scroll"
     >
       <div className={styles.codeSection}>
         <CodeInputGroup

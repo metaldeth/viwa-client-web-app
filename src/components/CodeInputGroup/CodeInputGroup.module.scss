@@ -1,12 +1,16 @@
 .codeGroup {
-  --code-input-gap: clamp(0.375rem, 2.5vw, 0.75rem);
+  --code-input-gap: clamp(0.375rem, 2vmin, 0.75rem);
 
   display: flex;
+  flex-shrink: 0;
   flex-wrap: nowrap;
   align-items: center;
   justify-content: center;
   gap: var(--code-input-gap);
+  box-sizing: border-box;
   width: 100%;
   max-width: 100%;
-  overflow-x: hidden;
+  /* room for focus outline / mild scale — avoid clipping under iOS overflow */
+  padding-block: 0.375rem;
+  overflow: visible;
 }

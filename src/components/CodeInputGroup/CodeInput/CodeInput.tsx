@@ -21,8 +21,13 @@ const CodeInput: FC<CodeInputProps> = ({
 }) => {
   const [isFocus, setIsFocus] = React.useState(false);
 
-  const handleFocus = () => {
+  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
     setIsFocus(true);
+    // Keep digit in the visual viewport above the iOS keyboard without jumping under the logo
+    const target = e.currentTarget;
+    window.requestAnimationFrame(() => {
+      target.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    });
   };
 
   const handleUnfocus = () => {
@@ -41,7 +46,7 @@ const CodeInput: FC<CodeInputProps> = ({
         key={index}
         id={String(index)}
         className={styles.slotInner}
-        animate={{ scale: isFocus ? 1.04 : 1 }}
+        animate={{ scale: isFocus ? 1.02 : 1 }}
       >
         <input
           className={classNames(

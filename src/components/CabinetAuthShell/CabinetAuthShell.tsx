@@ -2,6 +2,7 @@ import { FC, ReactNode } from 'react';
 import classNames from 'classnames';
 import { ViwaBrandLogo } from '../ViwaBrandLogo/ViwaBrandLogo';
 import CabinetLegalFooter from '../CabinetLegalFooter';
+import { useVisualViewportKeyboard } from '../../hooks/useVisualViewportKeyboard';
 import styles from './CabinetAuthShell.module.scss';
 
 export type CabinetAuthShellMainLayout = 'centered' | 'scroll';
@@ -24,12 +25,20 @@ const CabinetAuthShell: FC<CabinetAuthShellProps> = ({
   className,
   mainLayout = 'centered',
 }) => {
+  const { isKeyboardOpen } = useVisualViewportKeyboard();
+
   return (
-    <div className={[styles.pageShell, className].filter(Boolean).join(' ')}>
+    <div
+      className={classNames(
+        styles.pageShell,
+        isKeyboardOpen && styles.pageShellKeyboard,
+        className,
+      )}
+    >
       <div className={styles.glow} aria-hidden="true" />
       <header className={styles.header}>
         <div className={styles.logoWrap}>
-          <ViwaBrandLogo size="lg" />
+          <ViwaBrandLogo size={isKeyboardOpen ? 'sm' : 'lg'} />
         </div>
       </header>
       <main className={classNames(styles.main, mainLayout === 'scroll' && styles.mainScroll)}>
@@ -46,7 +55,7 @@ const CabinetAuthShell: FC<CabinetAuthShellProps> = ({
           <div className={styles.cardBody}>{children}</div>
         </section>
       </main>
-      <CabinetLegalFooter />
+      {!isKeyboardOpen ? <CabinetLegalFooter /> : null}
     </div>
   );
 };
