@@ -18,14 +18,14 @@ const manifest = readFileSync(join(root, 'public', 'manifest.webmanifest'), 'utf
 
 describe('cabinet site metadata cache-bust', () => {
   it('uses package.json release version for branding query', () => {
-    assert.equal(releaseVersion, '0.1.46');
-    assert.equal(brandingCacheQuery(releaseVersion), '?v=0.1.46');
+    assert.equal(releaseVersion, '0.1.47');
+    assert.equal(brandingCacheQuery(releaseVersion), '?v=0.1.47');
   });
 
   it('builds absolute OG preview URL with release query', () => {
     assert.equal(
       resolveStaticOgImageUrl(releaseVersion),
-      'https://cabinet.vitamin-water.ru/assets/social/og-card.png?v=0.1.46',
+      'https://cabinet.vitamin-water.ru/assets/social/og-card.png?v=0.1.47',
     );
   });
 
@@ -72,7 +72,7 @@ describe('cabinet site metadata cache-bust', () => {
   it('replaces stale query when re-syncing branding URLs', () => {
     assert.equal(
       withBrandingCacheBust('/icons/icon-192.png?v=0.1.41', releaseVersion),
-      '/icons/icon-192.png?v=0.1.46',
+      '/icons/icon-192.png?v=0.1.47',
     );
   });
 });

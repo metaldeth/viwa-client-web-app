@@ -29,4 +29,13 @@ describe('RecurringConsentModal', () => {
 
     expect(screen.getByTestId('recurring-consent-modal')).toBeTruthy();
   });
+
+  it('links to the public offer from the consent checkbox', () => {
+    render(
+      <RecurringConsentModal isOpen variant="checkout" onClose={vi.fn()} onAccept={vi.fn()} />,
+    );
+
+    const offerLink = screen.getByTestId('recurring-consent-offer-link');
+    expect(offerLink.getAttribute('href')).toBe('/legal/oferta_663903715112.docx');
+  });
 });

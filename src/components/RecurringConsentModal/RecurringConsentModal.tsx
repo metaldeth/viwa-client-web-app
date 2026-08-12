@@ -2,6 +2,7 @@ import { FC, useEffect, useId, useState } from 'react';
 import { Button } from '@asnefedov/uikit/Button';
 import { Text } from '@asnefedov/uikit/Text';
 import BottomSheetModal from '../BottomSheetModal';
+import { LEGAL_OFFER_URL } from '../../constants/legalLinks';
 import { tSubscription } from '../../locale/subscriptionLocale';
 import styles from './RecurringConsentModal.module.scss';
 
@@ -36,12 +37,8 @@ const RecurringConsentModal: FC<RecurringConsentModalProps> = ({
       ? tSubscription('recurringReenableConsent')
       : tSubscription('recurringConsentTitle');
 
-  const body =
-    variant === 'reenable'
-      ? tSubscription('recurringConsentBody')
-      : tSubscription('recurringConsentBody');
-
-  const acceptLabel = tSubscription('recurringConsentAccept');
+  const body = tSubscription('recurringConsentBody');
+  const confirmLabel = tSubscription('recurringConsentConfirm');
 
   return (
     <BottomSheetModal isOpen={isOpen} onClose={onClose}>
@@ -66,12 +63,24 @@ const RecurringConsentModal: FC<RecurringConsentModalProps> = ({
             data-testid="recurring-consent-checkbox"
             onChange={(event) => setAccepted(event.target.checked)}
           />
-          <span className={styles.checkboxLabel}>{acceptLabel}</span>
+          <span className={styles.checkboxLabel}>
+            {tSubscription('recurringConsentAcceptBefore')}
+            <a
+              className={styles.offerLink}
+              href={LEGAL_OFFER_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-testid="recurring-consent-offer-link"
+              onClick={(event) => event.stopPropagation()}
+            >
+              {tSubscription('recurringConsentOfferLink')}
+            </a>
+          </span>
         </label>
         <div className={styles.actions}>
           <Button
             size="l"
-            label={acceptLabel}
+            label={confirmLabel}
             disabled={!accepted || submitting}
             data-testid="recurring-consent-accept"
             onClick={onAccept}

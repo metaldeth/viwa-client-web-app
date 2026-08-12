@@ -38,6 +38,17 @@
   color: var(--viwa-text, #f5f5f5);
 }
 
+.offerLink {
+  color: #9b8cff;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+
+  &:hover,
+  &:focus-visible {
+    color: #c4bbff;
+  }
+}
+
 .actions {
   display: flex;
   flex-direction: column;
