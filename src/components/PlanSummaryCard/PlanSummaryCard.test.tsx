@@ -30,7 +30,7 @@ describe('PlanSummaryCard', () => {
     expect(screen.getByText('ПРОБНЫЙ ЛИТР')).toBeTruthy();
     expect(screen.getByText('12 литров')).toBeTruthy();
     expect(screen.getByText('12 л вкусовых / мес')).toBeTruthy();
-    expect(screen.getByText(/\+ вода безлимитно/i)).toBeTruthy();
+    expect(screen.getByText(/\+ вода без сиропа безлимитно/i)).toBeTruthy();
     expect(screen.queryByText('12 л / мес')).toBeNull();
     expect(screen.getByText('499 ₽ / мес')).toBeTruthy();
     expect(screen.getByText('ВЫБРАТЬ ТАРИФ')).toBeTruthy();
@@ -65,7 +65,7 @@ describe('PlanSummaryCard', () => {
 
     expect(screen.getByText('ТВОЙ ТАРИФ')).toBeTruthy();
     expect(screen.getByText('18 л вкусовых / мес')).toBeTruthy();
-    expect(screen.getByText('Вода безлимитно')).toBeTruthy();
+    expect(screen.getByText('Вода без сиропа безлимитно')).toBeTruthy();
     expect(screen.getByText(/Действует до/i)).toBeTruthy();
     expect(screen.queryByText('ПРОБНЫЙ ЛИТР')).toBeNull();
   });
@@ -90,7 +90,7 @@ describe('PlanSummaryCard', () => {
 
     expect(screen.getByText('Legacy VIP')).toBeTruthy();
     expect(screen.queryByText(/вкусовых/)).toBeNull();
-    expect(screen.getByText('Вода безлимитно')).toBeTruthy();
+    expect(screen.getByText('Вода без сиропа безлимитно')).toBeTruthy();
   });
 
   it('stays clickable while loading', () => {

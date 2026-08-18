@@ -59,15 +59,13 @@ describe('AuthMarketingSection', () => {
     expect(card.getAttribute('aria-labelledby')).toBe('public-tariff-name-tier-12');
     expect(card.getAttribute('aria-describedby')).toBe('public-tariff-description-tier-12');
     expect(document.getElementById('public-tariff-description-tier-12')?.textContent).toContain(
-      'Вкусовые напитки + вода безлимитно',
+      'Вкусовые напитки + вода без сиропа безлимитно',
     );
 
     expect(screen.getByText('12 литров')).toBeTruthy();
     expect(screen.getByText('12 л вкусовых напитков')).toBeTruthy();
     expect(screen.getByText('499 ₽ / мес')).toBeTruthy();
-    expect(
-      screen.getByText('Вкусовые напитки + вода безлимитно (обычная, холодная, газированная)'),
-    ).toBeTruthy();
+    expect(screen.getByText('Вкусовые напитки + вода без сиропа безлимитно')).toBeTruthy();
 
     expect(screen.getByText('18 литров')).toBeTruthy();
     expect(screen.getByText('Больше вкусовых напитков каждый месяц')).toBeTruthy();
@@ -101,9 +99,7 @@ describe('AuthMarketingSection', () => {
     render(<AuthMarketingSection />);
 
     expect(await screen.findByTestId('public-tariff-card-tier-12')).toBeTruthy();
-    expect(
-      screen.getByText('Вкусовые напитки + вода безлимитно (обычная, холодная, газированная)'),
-    ).toBeTruthy();
+    expect(screen.getByText('Вкусовые напитки + вода без сиропа безлимитно')).toBeTruthy();
   });
 
   it('shows compact error with retry and keeps auth section usable', async () => {

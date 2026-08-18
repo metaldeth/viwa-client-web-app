@@ -55,10 +55,10 @@
     "subscription.planPeriodSuffix": "/ мес",
     "subscription.planVolume": "{{liters}} л / мес",
     "subscription.planFlavoredVolume": "{{liters}} л вкусовых / мес",
-    "subscription.planUnlimitedWaterActive": "Вода безлимитно",
-    "subscription.planUnlimitedWaterOffer": "+ вода безлимитно (обычная, холодная, газированная)",
+    "subscription.planUnlimitedWaterActive": "Вода без сиропа безлимитно",
+    "subscription.planUnlimitedWaterOffer": "+ вода без сиропа безлимитно",
     "subscription.tierFlavoredVolume": "{{liters}} л вкусовых напитков",
-    "subscription.tierUnlimitedWaterBenefit": "Вода бесплатно",
+    "subscription.tierUnlimitedWaterBenefit": "Вода без сиропа безлимитно",
     "subscription.tierDisabledStatus": "Недоступен сейчас",
     "subscription.tierDisabledExplanation": "У вас действует тариф {{currentTier}} до {{date}}. После этой даты {{targetTier}} станет доступен.",
     "subscription.tierDisabledExplanationGeneric": "У вас действует более высокий тариф. После его окончания этот тариф станет доступен.",
@@ -173,6 +173,6 @@
     "subscription.authMarketingTariffsLoading": "Загрузка тарифов…",
     "subscription.authMarketingTariffsError": "Не удалось загрузить тарифы",
     "subscription.authMarketingTariffsRetry": "Повторить",
-    "subscription.authMarketingTariffDescriptionFallback": "Вкусовые напитки + вода безлимитно (обычная, холодная, газированная)"
+    "subscription.authMarketingTariffDescriptionFallback": "Вкусовые напитки + вода без сиропа безлимитно"
   }
 }

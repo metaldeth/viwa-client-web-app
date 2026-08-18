@@ -55,10 +55,10 @@
     "subscription.planPeriodSuffix": "/ mo",
     "subscription.planVolume": "{{liters}} L / mo",
     "subscription.planFlavoredVolume": "{{liters}} L flavored / mo",
-    "subscription.planUnlimitedWaterActive": "Unlimited water",
-    "subscription.planUnlimitedWaterOffer": "+ unlimited water (still, chilled, sparkling)",
+    "subscription.planUnlimitedWaterActive": "Unlimited water without syrup",
+    "subscription.planUnlimitedWaterOffer": "+ unlimited water without syrup",
     "subscription.tierFlavoredVolume": "{{liters}} L flavored drinks",
-    "subscription.tierUnlimitedWaterBenefit": "Free water",
+    "subscription.tierUnlimitedWaterBenefit": "Unlimited water without syrup",
     "subscription.tierDisabledStatus": "Unavailable now",
     "subscription.tierDisabledExplanation": "Your {{currentTier}} plan is active until {{date}}. After that date, {{targetTier}} will become available.",
     "subscription.tierDisabledExplanationGeneric": "You have a higher plan active. Once it ends, this plan will become available.",
@@ -173,6 +173,6 @@
     "subscription.authMarketingTariffsLoading": "Loading plans…",
     "subscription.authMarketingTariffsError": "Could not load plans",
     "subscription.authMarketingTariffsRetry": "Retry",
-    "subscription.authMarketingTariffDescriptionFallback": "Flavored drinks + unlimited water (still, chilled, sparkling)"
+    "subscription.authMarketingTariffDescriptionFallback": "Flavored drinks + unlimited water without syrup"
   }
 }
