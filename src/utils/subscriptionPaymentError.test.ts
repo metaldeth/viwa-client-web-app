@@ -61,4 +61,57 @@ describe('subscriptionPaymentError', () => {
     expect(resolveSubscriptionPaymentErrorMessage(error)).not.toBe('Не удалось загрузить тарифы');
     expect(resolveSubscriptionPaymentErrorMessage(error)).not.toBe('Could not load plans');
   });
+
+  it('maps billing maintenance to localized copy', () => {
+    const error = {
+      response: {
+        data: {
+          message: {
+            code: 'BILLING_MAINTENANCE',
+            message: 'Billing is temporarily unavailable',
+          },
+        },
+      },
+    };
+
+    expect(
+      resolveSubscriptionPaymentErrorMessage(error, (key) =>
+        key === 'billingMaintenance' ? 'Billing paused' : 'Generic error',
+      ),
+    ).toBe('Billing paused');
+  });
+
+  it('maps recurring parent not required to localized copy', () => {
+    const error = {
+      response: {
+        data: {
+          message: {
+            code: 'RECURRING_PARENT_NOT_REQUIRED',
+            message: 'Reusable recurring parent already exists',
+          },
+        },
+      },
+    };
+
+    expect(
+      resolveSubscriptionPaymentErrorMessage(error, (key) =>
+        key === 'recurringParentNotRequired' ? 'Use account settings' : 'Generic error',
+      ),
+    ).toBe('Use account settings');
+  });
+
+  it('does not map billing maintenance to plan loading copy', () => {
+    const error = {
+      response: {
+        data: {
+          message: {
+            code: 'BILLING_MAINTENANCE',
+            message: 'Billing is temporarily unavailable',
+          },
+        },
+      },
+    };
+
+    expect(resolveSubscriptionPaymentErrorMessage(error)).not.toBe('Не удалось загрузить тарифы');
+  });
 });

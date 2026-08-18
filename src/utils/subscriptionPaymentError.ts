@@ -52,6 +52,14 @@ export function resolveSubscriptionPaymentErrorMessage(
     return translate('recurringRequiresAction');
   }
 
+  if (code === 'RECURRING_PARENT_NOT_REQUIRED') {
+    return translate('recurringParentNotRequired');
+  }
+
+  if (code === 'BILLING_MAINTENANCE') {
+    return translate('billingMaintenance');
+  }
+
   if (error instanceof Error && error.message && error.message !== '[object Object]') {
     return error.message;
   }

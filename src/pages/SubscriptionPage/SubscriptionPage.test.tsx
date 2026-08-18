@@ -110,10 +110,18 @@ function renderPage(path = '/home', profileOverrides: Record<string, unknown> = 
   );
 }
 
+function getCheckbox(testId: string): HTMLInputElement {
+  return screen.getByTestId(testId) as HTMLInputElement;
+}
+
 async function openCheckoutModal() {
   const planButton = await screen.findByRole('button', { name: /тариф/i });
   fireEvent.click(planButton);
-  await screen.findByTestId('checkout-auto-renew-row');
+  await screen.findByTestId('checkout-offer-accept-row');
+}
+
+function acceptBaseOffer() {
+  fireEvent.click(screen.getByTestId('checkout-offer-accept-checkbox'));
 }
 
 describe('SubscriptionPage Robokassa checkout', () => {
@@ -137,18 +145,83 @@ describe('SubscriptionPage Robokassa checkout', () => {
     localStorage.clear();
   });
 
-  it('shows auto-renew opt-in in checkout modal (Robokassa only)', async () => {
+  it('shows checkout controls unchecked by default', async () => {
     renderPage();
     await openCheckoutModal();
 
-    expect(screen.getByTestId('checkout-auto-renew-row')).toBeTruthy();
+    expect(getCheckbox('checkout-offer-accept-checkbox').checked).toBe(false);
+    expect(getCheckbox('checkout-auto-renew-checkbox').checked).toBe(false);
+    expect(screen.queryByTestId('checkout-recurring-consent-section')).toBeNull();
+    expect(screen.getByTestId('subscription-pay-button').hasAttribute('disabled')).toBe(true);
     expect(screen.queryByTestId('payment-method-tabs')).toBeNull();
-    expect(screen.getByTestId('checkout-auto-renew-switch').getAttribute('aria-checked')).toBe(
-      'false',
-    );
   });
 
-  it('initializes Robokassa without consentVersion when auto-renew is off', async () => {
+  it('exposes accessible auto-renew labeling without duplicate aria-label', async () => {
+    renderPage();
+    await openCheckoutModal();
+
+    const checkbox = getCheckbox('checkout-auto-renew-checkbox');
+    expect(checkbox.getAttribute('aria-label')).toBeNull();
+    expect(checkbox.id).toBeTruthy();
+    expect(checkbox.getAttribute('aria-describedby')).toBeTruthy();
+
+    const hint = document.getElementById(checkbox.getAttribute('aria-describedby')!);
+    expect(hint?.textContent).toMatch(/действующей цене/i);
+  });
+
+  it('keeps offer link outside checkbox label with aria-describedby association', async () => {
+    renderPage();
+    await openCheckoutModal();
+
+    const row = screen.getByTestId('checkout-offer-accept-row');
+    const label = row.querySelector('label');
+    const link = screen.getByTestId('checkout-offer-accept-link');
+    const checkbox = getCheckbox('checkout-offer-accept-checkbox');
+
+    expect(label?.contains(link)).toBe(false);
+    expect(checkbox.getAttribute('aria-describedby')).toBe(link.id);
+    expect(link.getAttribute('href')).toBe('/legal/oferta_663903715112.docx');
+  });
+
+  it('does not toggle offer checkbox when offer link is clicked', async () => {
+    renderPage();
+    await openCheckoutModal();
+
+    const checkbox = getCheckbox('checkout-offer-accept-checkbox');
+    fireEvent.click(screen.getByTestId('checkout-offer-accept-link'));
+    expect(checkbox.checked).toBe(false);
+  });
+
+  it('blocks one-time Robokassa init until base offer is accepted', async () => {
+    vi.mocked(api.billing.initRobokassaPayment).mockResolvedValue({
+      paymentId: 'pay-rob',
+      paymentUrl: 'https://auth.robokassa.ru/Merchant/Index.aspx?test=1',
+      provider: 'ROBOKASSA',
+      amountKopecks: 49900,
+      expiresAt: '2026-09-10T12:00:00.000Z',
+    });
+
+    renderPage();
+    await openCheckoutModal();
+
+    expect(screen.getByTestId('subscription-pay-button').hasAttribute('disabled')).toBe(true);
+    fireEvent.click(screen.getByTestId('subscription-pay-button'));
+    expect(api.billing.initRobokassaPayment).not.toHaveBeenCalled();
+
+    acceptBaseOffer();
+    expect(screen.getByTestId('subscription-pay-button').hasAttribute('disabled')).toBe(false);
+    fireEvent.click(screen.getByTestId('subscription-pay-button'));
+
+    await waitFor(() => {
+      expect(api.billing.initRobokassaPayment).toHaveBeenCalledWith({
+        subscriptionLevelId: 'tier-12',
+        requestUuid: expect.any(String),
+        autoRenew: false,
+      });
+    });
+  });
+
+  it('initializes Robokassa without consentVersion for one-time checkout', async () => {
     vi.mocked(api.billing.initRobokassaPayment).mockResolvedValue({
       paymentId: 'pay-rob',
       paymentUrl: 'https://auth.robokassa.ru/Merchant/Index.aspx?test=1',
@@ -165,6 +238,7 @@ describe('SubscriptionPage Robokassa checkout', () => {
 
     renderPage('/m/ABC123/home');
     await openCheckoutModal();
+    acceptBaseOffer();
     fireEvent.click(screen.getByTestId('subscription-pay-button'));
 
     await waitFor(() => {
@@ -199,7 +273,7 @@ describe('SubscriptionPage Robokassa checkout', () => {
     expect(screen.queryByLabelText('Оплата СБП')).toBeNull();
   });
 
-  it('ignores same-frame double-clicks on pay CTA', async () => {
+  it('ignores same-frame double-clicks on pay CTA after offer acceptance', async () => {
     type InitResponse = Awaited<ReturnType<typeof api.billing.initRobokassaPayment>>;
     let resolveInit!: (value: InitResponse) => void;
 
@@ -212,6 +286,7 @@ describe('SubscriptionPage Robokassa checkout', () => {
 
     renderPage();
     await openCheckoutModal();
+    acceptBaseOffer();
 
     const payButton = screen.getByTestId('subscription-pay-button');
     fireEvent.click(payButton);
@@ -228,7 +303,7 @@ describe('SubscriptionPage Robokassa checkout', () => {
     });
   });
 
-  it('requires consent modal before Robokassa init when auto-renew is on', async () => {
+  it('requires base offer and recurring consent before recurring Robokassa init', async () => {
     vi.mocked(api.billing.initRobokassaPayment).mockResolvedValue({
       paymentId: 'pay-rob',
       paymentUrl: 'https://auth.robokassa.ru/Merchant/Index.aspx?test=1',
@@ -239,14 +314,19 @@ describe('SubscriptionPage Robokassa checkout', () => {
 
     renderPage();
     await openCheckoutModal();
-    fireEvent.click(screen.getByTestId('checkout-auto-renew-switch'));
+    fireEvent.click(screen.getByTestId('checkout-auto-renew-checkbox'));
+
+    expect(screen.getByTestId('checkout-recurring-consent-section')).toBeTruthy();
+    expect(screen.getByTestId('subscription-pay-button').hasAttribute('disabled')).toBe(true);
+    expect(screen.queryByTestId('recurring-consent-modal')).toBeNull();
+
+    acceptBaseOffer();
+    expect(screen.getByTestId('subscription-pay-button').hasAttribute('disabled')).toBe(true);
+
+    fireEvent.click(screen.getByTestId('checkout-recurring-consent-checkbox'));
+    expect(screen.getByTestId('subscription-pay-button').hasAttribute('disabled')).toBe(false);
+
     fireEvent.click(screen.getByTestId('subscription-pay-button'));
-
-    expect(screen.getByTestId('recurring-consent-modal')).toBeTruthy();
-    expect(api.billing.initRobokassaPayment).not.toHaveBeenCalled();
-
-    fireEvent.click(screen.getByTestId('recurring-consent-checkbox'));
-    fireEvent.click(screen.getByTestId('recurring-consent-accept'));
 
     await waitFor(() => {
       expect(api.billing.initRobokassaPayment).toHaveBeenCalledWith({
@@ -256,6 +336,41 @@ describe('SubscriptionPage Robokassa checkout', () => {
         consentVersion: RECURRING_CONSENT_VERSION,
       });
     });
+
+    expect(RECURRING_CONSENT_VERSION).toBe('2026-08-recurring-v3');
+  });
+
+  it('clears recurring consent when auto-renew is unchecked', async () => {
+    renderPage();
+    await openCheckoutModal();
+
+    fireEvent.click(screen.getByTestId('checkout-auto-renew-checkbox'));
+    fireEvent.click(screen.getByTestId('checkout-recurring-consent-checkbox'));
+    fireEvent.click(screen.getByTestId('checkout-auto-renew-checkbox'));
+
+    expect(screen.queryByTestId('checkout-recurring-consent-section')).toBeNull();
+    expect(getCheckbox('checkout-auto-renew-checkbox').checked).toBe(false);
+  });
+
+  it('resets all checkout consent state when modal is reopened', async () => {
+    renderPage();
+    await openCheckoutModal();
+
+    acceptBaseOffer();
+    fireEvent.click(screen.getByTestId('checkout-auto-renew-checkbox'));
+    fireEvent.click(screen.getByTestId('checkout-recurring-consent-checkbox'));
+
+    fireEvent.click(screen.getByLabelText('Закрыть'));
+    await waitFor(() => {
+      expect(screen.queryByTestId('checkout-offer-accept-row')).toBeNull();
+    });
+
+    await openCheckoutModal();
+
+    expect(getCheckbox('checkout-offer-accept-checkbox').checked).toBe(false);
+    expect(getCheckbox('checkout-auto-renew-checkbox').checked).toBe(false);
+    expect(screen.queryByTestId('checkout-recurring-consent-section')).toBeNull();
+    expect(screen.getByTestId('subscription-pay-button').hasAttribute('disabled')).toBe(true);
   });
 });
 
@@ -280,7 +395,7 @@ describe('SubscriptionPage requiresNewParentPayment', () => {
     localStorage.clear();
   });
 
-  it('opens checkout with auto-renew forced from CTA', async () => {
+  it('opens checkout from CTA without pre-checking auto-renew or consent', async () => {
     renderPage('/home', {
       tierName: '12 литров',
       subscriptionEndsAt: '2099-01-01T00:00:00.000Z',
@@ -290,10 +405,11 @@ describe('SubscriptionPage requiresNewParentPayment', () => {
     const cta = await screen.findByTestId('recurring-enable-new-parent-cta');
     fireEvent.click(cta);
 
-    await screen.findByTestId('checkout-auto-renew-row');
-    expect(screen.getByTestId('checkout-auto-renew-switch').getAttribute('aria-checked')).toBe(
-      'true',
-    );
+    await screen.findByTestId('checkout-offer-accept-row');
+    expect(getCheckbox('checkout-auto-renew-checkbox').checked).toBe(false);
+    expect(getCheckbox('checkout-offer-accept-checkbox').checked).toBe(false);
+    expect(screen.queryByTestId('checkout-recurring-consent-section')).toBeNull();
+    expect(screen.getByTestId('subscription-pay-button').hasAttribute('disabled')).toBe(true);
     expect(screen.queryByTestId('payment-method-tabs')).toBeNull();
   });
 });

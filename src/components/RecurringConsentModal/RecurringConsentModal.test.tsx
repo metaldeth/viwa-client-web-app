@@ -8,9 +8,7 @@ describe('RecurringConsentModal', () => {
   it('blocks accept until checkbox is checked', () => {
     const onAccept = vi.fn();
 
-    render(
-      <RecurringConsentModal isOpen variant="checkout" onClose={vi.fn()} onAccept={onAccept} />,
-    );
+    render(<RecurringConsentModal isOpen onClose={vi.fn()} onAccept={onAccept} />);
 
     const acceptButton = screen.getByTestId('recurring-consent-accept');
     expect(acceptButton.hasAttribute('disabled')).toBe(true);
@@ -22,18 +20,15 @@ describe('RecurringConsentModal', () => {
     expect(onAccept).toHaveBeenCalledTimes(1);
   });
 
-  it('renders re-enable title for reenable variant', () => {
-    render(
-      <RecurringConsentModal isOpen variant="reenable" onClose={vi.fn()} onAccept={vi.fn()} />,
-    );
+  it('renders re-enable title', () => {
+    render(<RecurringConsentModal isOpen onClose={vi.fn()} onAccept={vi.fn()} />);
 
     expect(screen.getByTestId('recurring-consent-modal')).toBeTruthy();
+    expect(screen.getByText('Включить автопродление снова')).toBeTruthy();
   });
 
   it('links to the public offer from the consent checkbox', () => {
-    render(
-      <RecurringConsentModal isOpen variant="checkout" onClose={vi.fn()} onAccept={vi.fn()} />,
-    );
+    render(<RecurringConsentModal isOpen onClose={vi.fn()} onAccept={vi.fn()} />);
 
     const offerLink = screen.getByTestId('recurring-consent-offer-link');
     expect(offerLink.getAttribute('href')).toBe('/legal/oferta_663903715112.docx');

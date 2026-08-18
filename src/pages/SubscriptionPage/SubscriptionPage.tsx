@@ -1,4 +1,4 @@
-import { FC, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { FC, memo, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { Button } from '@asnefedov/uikit/Button';
 import { Text } from '@asnefedov/uikit/Text';
@@ -12,9 +12,7 @@ import PwaInstallPrompt from '../../components/PwaInstallPrompt';
 import SubscriptionPriceConsentPanel, {
   SubscriptionPriceNoticeFetchError,
 } from '../../components/SubscriptionPriceConsentPanel/SubscriptionPriceConsentPanel';
-import RecurringConsentModal, {
-  type RecurringConsentModalVariant,
-} from '../../components/RecurringConsentModal';
+import RecurringConsentModal from '../../components/RecurringConsentModal';
 import RecurringStatusBlock from '../../components/RecurringStatusBlock';
 import MonthlyProgressCard from '../../components/MonthlyProgressCard';
 import QrPromoCard from '../../components/QrPromoCard';
@@ -30,6 +28,7 @@ import { useClientSubscriptionWs } from '../../hooks/useClientSubscriptionWs';
 import { useRecurringAgreement } from '../../hooks/useRecurringAgreement';
 import { useSubscriptionPriceNotice } from '../../hooks/useSubscriptionPriceNotice';
 import { RECURRING_CONSENT_VERSION } from '../../constants/recurringConsent';
+import { LEGAL_OFFER_URL } from '../../constants/legalLinks';
 import {
   resolveCheckoutReturnPath,
   sanitizeMachineSerial,
@@ -133,10 +132,15 @@ const SubscriptionPage: FC = () => {
   const [payPhase, setPayPhase] = useState<PayPhase>('idle');
   const [payError, setPayError] = useState<string | null>(null);
   const [autoRenew, setAutoRenew] = useState(false);
+  const [offerAccepted, setOfferAccepted] = useState(false);
+  const [recurringConsentAccepted, setRecurringConsentAccepted] = useState(false);
   const [isConsentModalOpen, setIsConsentModalOpen] = useState(false);
-  const [consentModalVariant, setConsentModalVariant] =
-    useState<RecurringConsentModalVariant>('checkout');
   const [recurringActionError, setRecurringActionError] = useState<string | null>(null);
+  const offerAcceptCheckboxId = useId();
+  const offerAcceptLinkId = useId();
+  const autoRenewCheckboxId = useId();
+  const autoRenewHintId = useId();
+  const recurringConsentCheckboxId = useId();
 
   const [isScanModalOpen, setIsScanModalOpen] = useState(false);
   const [isDescriptionModalOpen, setIsDescriptionModalOpen] = useState(false);
@@ -212,70 +216,67 @@ const SubscriptionPage: FC = () => {
     };
   }, [isAuthed]);
 
-  const handleRobokassaPurchase = useCallback(
-    async (consentAccepted: boolean) => {
-      const levelId = selectedLevelId;
-      if (!levelId || !isSubscriptionLevelSelectable(levelId, selectableLevels)) return;
+  const resetCheckoutConsentState = useCallback(() => {
+    setAutoRenew(false);
+    setOfferAccepted(false);
+    setRecurringConsentAccepted(false);
+  }, []);
 
-      if (autoRenew && !consentAccepted) {
-        setConsentModalVariant('checkout');
-        setIsConsentModalOpen(true);
-        return;
-      }
+  const handleRobokassaPurchase = useCallback(async () => {
+    const levelId = selectedLevelId;
+    if (!levelId || !isSubscriptionLevelSelectable(levelId, selectableLevels)) return;
 
-      if (!tryAcquirePurchaseLock()) return;
+    if (!offerAccepted || (autoRenew && !recurringConsentAccepted)) {
+      return;
+    }
 
-      setPayError(null);
-      setPayPhase('init');
+    if (!tryAcquirePurchaseLock()) return;
 
-      try {
-        const init = await api.billing.initRobokassaPayment({
-          subscriptionLevelId: levelId,
-          requestUuid: crypto.randomUUID(),
-          autoRenew,
-          ...(autoRenew ? { consentVersion: RECURRING_CONSENT_VERSION } : {}),
-        });
+    setPayError(null);
+    setPayPhase('init');
 
-        const returnPath = resolveCheckoutReturnPath(location.pathname);
-        const machineSerial =
-          sanitizeMachineSerial(getMachineSerialFromPath(location.pathname)) ?? undefined;
+    try {
+      const init = await api.billing.initRobokassaPayment({
+        subscriptionLevelId: levelId,
+        requestUuid: crypto.randomUUID(),
+        autoRenew,
+        ...(autoRenew ? { consentVersion: RECURRING_CONSENT_VERSION } : {}),
+      });
 
-        writePendingPayment({
-          paymentId: init.paymentId,
-          startedAt: Date.now(),
-          returnPath,
-          ...(machineSerial ? { machineSerial } : {}),
-        });
+      const returnPath = resolveCheckoutReturnPath(location.pathname);
+      const machineSerial =
+        sanitizeMachineSerial(getMachineSerialFromPath(location.pathname)) ?? undefined;
 
-        window.location.href = init.paymentUrl;
-      } catch (e: unknown) {
-        releasePurchaseLock();
-        setPayError(resolveSubscriptionPaymentErrorMessage(e));
-        setPayPhase('ready');
-      }
-    },
-    [
-      autoRenew,
-      location.pathname,
-      releasePurchaseLock,
-      selectedLevelId,
-      selectableLevels,
-      tryAcquirePurchaseLock,
-    ],
-  );
+      writePendingPayment({
+        paymentId: init.paymentId,
+        startedAt: Date.now(),
+        returnPath,
+        ...(machineSerial ? { machineSerial } : {}),
+      });
+
+      window.location.href = init.paymentUrl;
+    } catch (e: unknown) {
+      releasePurchaseLock();
+      setPayError(resolveSubscriptionPaymentErrorMessage(e));
+      setPayPhase('ready');
+    }
+  }, [
+    autoRenew,
+    location.pathname,
+    offerAccepted,
+    recurringConsentAccepted,
+    releasePurchaseLock,
+    selectedLevelId,
+    selectableLevels,
+    tryAcquirePurchaseLock,
+  ]);
 
   const handlePurchase = useCallback(() => {
-    void handleRobokassaPurchase(false);
+    void handleRobokassaPurchase();
   }, [handleRobokassaPurchase]);
 
   const handleConsentAccept = useCallback(async () => {
     setIsConsentModalOpen(false);
-
-    if (consentModalVariant === 'checkout') {
-      void handleRobokassaPurchase(true);
-      return;
-    }
-
     setRecurringActionError(null);
 
     try {
@@ -286,7 +287,7 @@ const SubscriptionPage: FC = () => {
     } catch (e: unknown) {
       setRecurringActionError(resolveSubscriptionPaymentErrorMessage(e));
     }
-  }, [consentModalVariant, handleRobokassaPurchase, patchAgreement]);
+  }, [patchAgreement]);
 
   const handleRecurringDisable = useCallback(async () => {
     setRecurringActionError(null);
@@ -300,6 +301,7 @@ const SubscriptionPage: FC = () => {
 
   const openSubscribeModal = useCallback(
     (levelId?: string | null) => {
+      resetCheckoutConsentState();
       const nextLevelId = normalizeSelectedSubscriptionLevelId(
         levelId ?? selectedLevelId,
         selectableLevels,
@@ -308,17 +310,22 @@ const SubscriptionPage: FC = () => {
       setSelectedLevelId(nextLevelId);
       setIsDescriptionModalOpen(true);
     },
-    [selectableLevels, planSummary?.levelId, selectedLevelId],
+    [resetCheckoutConsentState, selectableLevels, planSummary?.levelId, selectedLevelId],
   );
 
   const handleEnableNewParent = useCallback(() => {
-    setAutoRenew(true);
     openSubscribeModal(planSummary?.levelId);
   }, [openSubscribeModal, planSummary?.levelId]);
 
   const handleRecurringReEnable = useCallback(() => {
-    setConsentModalVariant('reenable');
     setIsConsentModalOpen(true);
+  }, []);
+
+  const handleAutoRenewChange = useCallback((checked: boolean) => {
+    setAutoRenew(checked);
+    if (!checked) {
+      setRecurringConsentAccepted(false);
+    }
   }, []);
 
   const handleDescriptionModalClose = () => {
@@ -326,15 +333,17 @@ const SubscriptionPage: FC = () => {
     setIsDescriptionModalOpen(false);
     setPayError(null);
     setPayPhase('ready');
-    setAutoRenew(false);
+    resetCheckoutConsentState();
   };
 
   const showTariffSelection = payPhase !== 'init';
   const isPayFlowBusy = payPhase === 'init';
+  const isCheckoutConsentComplete = offerAccepted && (!autoRenew || recurringConsentAccepted);
   const isPayButtonDisabled =
     !isSubscriptionLevelSelectable(selectedLevelId, selectableLevels) ||
     isPayFlowBusy ||
-    payPhase === 'loading_levels';
+    payPhase === 'loading_levels' ||
+    !isCheckoutConsentComplete;
 
   const renderAutoRenewRow = () => {
     if (!showTariffSelection) {
@@ -342,23 +351,96 @@ const SubscriptionPage: FC = () => {
     }
 
     return (
-      <div className={styles.autoRenewRow} data-testid="checkout-auto-renew-row">
-        <div className={styles.autoRenewCopy}>
-          <span className={styles.autoRenewLabel}>{tSubscription('autoRenewLabel')}</span>
-          <span className={styles.autoRenewHint}>{tSubscription('autoRenewSoon')}</span>
-        </div>
-        <button
-          type="button"
-          className={styles.autoRenewSwitch}
-          role="switch"
-          aria-checked={autoRenew}
-          aria-label={tSubscription('autoRenewLabel')}
+      <label
+        className={styles.autoRenewRow}
+        htmlFor={autoRenewCheckboxId}
+        data-testid="checkout-auto-renew-row"
+      >
+        <input
+          id={autoRenewCheckboxId}
+          type="checkbox"
+          className={styles.autoRenewCheckbox}
+          checked={autoRenew}
           disabled={isPayFlowBusy}
-          data-testid="checkout-auto-renew-switch"
-          onClick={() => setAutoRenew((current) => !current)}
+          aria-describedby={autoRenewHintId}
+          data-testid="checkout-auto-renew-checkbox"
+          onChange={(event) => handleAutoRenewChange(event.target.checked)}
+        />
+        <span className={styles.autoRenewCopy}>
+          <span className={styles.autoRenewLabel}>{tSubscription('autoRenewLabel')}</span>
+          <span id={autoRenewHintId} className={styles.autoRenewHint}>
+            {tSubscription('autoRenewSoon')}
+          </span>
+        </span>
+      </label>
+    );
+  };
+
+  const renderOfferAcceptSection = () => {
+    if (!showTariffSelection) {
+      return null;
+    }
+
+    return (
+      <div className={styles.offerAcceptRow} data-testid="checkout-offer-accept-row">
+        <label className={styles.offerAcceptLabelRow} htmlFor={offerAcceptCheckboxId}>
+          <input
+            id={offerAcceptCheckboxId}
+            type="checkbox"
+            className={styles.consentCheckboxInput}
+            checked={offerAccepted}
+            disabled={isPayFlowBusy}
+            aria-describedby={offerAcceptLinkId}
+            data-testid="checkout-offer-accept-checkbox"
+            onChange={(event) => setOfferAccepted(event.target.checked)}
+          />
+          <span className={styles.consentCheckboxLabel}>
+            {tSubscription('checkoutOfferAcceptBefore')}
+          </span>
+        </label>
+        <a
+          id={offerAcceptLinkId}
+          className={styles.consentOfferLink}
+          href={LEGAL_OFFER_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          data-testid="checkout-offer-accept-link"
         >
-          <span className={styles.autoRenewThumb} aria-hidden="true" />
-        </button>
+          {tSubscription('recurringConsentOfferLink')}
+        </a>
+      </div>
+    );
+  };
+
+  const renderRecurringConsentSection = () => {
+    if (!showTariffSelection || !autoRenew) {
+      return null;
+    }
+
+    return (
+      <div
+        className={styles.checkoutConsentSection}
+        data-testid="checkout-recurring-consent-section"
+      >
+        <p className={styles.consentBody}>{tSubscription('recurringConsentBody')}</p>
+        <label
+          className={styles.consentCheckboxRow}
+          htmlFor={recurringConsentCheckboxId}
+          data-testid="checkout-recurring-consent-label"
+        >
+          <input
+            id={recurringConsentCheckboxId}
+            type="checkbox"
+            className={styles.consentCheckboxInput}
+            checked={recurringConsentAccepted}
+            disabled={isPayFlowBusy}
+            data-testid="checkout-recurring-consent-checkbox"
+            onChange={(event) => setRecurringConsentAccepted(event.target.checked)}
+          />
+          <span className={styles.consentCheckboxLabel}>
+            {tSubscription('recurringConsentAccept')}
+          </span>
+        </label>
       </div>
     );
   };
@@ -487,6 +569,8 @@ const SubscriptionPage: FC = () => {
       )}
 
       {renderAutoRenewRow()}
+      {renderRecurringConsentSection()}
+      {renderOfferAcceptSection()}
 
       {isPayFlowBusy ? (
         <Text size="s" view="secondary" align="center" className={styles.robokassaHint}>
@@ -627,8 +711,7 @@ const SubscriptionPage: FC = () => {
 
       <RecurringConsentModal
         isOpen={isConsentModalOpen}
-        variant={consentModalVariant}
-        submitting={recurringPatching || payPhase === 'init'}
+        submitting={recurringPatching}
         onClose={() => setIsConsentModalOpen(false)}
         onAccept={() => void handleConsentAccept()}
       />

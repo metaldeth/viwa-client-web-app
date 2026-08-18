@@ -1,29 +1,38 @@
 import { FC, useEffect, useId, useState } from 'react';
-import { Button } from '@asnefedov/uikit/Button';
-import { Text } from '@asnefedov/uikit/Text';
-import BottomSheetModal from '../BottomSheetModal';
-import { LEGAL_OFFER_URL } from '../../constants/legalLinks';
-import { tSubscription } from '../../locale/subscriptionLocale';
-import styles from './RecurringConsentModal.module.scss';
 
-export type RecurringConsentModalVariant = 'checkout' | 'reenable';
+import { Button } from '@asnefedov/uikit/Button';
+
+import { Text } from '@asnefedov/uikit/Text';
+
+import BottomSheetModal from '../BottomSheetModal';
+
+import { LEGAL_OFFER_URL } from '../../constants/legalLinks';
+
+import { tSubscription } from '../../locale/subscriptionLocale';
+
+import styles from './RecurringConsentModal.module.scss';
 
 export type RecurringConsentModalProps = {
   isOpen: boolean;
-  variant: RecurringConsentModalVariant;
+
   submitting?: boolean;
+
   onClose: () => void;
+
   onAccept: () => void;
 };
 
 const RecurringConsentModal: FC<RecurringConsentModalProps> = ({
   isOpen,
-  variant,
+
   submitting = false,
+
   onClose,
+
   onAccept,
 }) => {
   const checkboxId = useId();
+
   const [accepted, setAccepted] = useState(false);
 
   useEffect(() => {
@@ -32,12 +41,10 @@ const RecurringConsentModal: FC<RecurringConsentModalProps> = ({
     }
   }, [isOpen]);
 
-  const title =
-    variant === 'reenable'
-      ? tSubscription('recurringReenableConsent')
-      : tSubscription('recurringConsentTitle');
+  const title = tSubscription('recurringReenableConsent');
 
   const body = tSubscription('recurringConsentBody');
+
   const confirmLabel = tSubscription('recurringConsentConfirm');
 
   return (
@@ -52,7 +59,9 @@ const RecurringConsentModal: FC<RecurringConsentModalProps> = ({
         <Text id={`${checkboxId}-title`} size="l" weight="semibold">
           {title}
         </Text>
+
         <p className={styles.body}>{body}</p>
+
         <label className={styles.checkboxRow} htmlFor={checkboxId}>
           <input
             id={checkboxId}
@@ -63,8 +72,10 @@ const RecurringConsentModal: FC<RecurringConsentModalProps> = ({
             data-testid="recurring-consent-checkbox"
             onChange={(event) => setAccepted(event.target.checked)}
           />
+
           <span className={styles.checkboxLabel}>
             {tSubscription('recurringConsentAcceptBefore')}
+
             <a
               className={styles.offerLink}
               href={LEGAL_OFFER_URL}
@@ -77,6 +88,7 @@ const RecurringConsentModal: FC<RecurringConsentModalProps> = ({
             </a>
           </span>
         </label>
+
         <div className={styles.actions}>
           <Button
             size="l"
