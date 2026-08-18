@@ -580,10 +580,19 @@
 }
 
 .subscribeActions {
+  position: sticky;
+  z-index: 3;
+  bottom: 0;
   display: flex;
   flex-direction: column;
   gap: 6px;
-  padding-top: 2px;
+  margin: 0 -2px -2px;
+  padding: 10px 2px 2px;
+  background: linear-gradient(
+    180deg,
+    rgba(23, 20, 33, 0) 0%,
+    var(--bottom-sheet-bg, #171421) 24%
+  );
 }
 
 @media (max-width: 390px) {
