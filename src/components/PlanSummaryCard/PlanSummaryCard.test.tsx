@@ -37,7 +37,7 @@ describe('PlanSummaryCard', () => {
 
     const button = screen.getByRole('button', { name: /тариф/i });
     expect(button.getAttribute('aria-label')).toMatch(/вкусовых/i);
-    expect(button.getAttribute('aria-label')).toMatch(/Обычная вода/i);
+    expect(button.getAttribute('aria-label')).toMatch(/без сиропа/i);
 
     fireEvent.click(button);
     expect(onOpen).toHaveBeenCalledTimes(1);

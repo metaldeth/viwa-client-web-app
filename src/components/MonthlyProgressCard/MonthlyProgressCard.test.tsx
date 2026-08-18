@@ -26,7 +26,7 @@ describe('MonthlyProgressCard', () => {
     expect(screen.getByText('ОСТАЛОСЬ')).toBeTruthy();
     expect(screen.getByText('700')).toBeTruthy();
     expect(screen.getByText('ИЗ 1000 МЛ НАПИТКОВ')).toBeTruthy();
-    expect(screen.getByText(/Вода безлимитно: обычная, холодная и газированная/i)).toBeTruthy();
+    expect(screen.getByText(/Вода без сиропа безлимитно/i)).toBeTruthy();
     expect(screen.queryByText(/Пакет напитков израсходован/i)).toBeNull();
 
     const progressbar = screen.getByRole('progressbar');
@@ -56,7 +56,7 @@ describe('MonthlyProgressCard', () => {
     );
 
     expect(screen.getByText('Пробный абонемент активен')).toBeTruthy();
-    expect(screen.getByText(/Обычная вода — бесплатно и безлимитно/i)).toBeTruthy();
+    expect(screen.getByText(/Вода без сиропа безлимитно/i)).toBeTruthy();
     expect(screen.getByTestId('unlimited-water-benefit').getAttribute('data-variant')).toBe(
       'trial',
     );
@@ -71,7 +71,7 @@ describe('MonthlyProgressCard', () => {
       />,
     );
 
-    expect(screen.getByText(/Доступна только обычная вода безлимитно/i)).toBeTruthy();
+    expect(screen.getByText(/Вода без сиропа безлимитно/i)).toBeTruthy();
     expect(screen.getByTestId('unlimited-water-benefit').getAttribute('data-variant')).toBe(
       'expired',
     );
@@ -113,6 +113,6 @@ describe('MonthlyProgressCard', () => {
     const shell = screen.getByTestId('narrow-shell');
     const benefit = screen.getByTestId('unlimited-water-benefit');
     expect(shell.style.width).toBe('360px');
-    expect(benefit.textContent).toMatch(/Вода безлимитно/i);
+    expect(benefit.textContent).toMatch(/Вода без сиропа безлимитно/i);
   });
 });
