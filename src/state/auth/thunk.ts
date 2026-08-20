@@ -4,12 +4,17 @@ import { CheckCodeResponse, SendCodeResult } from '../../types/serverInterface/c
 import { getStoredRegistrationHint } from '../../utils/landingEntry';
 import { completeFirstRegistrationNavigation, completeReturningAuthNavigation } from './navigation';
 
-export const sendCodeToPhoneThunk = createAsyncThunk<SendCodeResult, string>(
-  'sendCodeToPhoneAction',
-  async (phoneNumber) => {
+export const sendCodeToPhoneThunk = createAsyncThunk<
+  SendCodeResult,
+  string,
+  { rejectValue: unknown }
+>('sendCodeToPhoneAction', async (phoneNumber, { rejectWithValue }) => {
+  try {
     return await api.auth.sendCodeToPhone(phoneNumber);
-  },
-);
+  } catch (error) {
+    return rejectWithValue(error);
+  }
+});
 
 export const checkCodeAndCreateClientThunk = createAsyncThunk<
   CheckCodeResponse,

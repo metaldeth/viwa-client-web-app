@@ -70,6 +70,8 @@
     "subscription.checkoutOfferAcceptBefore": "Принимаю условия ",
     "subscription.recurringConsentTitle": "Согласие на автоматические списания",
     "subscription.recurringConsentBody": "Вы разрешаете автоматически списывать стоимость абонемента по текущей цене тарифа с привязанной карты. Первое и последующие списания могут быть инициированы не позднее чем за 2 часа до окончания оплаченного периода, чтобы продление проходило без перерыва. Отключить автопродление можно в любой момент в личном кабинете — оплаченный период сохранится.",
+    "subscription.recurringConsentDetailsShow": "Подробнее",
+    "subscription.recurringConsentDetailsHide": "Скрыть",
     "subscription.recurringConsentAccept": "Я согласен на автоматические списания согласно условиям оферты",
     "subscription.recurringConsentAcceptBefore": "Я согласен на автоматические списания согласно условиям ",
     "subscription.recurringConsentOfferLink": "оферты",

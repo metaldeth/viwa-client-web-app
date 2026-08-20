@@ -1,4 +1,8 @@
-﻿import { CheckCodeResponse, SendCodeResponse } from '../../types/serverInterface/clientDTO';
+﻿import {
+  CheckCodeResponse,
+  SendCodeResponse,
+  SendCodeResult,
+} from '../../types/serverInterface/clientDTO';
 import { createSlice } from '@reduxjs/toolkit';
 import { checkCodeAndCreateClientThunk, sendCodeToPhoneThunk } from './thunk';
 import { api } from '../../app/api';
@@ -10,7 +14,10 @@ type StateItemType<T> = {
 };
 
 export type AuthState = {
-  sendCodeToPhone: StateItemType<SendCodeResponse>;
+  sendCodeToPhone: StateItemType<SendCodeResponse> & {
+    lastError: unknown;
+    lastResult: SendCodeResult | null;
+  };
   checkCodeAndCreateClient: StateItemType<CheckCodeResponse>;
 };
 
@@ -19,6 +26,8 @@ const initialState: AuthState = {
     state: null,
     isLoading: false,
     isReject: false,
+    lastError: null,
+    lastResult: null,
   },
   checkCodeAndCreateClient: {
     state: null,
@@ -35,6 +44,8 @@ export const authSlice = createSlice({
     builder.addCase(sendCodeToPhoneThunk.pending, (state) => {
       state.sendCodeToPhone.isLoading = true;
       state.sendCodeToPhone.isReject = false;
+      state.sendCodeToPhone.lastError = null;
+      state.sendCodeToPhone.lastResult = null;
     });
 
     builder.addCase(sendCodeToPhoneThunk.rejected, (state, action) => {
@@ -44,6 +55,8 @@ export const authSlice = createSlice({
       };
       state.sendCodeToPhone.isLoading = false;
       state.sendCodeToPhone.isReject = true;
+      state.sendCodeToPhone.lastError = action.payload ?? action.error;
+      state.sendCodeToPhone.lastResult = null;
     });
 
     builder.addCase(sendCodeToPhoneThunk.fulfilled, (state, action) => {
@@ -53,6 +66,8 @@ export const authSlice = createSlice({
       };
       state.sendCodeToPhone.isLoading = false;
       state.sendCodeToPhone.isReject = false;
+      state.sendCodeToPhone.lastError = null;
+      state.sendCodeToPhone.lastResult = action.payload;
     });
 
     builder.addCase(checkCodeAndCreateClientThunk.pending, (state) => {

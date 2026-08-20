@@ -72,6 +72,8 @@ export type SubscriptionLocaleKey =
   | 'checkoutOfferAcceptBefore'
   | 'recurringConsentTitle'
   | 'recurringConsentBody'
+  | 'recurringConsentDetailsShow'
+  | 'recurringConsentDetailsHide'
   | 'recurringConsentAccept'
   | 'recurringConsentAcceptBefore'
   | 'recurringConsentOfferLink'

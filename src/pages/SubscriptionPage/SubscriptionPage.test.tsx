@@ -317,6 +317,9 @@ describe('SubscriptionPage Robokassa checkout', () => {
     fireEvent.click(screen.getByTestId('checkout-auto-renew-checkbox'));
 
     expect(screen.getByTestId('checkout-recurring-consent-section')).toBeTruthy();
+    expect(screen.queryByTestId('checkout-recurring-consent-details')).toBeNull();
+    fireEvent.click(screen.getByTestId('checkout-recurring-consent-details-toggle'));
+    expect(screen.getByTestId('checkout-recurring-consent-details')).toBeTruthy();
     expect(screen.getByTestId('subscription-pay-button').hasAttribute('disabled')).toBe(true);
     expect(screen.queryByTestId('recurring-consent-modal')).toBeNull();
 

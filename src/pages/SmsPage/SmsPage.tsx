@@ -3,10 +3,11 @@ import classNames from 'classnames';
 import styles from './SmsPage.module.scss';
 import CabinetAuthShell from '../../components/CabinetAuthShell';
 import CodeInputGroup from '../../components/CodeInputGroup/CodeInputGroup';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { getFormatPhone } from '../../helpers/getFormattedPhone';
 import { useTimer } from '../../hooks/useTimer';
-import { useAppDispatch } from '../../app/hooks/store';
+import { useAppDispatch, useAppSelector } from '../../app/hooks/store';
+import { selectSendCodeToPhone } from '../../state/auth/selectors';
 import { Loader } from '@asnefedov/uikit/Loader';
 import { CheckCodeResponse } from '../../types/serverInterface/clientDTO';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -31,6 +32,11 @@ const SmsPage: FC = () => {
 
   const { machineSerial, time, phone, channel: channelParam } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const sendCodeState = useAppSelector(selectSendCodeToPhone());
+  const optimisticSend = Boolean(
+    (location.state as { optimisticSend?: boolean } | null)?.optimisticSend,
+  );
 
   const [channel, setChannel] = useState<OtpChannel>(() => parseOtpChannel(channelParam));
   const [canRequest, setCanRequest] = useState(false);
@@ -60,6 +66,44 @@ const SmsPage: FC = () => {
   const handleStartTimer = useCallback(() => {
     start(Number(time), handleCompleteTimer);
   }, [start, time, handleCompleteTimer]);
+
+  useEffect(() => {
+    if (!optimisticSend || sendCodeState.isLoading) {
+      return;
+    }
+
+    if (sendCodeState.isReject) {
+      setResendError(getSendCodeErrorMessage(sendCodeState.lastError));
+      return;
+    }
+
+    const result = sendCodeState.lastResult;
+    if (!result || !phone) {
+      return;
+    }
+
+    setResendError('');
+    setChannel(result.channel);
+    start(result.cooldownSeconds, handleCompleteTimer);
+
+    const nextPath = buildSmsAuthPath(result.cooldownSeconds, phone, result.channel, machineSerial);
+    if (location.pathname !== nextPath) {
+      navigate(nextPath, { replace: true, state: location.state });
+    }
+  }, [
+    handleCompleteTimer,
+    location.pathname,
+    location.state,
+    machineSerial,
+    navigate,
+    optimisticSend,
+    phone,
+    sendCodeState.isLoading,
+    sendCodeState.isReject,
+    sendCodeState.lastError,
+    sendCodeState.lastResult,
+    start,
+  ]);
 
   useEffect(() => {
     if (!canRequest) {

@@ -134,6 +134,7 @@ const SubscriptionPage: FC = () => {
   const [autoRenew, setAutoRenew] = useState(false);
   const [offerAccepted, setOfferAccepted] = useState(false);
   const [recurringConsentAccepted, setRecurringConsentAccepted] = useState(false);
+  const [isRecurringDetailsOpen, setIsRecurringDetailsOpen] = useState(false);
   const [isConsentModalOpen, setIsConsentModalOpen] = useState(false);
   const [recurringActionError, setRecurringActionError] = useState<string | null>(null);
   const offerAcceptCheckboxId = useId();
@@ -141,6 +142,7 @@ const SubscriptionPage: FC = () => {
   const autoRenewCheckboxId = useId();
   const autoRenewHintId = useId();
   const recurringConsentCheckboxId = useId();
+  const recurringConsentDetailsId = useId();
 
   const [isScanModalOpen, setIsScanModalOpen] = useState(false);
   const [isDescriptionModalOpen, setIsDescriptionModalOpen] = useState(false);
@@ -220,6 +222,7 @@ const SubscriptionPage: FC = () => {
     setAutoRenew(false);
     setOfferAccepted(false);
     setRecurringConsentAccepted(false);
+    setIsRecurringDetailsOpen(false);
   }, []);
 
   const handleRobokassaPurchase = useCallback(async () => {
@@ -325,6 +328,7 @@ const SubscriptionPage: FC = () => {
     setAutoRenew(checked);
     if (!checked) {
       setRecurringConsentAccepted(false);
+      setIsRecurringDetailsOpen(false);
     }
   }, []);
 
@@ -422,7 +426,6 @@ const SubscriptionPage: FC = () => {
         className={styles.checkoutConsentSection}
         data-testid="checkout-recurring-consent-section"
       >
-        <p className={styles.consentBody}>{tSubscription('recurringConsentBody')}</p>
         <label
           className={styles.consentCheckboxRow}
           htmlFor={recurringConsentCheckboxId}
@@ -441,12 +444,34 @@ const SubscriptionPage: FC = () => {
             {tSubscription('recurringConsentAccept')}
           </span>
         </label>
+        <button
+          type="button"
+          className={styles.consentDetailsToggle}
+          data-testid="checkout-recurring-consent-details-toggle"
+          aria-expanded={isRecurringDetailsOpen}
+          aria-controls={recurringConsentDetailsId}
+          onClick={() => setIsRecurringDetailsOpen((open) => !open)}
+        >
+          {isRecurringDetailsOpen
+            ? tSubscription('recurringConsentDetailsHide')
+            : tSubscription('recurringConsentDetailsShow')}
+        </button>
+        {isRecurringDetailsOpen ? (
+          <p
+            id={recurringConsentDetailsId}
+            className={styles.consentBody}
+            data-testid="checkout-recurring-consent-details"
+          >
+            {tSubscription('recurringConsentBody')}
+          </p>
+        ) : null}
       </div>
     );
   };
 
   const renderDescriptionModalBody = () => (
     <div className={styles.subscribeModalBody}>
+      <div className={styles.subscribeModalScroll}>
       {showTariffSelection && (
         <div className={styles.tierSelection}>
           {payPhase !== 'loading_levels' && catalogLevels.length > 0 ? (
@@ -571,6 +596,7 @@ const SubscriptionPage: FC = () => {
       {renderAutoRenewRow()}
       {renderRecurringConsentSection()}
       {renderOfferAcceptSection()}
+      </div>
 
       {isPayFlowBusy ? (
         <Text size="s" view="secondary" align="center" className={styles.robokassaHint}>

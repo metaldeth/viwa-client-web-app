@@ -70,6 +70,8 @@
     "subscription.checkoutOfferAcceptBefore": "I accept the terms of the ",
     "subscription.recurringConsentTitle": "Consent to automatic charges",
     "subscription.recurringConsentBody": "You authorize automatic charges for your subscription at the current plan price from your linked card. The first and subsequent charges may be initiated up to 2 hours before your paid period ends to keep access uninterrupted. You can turn off auto-renewal anytime in your account — your paid period stays active.",
+    "subscription.recurringConsentDetailsShow": "Details",
+    "subscription.recurringConsentDetailsHide": "Hide",
     "subscription.recurringConsentAccept": "I agree to automatic charges according to the offer terms",
     "subscription.recurringConsentAcceptBefore": "I agree to automatic charges according to the terms of the ",
     "subscription.recurringConsentOfferLink": "offer",

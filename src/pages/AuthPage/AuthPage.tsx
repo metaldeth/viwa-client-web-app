@@ -10,7 +10,7 @@ import { useAppDispatch } from '../../app/hooks/store';
 import { sendCodeToPhoneThunk } from '../../state/auth/thunk';
 import AuthMarketingSection from '../../components/AuthMarketingSection';
 import PwaInstallPrompt from '../../components/PwaInstallPrompt';
-import { buildSmsAuthPath, getSendCodeErrorMessage } from '../../utils/authSendCode';
+import { buildSmsAuthPath } from '../../utils/authSendCode';
 
 const AuthPage: FC = () => {
   const dispatch = useAppDispatch();
@@ -26,12 +26,10 @@ const AuthPage: FC = () => {
     isValid: false,
     message: '',
   });
-  const [sendError, setSendError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     setPhoneValidation(checkPhoneValidation(unmaskedValue));
-    setSendError('');
   }, [unmaskedValue]);
 
   const handleSendCode = () => {
@@ -40,26 +38,11 @@ const AuthPage: FC = () => {
     }
 
     if (isOnRequest) {
-      setSendError('');
       setIsSubmitting(true);
-      dispatch(sendCodeToPhoneThunk(unmaskedValue))
-        .unwrap()
-        .then((response) => {
-          navigate(
-            buildSmsAuthPath(
-              response.cooldownSeconds,
-              unmaskedValue,
-              response.channel,
-              machineSerial,
-            ),
-          );
-        })
-        .catch((error: unknown) => {
-          setSendError(getSendCodeErrorMessage(error));
-        })
-        .finally(() => {
-          setIsSubmitting(false);
-        });
+      dispatch(sendCodeToPhoneThunk(unmaskedValue));
+      navigate(buildSmsAuthPath(30, unmaskedValue, 'FLASHCALL', machineSerial), {
+        state: { optimisticSend: true },
+      });
     } else {
       navigate(buildSmsAuthPath(10, unmaskedValue, 'FLASHCALL', machineSerial));
     }
@@ -104,18 +87,12 @@ const AuthPage: FC = () => {
           </span>
         </div>
 
-        {sendError ? (
-          <p className={styles.errorBanner} role="alert" aria-live="assertive">
-            {sendError}
-          </p>
-        ) : null}
-
         <button
           type="submit"
           className={styles.submitButton}
           disabled={!phoneValidation.isValid || isSubmitting}
         >
-          {isSubmitting ? 'Отправляем…' : 'Подтвердить вход'}
+          Подтвердить вход
         </button>
 
         <PwaInstallPrompt />

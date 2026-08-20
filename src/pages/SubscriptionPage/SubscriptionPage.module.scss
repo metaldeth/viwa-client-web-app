@@ -196,21 +196,39 @@
 .DescriptionSheetModal {
   --bottom-sheet-bg: #171421;
   --bottom-sheet-border: rgba(127, 90, 240, 0.24);
-  --bottom-sheet-padding: 12px 16px calc(16px + env(safe-area-inset-bottom, 0px));
+  --bottom-sheet-padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
 
   width: min(100%, 430px);
   max-width: 100%;
+  max-height: min(100dvh, 640px) !important;
   box-sizing: border-box;
   border-radius: 22px 22px 0 0;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
   box-shadow: 0 -18px 48px rgba(0, 0, 0, 0.42);
+
+  :global(.VerticalContainer) {
+    flex: 1;
+    min-height: 0;
+    max-height: 100%;
+  }
 }
 
 .subscribeModalBody {
   display: flex;
   flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  gap: 10px;
+}
+
+.subscribeModalScroll {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
   gap: 12px;
-  max-height: min(calc(100dvh - 120px), 560px);
   overflow-y: auto;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
@@ -500,6 +518,31 @@
   color: rgba(245, 245, 245, 0.82);
 }
 
+.consentDetailsToggle {
+  align-self: flex-start;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 0.8125rem;
+  line-height: 1.35;
+  color: #9b8cff;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+
+  &:hover,
+  &:focus-visible {
+    color: #c4bbff;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--viwa-focus, #7f5af0);
+    outline-offset: 2px;
+  }
+}
+
 .consentCheckboxRow {
   display: flex;
   align-items: flex-start;
@@ -580,19 +623,14 @@
 }
 
 .subscribeActions {
-  position: sticky;
+  flex-shrink: 0;
   z-index: 3;
-  bottom: 0;
   display: flex;
   flex-direction: column;
   gap: 6px;
-  margin: 0 -2px -2px;
-  padding: 10px 2px 2px;
-  background: linear-gradient(
-    180deg,
-    rgba(23, 20, 33, 0) 0%,
-    var(--bottom-sheet-bg, #171421) 24%
-  );
+  margin: 0;
+  padding: 8px 0 0;
+  background: var(--bottom-sheet-bg, #171421);
 }
 
 @media (max-width: 390px) {
@@ -617,8 +655,8 @@
 }
 
 @media (max-height: 780px) {
-  .subscribeModalBody {
-    max-height: min(calc(100dvh - 96px), 480px);
+  .DescriptionSheetModal {
+    max-height: 100dvh;
   }
 
   .tierCard:not(.tierCardDisabled) {
