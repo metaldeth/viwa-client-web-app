@@ -11,6 +11,7 @@ import { sendCodeToPhoneThunk } from '../../state/auth/thunk';
 import AuthMarketingSection from '../../components/AuthMarketingSection';
 import PwaInstallPrompt from '../../components/PwaInstallPrompt';
 import { buildSmsAuthPath } from '../../utils/authSendCode';
+import { clientDiag } from '../../utils/clientDiag';
 
 const AuthPage: FC = () => {
   const dispatch = useAppDispatch();
@@ -39,10 +40,16 @@ const AuthPage: FC = () => {
 
     if (isOnRequest) {
       setIsSubmitting(true);
+      clientDiag('auth', 'send_code_submit', {
+        phone: unmaskedValue,
+        machineSerial: machineSerial ?? null,
+        optimistic: true,
+      });
       dispatch(sendCodeToPhoneThunk(unmaskedValue));
       navigate(buildSmsAuthPath(30, unmaskedValue, 'FLASHCALL', machineSerial), {
         state: { optimisticSend: true },
       });
+      clientDiag('auth', 'navigated_code_entry', { phone: unmaskedValue, channel: 'FLASHCALL' });
     } else {
       navigate(buildSmsAuthPath(10, unmaskedValue, 'FLASHCALL', machineSerial));
     }

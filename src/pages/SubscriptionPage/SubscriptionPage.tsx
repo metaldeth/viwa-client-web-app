@@ -28,6 +28,7 @@ import { useClientSubscriptionWs } from '../../hooks/useClientSubscriptionWs';
 import { useRecurringAgreement } from '../../hooks/useRecurringAgreement';
 import { useSubscriptionPriceNotice } from '../../hooks/useSubscriptionPriceNotice';
 import { RECURRING_CONSENT_VERSION } from '../../constants/recurringConsent';
+import { clientDiag } from '../../utils/clientDiag';
 import { LEGAL_OFFER_URL } from '../../constants/legalLinks';
 import {
   resolveCheckoutReturnPath,
@@ -237,6 +238,7 @@ const SubscriptionPage: FC = () => {
 
     setPayError(null);
     setPayPhase('init');
+    clientDiag('billing', 'robokassa_init_start', { levelId, autoRenew });
 
     try {
       const init = await api.billing.initRobokassaPayment({
@@ -257,11 +259,21 @@ const SubscriptionPage: FC = () => {
         ...(machineSerial ? { machineSerial } : {}),
       });
 
+      clientDiag('billing', 'robokassa_init_ok', {
+        paymentId: init.paymentId,
+        provider: init.provider,
+      });
       window.location.href = init.paymentUrl;
     } catch (e: unknown) {
       releasePurchaseLock();
       setPayError(resolveSubscriptionPaymentErrorMessage(e));
       setPayPhase('ready');
+      clientDiag(
+        'billing',
+        'robokassa_init_error',
+        { message: resolveSubscriptionPaymentErrorMessage(e) },
+        'error',
+      );
     }
   }, [
     autoRenew,
@@ -472,130 +484,130 @@ const SubscriptionPage: FC = () => {
   const renderDescriptionModalBody = () => (
     <div className={styles.subscribeModalBody}>
       <div className={styles.subscribeModalScroll}>
-      {showTariffSelection && (
-        <div className={styles.tierSelection}>
-          {payPhase !== 'loading_levels' && catalogLevels.length > 0 ? (
-            <Text size="s" view="secondary" className={styles.tierSelectionHint}>
-              {tSubscription('planSelect')}
-            </Text>
-          ) : null}
+        {showTariffSelection && (
+          <div className={styles.tierSelection}>
+            {payPhase !== 'loading_levels' && catalogLevels.length > 0 ? (
+              <Text size="s" view="secondary" className={styles.tierSelectionHint}>
+                {tSubscription('planSelect')}
+              </Text>
+            ) : null}
 
-          {payPhase === 'loading_levels' && (
-            <Text size="m" view="secondary">
-              {tSubscription('planLoading')}
-            </Text>
-          )}
+            {payPhase === 'loading_levels' && (
+              <Text size="m" view="secondary">
+                {tSubscription('planLoading')}
+              </Text>
+            )}
 
-          {catalogLevels.length === 0 && payPhase === 'ready' && (
-            <Text size="m" view="secondary">
-              {tSubscription('planEmpty')}
-            </Text>
-          )}
+            {catalogLevels.length === 0 && payPhase === 'ready' && (
+              <Text size="m" view="secondary">
+                {tSubscription('planEmpty')}
+              </Text>
+            )}
 
-          {payPhase === 'error' && payError && (
-            <Text size="m" view="alert">
-              {payError}
-            </Text>
-          )}
+            {payPhase === 'error' && payError && (
+              <Text size="m" view="alert">
+                {payError}
+              </Text>
+            )}
 
-          <div
-            className={styles.tierCardList}
-            role="radiogroup"
-            aria-label={tSubscription('planSelect')}
-          >
-            {catalogLevels.map((level) => {
-              const isDisabled = isSubscriptionLevelDisabled(
-                level.id,
-                catalogLevels,
-                selectableLevels,
-              );
-              const isSelected = !isDisabled && selectedLevelId === level.id;
-              const disabledStatusId = `tier-disabled-status-${level.id}`;
-              const disabledExplanationId = `tier-disabled-explanation-${level.id}`;
-              const disabledCopy = isDisabled
-                ? resolveDisabledTierCopy(subscriptionProfile, level)
-                : null;
+            <div
+              className={styles.tierCardList}
+              role="radiogroup"
+              aria-label={tSubscription('planSelect')}
+            >
+              {catalogLevels.map((level) => {
+                const isDisabled = isSubscriptionLevelDisabled(
+                  level.id,
+                  catalogLevels,
+                  selectableLevels,
+                );
+                const isSelected = !isDisabled && selectedLevelId === level.id;
+                const disabledStatusId = `tier-disabled-status-${level.id}`;
+                const disabledExplanationId = `tier-disabled-explanation-${level.id}`;
+                const disabledCopy = isDisabled
+                  ? resolveDisabledTierCopy(subscriptionProfile, level)
+                  : null;
 
-              return (
-                <label
-                  key={level.id}
-                  className={classNames(
-                    styles.tierCard,
-                    isSelected && styles.tierCardSelected,
-                    isDisabled && styles.tierCardDisabled,
-                  )}
-                  aria-disabled={isDisabled || undefined}
-                >
-                  <input
-                    type="radio"
-                    name="subscription-tier"
-                    className={styles.tierCardInput}
-                    checked={isSelected}
-                    disabled={isDisabled}
-                    aria-describedby={
-                      isDisabled ? `${disabledStatusId} ${disabledExplanationId}` : undefined
-                    }
-                    onChange={() => {
-                      if (!isDisabled) {
-                        setSelectedLevelId(level.id);
+                return (
+                  <label
+                    key={level.id}
+                    className={classNames(
+                      styles.tierCard,
+                      isSelected && styles.tierCardSelected,
+                      isDisabled && styles.tierCardDisabled,
+                    )}
+                    aria-disabled={isDisabled || undefined}
+                  >
+                    <input
+                      type="radio"
+                      name="subscription-tier"
+                      className={styles.tierCardInput}
+                      checked={isSelected}
+                      disabled={isDisabled}
+                      aria-describedby={
+                        isDisabled ? `${disabledStatusId} ${disabledExplanationId}` : undefined
                       }
-                    }}
-                  />
-                  <span
-                    className={styles.tierCardBackground}
-                    style={{
-                      backgroundImage: `url(${resolveTierCardBackgroundForLevel(level.id, levels)})`,
-                    }}
-                    aria-hidden="true"
-                  />
-                  <span className={styles.tierCardGradient} aria-hidden="true" />
-                  <span className={styles.tierCardContent}>
-                    <span className={styles.tierCardName}>{level.name}</span>
-                    <span className={styles.tierCardMeta}>
-                      {tSubscription('tierFlavoredVolume', {
-                        liters: formatLitersFromMl(levelVolumeMl(level)),
-                      })}
-                    </span>
+                      onChange={() => {
+                        if (!isDisabled) {
+                          setSelectedLevelId(level.id);
+                        }
+                      }}
+                    />
                     <span
-                      className={styles.tierCardMeta}
-                      data-testid="tier-unlimited-water-benefit"
-                    >
-                      {tSubscription('tierUnlimitedWaterBenefit')}
+                      className={styles.tierCardBackground}
+                      style={{
+                        backgroundImage: `url(${resolveTierCardBackgroundForLevel(level.id, levels)})`,
+                      }}
+                      aria-hidden="true"
+                    />
+                    <span className={styles.tierCardGradient} aria-hidden="true" />
+                    <span className={styles.tierCardContent}>
+                      <span className={styles.tierCardName}>{level.name}</span>
+                      <span className={styles.tierCardMeta}>
+                        {tSubscription('tierFlavoredVolume', {
+                          liters: formatLitersFromMl(levelVolumeMl(level)),
+                        })}
+                      </span>
+                      <span
+                        className={styles.tierCardMeta}
+                        data-testid="tier-unlimited-water-benefit"
+                      >
+                        {tSubscription('tierUnlimitedWaterBenefit')}
+                      </span>
+                      {disabledCopy ? (
+                        <span className={styles.tierCardDisabledCopy}>
+                          <span id={disabledStatusId} className={styles.tierCardDisabledStatus}>
+                            {disabledCopy.status}
+                          </span>
+                          <span
+                            id={disabledExplanationId}
+                            className={styles.tierCardDisabledExplanation}
+                          >
+                            {disabledCopy.explanation}
+                          </span>
+                        </span>
+                      ) : null}
+                      <span className={styles.tierCardPrice}>
+                        {formatPriceRub(level.priceKopecks)} ₽
+                      </span>
                     </span>
-                    {disabledCopy ? (
-                      <span className={styles.tierCardDisabledCopy}>
-                        <span id={disabledStatusId} className={styles.tierCardDisabledStatus}>
-                          {disabledCopy.status}
-                        </span>
-                        <span
-                          id={disabledExplanationId}
-                          className={styles.tierCardDisabledExplanation}
-                        >
-                          {disabledCopy.explanation}
-                        </span>
+                    {isSelected ? (
+                      <span className={styles.tierCardCheck} aria-hidden="true">
+                        <svg viewBox="0 0 20 20">
+                          <path d="M5 10.5l3 3 7-7" />
+                        </svg>
                       </span>
                     ) : null}
-                    <span className={styles.tierCardPrice}>
-                      {formatPriceRub(level.priceKopecks)} ₽
-                    </span>
-                  </span>
-                  {isSelected ? (
-                    <span className={styles.tierCardCheck} aria-hidden="true">
-                      <svg viewBox="0 0 20 20">
-                        <path d="M5 10.5l3 3 7-7" />
-                      </svg>
-                    </span>
-                  ) : null}
-                </label>
-              );
-            })}
+                  </label>
+                );
+              })}
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {renderAutoRenewRow()}
-      {renderRecurringConsentSection()}
-      {renderOfferAcceptSection()}
+        {renderAutoRenewRow()}
+        {renderRecurringConsentSection()}
+        {renderOfferAcceptSection()}
       </div>
 
       {isPayFlowBusy ? (

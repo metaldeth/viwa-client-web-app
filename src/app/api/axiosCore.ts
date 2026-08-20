@@ -14,6 +14,7 @@ import {
 import { ACCESS_TOKEN_STORAGE_NAME } from '../../consts/env/storage';
 import { viwaTelemetryApiUrl } from '../../consts';
 import { redirectToClientAuth } from '../../pages/ValidationPage/helpers';
+import { clientDiag } from '../../utils/clientDiag';
 
 type ApiError = {
   code: string;
@@ -91,6 +92,9 @@ export class AxiosCoreApi {
           cfg.headers.Authorization = `Bearer ${this._accessToken}`;
         }
 
+        (cfg as InternalAxiosRequestConfig & { _diagStartedAt?: number })._diagStartedAt =
+          Date.now();
+
         return cfg;
       },
 
@@ -101,7 +105,19 @@ export class AxiosCoreApi {
     );
 
     this._axiosInstance.interceptors.response.use(
-      (data) => data,
+      (data) => {
+        const cfg = data.config as InternalAxiosRequestConfig & { _diagStartedAt?: number };
+        const url = String(cfg.url ?? '');
+        if (!url.includes('/public/client-diag-logs')) {
+          clientDiag('http', 'response_ok', {
+            method: String(cfg.method ?? 'get'),
+            url,
+            status: data.status,
+            ms: cfg._diagStartedAt ? Date.now() - cfg._diagStartedAt : null,
+          });
+        }
+        return data;
+      },
       async (error): Promise<ApiError> => {
         const status = error.response?.status;
         const originalConfig = error.config as AxiosRequestConfigWithAuth | undefined;
@@ -131,6 +147,21 @@ export class AxiosCoreApi {
         const responseData = error.response?.data as Record<string, unknown> | undefined;
         const bodyCode = responseData?.code;
         const bodyMessage = responseData?.message ?? responseData?.key;
+        const failedUrl = String(originalConfig?.url ?? '');
+        if (!failedUrl.includes('/public/client-diag-logs')) {
+          clientDiag(
+            'http',
+            'response_error',
+            {
+              method: String(originalConfig?.method ?? 'get'),
+              url: failedUrl,
+              status,
+              code: bodyCode != null ? String(bodyCode) : undefined,
+              message: bodyMessage != null ? String(bodyMessage) : undefined,
+            },
+            'error',
+          );
+        }
 
         return Promise.reject({
           ...error,

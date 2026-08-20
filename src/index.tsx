@@ -9,8 +9,10 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import reportWebVitals from './reportWebVitals';
 import { registerMinimalServiceWorker } from './pwa/registerServiceWorker';
+import { installClientDiag } from './utils/clientDiag';
 
 registerMinimalServiceWorker();
+installClientDiag();
 
 if (import.meta.env.DEV) {
   const link = document.createElement('link');

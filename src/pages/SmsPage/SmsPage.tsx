@@ -13,6 +13,7 @@ import { CheckCodeResponse } from '../../types/serverInterface/clientDTO';
 import { AnimatePresence, motion } from 'framer-motion';
 import { checkCodeAndCreateClientThunk, sendCodeToPhoneThunk } from '../../state/auth/thunk';
 import { POST_AUTH_HOME_PATH } from '../../state/auth/navigation';
+import { clientDiag } from '../../utils/clientDiag';
 import {
   buildSmsAuthPath,
   getCodeEntryTitle,
@@ -74,6 +75,12 @@ const SmsPage: FC = () => {
 
     if (sendCodeState.isReject) {
       setResendError(getSendCodeErrorMessage(sendCodeState.lastError));
+      clientDiag(
+        'auth',
+        'send_code_rejected',
+        { phone, error: getSendCodeErrorMessage(sendCodeState.lastError) },
+        'error',
+      );
       return;
     }
 
@@ -84,6 +91,11 @@ const SmsPage: FC = () => {
 
     setResendError('');
     setChannel(result.channel);
+    clientDiag('auth', 'send_code_fulfilled', {
+      phone,
+      channel: result.channel,
+      cooldownSeconds: result.cooldownSeconds,
+    });
     start(result.cooldownSeconds, handleCompleteTimer);
 
     const nextPath = buildSmsAuthPath(result.cooldownSeconds, phone, result.channel, machineSerial);
@@ -123,6 +135,11 @@ const SmsPage: FC = () => {
 
   const handleCompleteCode = (code: string) => {
     setIsLoadRequest(true);
+    clientDiag('auth', 'check_code_submit', {
+      phone: formattedPhone,
+      machineSerial: machineSerial ?? null,
+      codeLength: code.length,
+    });
 
     if (isOnRequest) {
       dispatch(
@@ -136,16 +153,27 @@ const SmsPage: FC = () => {
         .then((response: CheckCodeResponse) => {
           if (response?.accessToken) {
             setIsValidCode(true);
+            clientDiag('auth', 'check_code_ok', {
+              phone: formattedPhone,
+              clientId: response.client?.id,
+            });
             navigate(POST_AUTH_HOME_PATH, { replace: true });
           } else {
             setIsValidCode(false);
+            clientDiag('auth', 'check_code_no_token', { phone: formattedPhone }, 'warn');
           }
 
           setIsLoadRequest(false);
         })
-        .catch(() => {
+        .catch((error: unknown) => {
           setIsValidCode(false);
           setIsLoadRequest(false);
+          clientDiag(
+            'auth',
+            'check_code_rejected',
+            { phone: formattedPhone, error: String(error) },
+            'error',
+          );
         });
     } else {
       setTimeout(() => {
@@ -169,6 +197,7 @@ const SmsPage: FC = () => {
     setResetVersion((v) => v + 1);
 
     if (isOnRequest) {
+      clientDiag('auth', 'resend_code_submit', { phone: formattedPhone });
       dispatch(sendCodeToPhoneThunk(formattedPhone))
         .unwrap()
         .then((response) => {
