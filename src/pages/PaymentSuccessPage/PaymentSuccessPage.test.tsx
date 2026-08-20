@@ -9,6 +9,7 @@ import { installBrowserStorageMocks } from '../../test/browserMocks';
 
 const navigateMock = vi.fn();
 const retryMock = vi.fn();
+const skipWaitMock = vi.fn();
 
 const hookState = vi.hoisted(() => ({
   phase: 'checking' as 'checking' | 'error' | 'missing_pending',
@@ -36,6 +37,7 @@ vi.mock('../../hooks/useRobokassaPaymentReturn', () => ({
     returnPath: hookState.returnPath,
     pendingSession: hookState.pendingSession,
     retry: retryMock,
+    skipWait: skipWaitMock,
   }),
 }));
 
@@ -46,6 +48,7 @@ describe('PaymentSuccessPage', () => {
     hookState.phase = 'checking';
     hookState.errorMessage = null;
     retryMock.mockReset();
+    skipWaitMock.mockReset();
     navigateMock.mockReset();
   });
 
@@ -88,5 +91,8 @@ describe('PaymentSuccessPage', () => {
 
     expect(screen.queryByText('Проверить снова')).toBeNull();
     expect(screen.getByText('Проверяем оплату…')).toBeTruthy();
+    expect(screen.getByText('Не ждать')).toBeTruthy();
+    screen.getByText('Не ждать').click();
+    expect(skipWaitMock).toHaveBeenCalledTimes(1);
   });
 });

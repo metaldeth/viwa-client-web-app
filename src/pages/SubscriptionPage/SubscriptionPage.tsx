@@ -163,6 +163,22 @@ const SubscriptionPage: FC = () => {
     return true;
   }, []);
 
+  useEffect(() => {
+    const onPageShow = (event: PageTransitionEvent) => {
+      if (!event.persisted) {
+        return;
+      }
+
+      releasePurchaseLock();
+      setPayPhase((current) => (current === 'init' ? 'ready' : current));
+    };
+
+    window.addEventListener('pageshow', onPageShow);
+    return () => {
+      window.removeEventListener('pageshow', onPageShow);
+    };
+  }, [releasePurchaseLock]);
+
   const planSummary = useMemo(
     () => resolvePlanSummaryDisplay(subscriptionProfile, levels),
     [subscriptionProfile, levels],

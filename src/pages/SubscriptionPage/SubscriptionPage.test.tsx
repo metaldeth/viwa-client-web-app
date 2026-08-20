@@ -303,6 +303,30 @@ describe('SubscriptionPage Robokassa checkout', () => {
     });
   });
 
+  it('resets checkout checking state after bfcache return from Robokassa', async () => {
+    vi.mocked(api.billing.initRobokassaPayment).mockImplementation(
+      () => new Promise(() => undefined),
+    );
+
+    renderPage();
+    await openCheckoutModal();
+    acceptBaseOffer();
+    fireEvent.click(screen.getByTestId('subscription-pay-button'));
+
+    await waitFor(() => {
+      expect(screen.getByText('Проверяем оплату…')).toBeTruthy();
+    });
+
+    const pageShow = new Event('pageshow');
+    Object.defineProperty(pageShow, 'persisted', { configurable: true, value: true });
+    window.dispatchEvent(pageShow);
+
+    await waitFor(() => {
+      expect(screen.queryByText('Проверяем оплату…')).toBeNull();
+    });
+    expect(screen.getByTestId('subscription-pay-button').hasAttribute('disabled')).toBe(false);
+  });
+
   it('requires base offer and recurring consent before recurring Robokassa init', async () => {
     vi.mocked(api.billing.initRobokassaPayment).mockResolvedValue({
       paymentId: 'pay-rob',

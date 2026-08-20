@@ -11,7 +11,7 @@ import styles from './PaymentSuccessPage.module.scss';
 
 const PaymentSuccessPage: FC = memo(function PaymentSuccessPage() {
   const navigate = useNavigate();
-  const { phase, errorMessage, pendingSession, retry } = useRobokassaPaymentReturn({
+  const { phase, errorMessage, pendingSession, retry, skipWait } = useRobokassaPaymentReturn({
     mode: 'success',
   });
 
@@ -45,6 +45,14 @@ const PaymentSuccessPage: FC = memo(function PaymentSuccessPage() {
               ? tSubscription('paymentReturnAwaitActivation')
               : tSubscription('paymentReturnCheckingStatus')}
           </Text>
+          <div className={styles.actions}>
+            <Button
+              label={tSubscription('paymentReturnDontWait')}
+              view="secondary"
+              width="full"
+              onClick={skipWait}
+            />
+          </div>
         </div>
       ) : (
         <div className={styles.actions}>

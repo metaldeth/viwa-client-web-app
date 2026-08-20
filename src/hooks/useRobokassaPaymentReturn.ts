@@ -34,6 +34,7 @@ export type UseRobokassaPaymentReturnResult = {
   returnPath: string;
   pendingSession: PendingPaymentSession | null;
   retry: () => void;
+  skipWait: () => void;
 };
 
 function isTransientPollError(error: unknown): boolean {
@@ -96,6 +97,15 @@ export function useRobokassaPaymentReturn({
     setRunId((value) => value + 1);
   }, []);
 
+  const skipWait = useCallback(() => {
+    cancelledRef.current = true;
+    clearSleepTimeouts();
+    const session = readPendingPayment();
+    clearPendingPayment();
+    setPhase('done');
+    navigateToSafeReturnPath(navigate, session);
+  }, [clearSleepTimeouts, navigate]);
+
   useEffect(() => {
     cancelledRef.current = false;
     const pollRunId = runId;
@@ -132,7 +142,7 @@ export function useRobokassaPaymentReturn({
       setPhase('checking');
       setErrorMessage(null);
 
-      const deadline = session.startedAt + BILLING_POLL_MAX_MS;
+      const deadline = Date.now() + BILLING_POLL_MAX_MS;
 
       while (!cancelledRef.current && pollRunId === runId && Date.now() < deadline) {
         try {
@@ -230,5 +240,6 @@ export function useRobokassaPaymentReturn({
     returnPath,
     pendingSession,
     retry,
+    skipWait,
   };
 }

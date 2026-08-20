@@ -107,6 +107,7 @@ const REQUIRED_KEYS = [
   'subscription.paymentReturnErrorTitle',
   'subscription.paymentReturnCheckFailed',
   'subscription.paymentReturnCheckTimeout',
+  'subscription.paymentReturnDontWait',
   'subscription.paymentReturnActivationFailed',
   'subscription.paymentReturnActivationTimeout',
   'subscription.paymentReturnMissingSession',

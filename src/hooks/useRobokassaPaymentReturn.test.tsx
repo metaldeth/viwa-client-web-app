@@ -1,7 +1,7 @@
 /**
  * @vitest-environment jsdom
  */
-import { act, renderHook, waitFor } from '@testing-library/react';
+import { renderHook, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import {
   BILLING_POLL_INTERVAL_MS,
@@ -148,24 +148,68 @@ describe('useRobokassaPaymentReturn', () => {
     expect(localStorage.getItem('api/accessToken')).toBe('token');
   }, 10_000);
 
-  it('enters error phase when poll window expired', async () => {
+  it('enters error phase when the 2-minute poll window expires', async () => {
+    let now = 1_700_000_000_000;
+    vi.spyOn(Date, 'now').mockImplementation(() => now);
+
     sessionStorage.setItem(
       VIWA_PENDING_PAYMENT_KEY,
       JSON.stringify({
         paymentId: 'pay-timeout',
-        startedAt: Date.now() - BILLING_POLL_MAX_MS - 1_000,
+        startedAt: now,
         returnPath: '/home',
       }),
+    );
+
+    vi.mocked(api.billing.getPaymentStatus).mockImplementation(async () => {
+      now += BILLING_POLL_MAX_MS + 1;
+      return { status: 'PENDING', provider: 'ROBOKASSA' };
+    });
+
+    const { result } = renderReturnHook('success');
+
+    await waitFor(
+      () => {
+        expect(result.current.phase).toBe('error');
+      },
+      { timeout: 5_000 },
+    );
+
+    expect(result.current.errorMessage).toBeTruthy();
+    expect(sessionStorage.getItem(VIWA_PENDING_PAYMENT_KEY)).toBeTruthy();
+  });
+
+  it('skipWait unlocks the screen and keeps the payment pending on the server', async () => {
+    sessionStorage.setItem(
+      VIWA_PENDING_PAYMENT_KEY,
+      JSON.stringify({
+        paymentId: 'pay-skip',
+        startedAt: Date.now(),
+        returnPath: '/home',
+      }),
+    );
+
+    vi.mocked(api.billing.getPaymentStatus).mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          setTimeout(() => resolve({ status: 'PENDING', provider: 'ROBOKASSA' }), 50);
+        }),
     );
 
     const { result } = renderReturnHook('success');
 
     await waitFor(() => {
-      expect(result.current.phase).toBe('error');
+      expect(result.current.phase).toBe('checking');
     });
 
-    expect(result.current.errorMessage).toBeTruthy();
-    expect(api.billing.getPaymentStatus).not.toHaveBeenCalled();
+    result.current.skipWait();
+
+    await waitFor(() => {
+      expect(result.current.phase).toBe('done');
+    });
+
+    expect(navigateMock).toHaveBeenCalledWith('/home', { replace: true });
+    expect(sessionStorage.getItem(VIWA_PENDING_PAYMENT_KEY)).toBeNull();
   });
 
   it('navigates to machine home when returnPath is unsafe but machineSerial is set', async () => {
@@ -229,7 +273,10 @@ describe('useRobokassaPaymentReturn', () => {
   });
 
   it('retry after timeout starts a fresh poll window and can succeed', async () => {
-    const expiredStartedAt = Date.now() - BILLING_POLL_MAX_MS - 5_000;
+    let now = 1_700_000_000_000;
+    vi.spyOn(Date, 'now').mockImplementation(() => now);
+    const expiredStartedAt = now - BILLING_POLL_MAX_MS - 5_000;
+
     sessionStorage.setItem(
       VIWA_PENDING_PAYMENT_KEY,
       JSON.stringify({
@@ -240,12 +287,19 @@ describe('useRobokassaPaymentReturn', () => {
       }),
     );
 
+    vi.mocked(api.billing.getPaymentStatus).mockImplementation(async () => {
+      now += BILLING_POLL_MAX_MS + 1;
+      return { status: 'PENDING', provider: 'ROBOKASSA' };
+    });
+
     const { result } = renderReturnHook('success');
 
-    await waitFor(() => {
-      expect(result.current.phase).toBe('error');
-    });
-    expect(api.billing.getPaymentStatus).not.toHaveBeenCalled();
+    await waitFor(
+      () => {
+        expect(result.current.phase).toBe('error');
+      },
+      { timeout: 5_000 },
+    );
     expect(sessionStorage.getItem(VIWA_PENDING_PAYMENT_KEY)).toBeTruthy();
 
     vi.mocked(api.billing.getPaymentStatus).mockResolvedValue({
@@ -267,20 +321,36 @@ describe('useRobokassaPaymentReturn', () => {
       expect(result.current.phase).toBe('done');
     });
 
-    expect(api.billing.getPaymentStatus).toHaveBeenCalledTimes(1);
     expect(api.billing.getSubscriptionStatus).toHaveBeenCalledWith('pay-retry-success');
     expect(navigateMock).toHaveBeenCalledWith('/m/VIWA-001/home', { replace: true });
     expect(sessionStorage.getItem(VIWA_PENDING_PAYMENT_KEY)).toBeNull();
   }, 10_000);
 
   it('repeated retry clicks do not run concurrent payment polls', async () => {
+    let now = 1_700_000_000_000;
+    vi.spyOn(Date, 'now').mockImplementation(() => now);
+
     sessionStorage.setItem(
       VIWA_PENDING_PAYMENT_KEY,
       JSON.stringify({
         paymentId: 'pay-retry-race',
-        startedAt: Date.now() - BILLING_POLL_MAX_MS - 1_000,
+        startedAt: now,
         returnPath: '/home',
       }),
+    );
+
+    vi.mocked(api.billing.getPaymentStatus).mockImplementation(async () => {
+      now += BILLING_POLL_MAX_MS + 1;
+      return { status: 'PENDING', provider: 'ROBOKASSA' };
+    });
+
+    const { result } = renderReturnHook('success');
+
+    await waitFor(
+      () => {
+        expect(result.current.phase).toBe('error');
+      },
+      { timeout: 5_000 },
     );
 
     let resolvePaymentStatus:
@@ -294,18 +364,12 @@ describe('useRobokassaPaymentReturn', () => {
         }),
     );
 
-    const { result } = renderReturnHook('success');
-
-    await waitFor(() => {
-      expect(result.current.phase).toBe('error');
-    });
-
     result.current.retry();
     result.current.retry();
     result.current.retry();
 
     await waitFor(() => {
-      expect(api.billing.getPaymentStatus).toHaveBeenCalledTimes(1);
+      expect(api.billing.getPaymentStatus).toHaveBeenCalledTimes(2);
     });
 
     resolvePaymentStatus?.({ status: 'PENDING', provider: 'ROBOKASSA' });
@@ -314,24 +378,35 @@ describe('useRobokassaPaymentReturn', () => {
       expect(result.current.phase).toBe('checking');
     });
 
-    expect(api.billing.getPaymentStatus).toHaveBeenCalledTimes(1);
+    expect(api.billing.getPaymentStatus).toHaveBeenCalledTimes(2);
   }, 10_000);
 
   it('keeps pending session across reload after timeout until success clears it', async () => {
+    let now = 1_700_000_000_000;
+    vi.spyOn(Date, 'now').mockImplementation(() => now);
+
     sessionStorage.setItem(
       VIWA_PENDING_PAYMENT_KEY,
       JSON.stringify({
         paymentId: 'pay-reload',
-        startedAt: Date.now() - BILLING_POLL_MAX_MS - 1_000,
+        startedAt: now,
         returnPath: '/home',
       }),
     );
 
+    vi.mocked(api.billing.getPaymentStatus).mockImplementation(async () => {
+      now += BILLING_POLL_MAX_MS + 1;
+      return { status: 'PENDING', provider: 'ROBOKASSA' };
+    });
+
     const firstMount = renderReturnHook('success');
 
-    await waitFor(() => {
-      expect(firstMount.result.current.phase).toBe('error');
-    });
+    await waitFor(
+      () => {
+        expect(firstMount.result.current.phase).toBe('error');
+      },
+      { timeout: 5_000 },
+    );
 
     const persistedAfterTimeout = sessionStorage.getItem(VIWA_PENDING_PAYMENT_KEY);
     expect(persistedAfterTimeout).toBeTruthy();
@@ -341,10 +416,10 @@ describe('useRobokassaPaymentReturn', () => {
     const secondMount = renderReturnHook('success');
 
     await waitFor(() => {
-      expect(secondMount.result.current.phase).toBe('error');
+      expect(secondMount.result.current.phase).toBe('checking');
     });
 
     expect(sessionStorage.getItem(VIWA_PENDING_PAYMENT_KEY)).toBe(persistedAfterTimeout);
-    expect(api.billing.getPaymentStatus).not.toHaveBeenCalled();
+    expect(api.billing.getPaymentStatus).toHaveBeenCalled();
   });
 });

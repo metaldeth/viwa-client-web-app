@@ -100,6 +100,7 @@ export type SubscriptionLocaleKey =
   | 'paymentReturnErrorTitle'
   | 'paymentReturnCheckFailed'
   | 'paymentReturnCheckTimeout'
+  | 'paymentReturnDontWait'
   | 'paymentReturnActivationFailed'
   | 'paymentReturnActivationTimeout'
   | 'paymentReturnMissingSession'
