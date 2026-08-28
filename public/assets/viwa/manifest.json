@@ -1,7 +1,7 @@
 {
   "version": "1.1.0",
   "conceptRef": "concept-bento-station-first",
-  "generatedAt": "2026-08-06T14:13:34Z",
+  "generatedAt": "2026-08-28T11:47:18Z",
   "assets": [
     {
       "id": "hero-bottle",
@@ -290,6 +290,60 @@
       "tasteMediaKey": "watermelon"
     },
     {
+      "id": "taste-peach",
+      "category": "taste",
+      "files": {
+        "webp": {
+          "path": "tastes/peach.webp",
+          "width": 800,
+          "height": 1000
+        },
+        "png": {
+          "path": "tastes/peach.png",
+          "width": 800,
+          "height": 1000
+        }
+      },
+      "altRu": "Персик — фруктовый разрез и бутылка",
+      "tasteMediaKey": "peach"
+    },
+    {
+      "id": "taste-mint",
+      "category": "taste",
+      "files": {
+        "webp": {
+          "path": "tastes/mint.webp",
+          "width": 800,
+          "height": 1000
+        },
+        "png": {
+          "path": "tastes/mint.png",
+          "width": 800,
+          "height": 1000
+        }
+      },
+      "altRu": "Мята — фруктовый разрез и бутылка",
+      "tasteMediaKey": "mint"
+    },
+    {
+      "id": "taste-pineapple",
+      "category": "taste",
+      "files": {
+        "webp": {
+          "path": "tastes/pineapple.webp",
+          "width": 800,
+          "height": 1000
+        },
+        "png": {
+          "path": "tastes/pineapple.png",
+          "width": 800,
+          "height": 1000
+        }
+      },
+      "altRu": "Ананас — фруктовый разрез и бутылка",
+      "tasteMediaKey": "pineapple"
+    },
+    {
       "id": "taste-medallion-cherry",
       "category": "taste-medallion",
       "files": {
@@ -553,6 +607,63 @@
       },
       "altRu": "Арбуз — медальон вкуса",
       "tasteMediaKey": "watermelon",
+      "cabinetRole": "favorite-circle"
+    },
+    {
+      "id": "taste-medallion-peach",
+      "category": "taste-medallion",
+      "files": {
+        "webp": {
+          "path": "tastes/medallions/peach.webp",
+          "width": 180,
+          "height": 180
+        },
+        "png": {
+          "path": "tastes/medallions/peach.png",
+          "width": 180,
+          "height": 180
+        }
+      },
+      "altRu": "Персик — медальон вкуса",
+      "tasteMediaKey": "peach",
+      "cabinetRole": "favorite-circle"
+    },
+    {
+      "id": "taste-medallion-mint",
+      "category": "taste-medallion",
+      "files": {
+        "webp": {
+          "path": "tastes/medallions/mint.webp",
+          "width": 180,
+          "height": 180
+        },
+        "png": {
+          "path": "tastes/medallions/mint.png",
+          "width": 180,
+          "height": 180
+        }
+      },
+      "altRu": "Мята — медальон вкуса",
+      "tasteMediaKey": "mint",
+      "cabinetRole": "favorite-circle"
+    },
+    {
+      "id": "taste-medallion-pineapple",
+      "category": "taste-medallion",
+      "files": {
+        "webp": {
+          "path": "tastes/medallions/pineapple.webp",
+          "width": 180,
+          "height": 180
+        },
+        "png": {
+          "path": "tastes/medallions/pineapple.png",
+          "width": 180,
+          "height": 180
+        }
+      },
+      "altRu": "Ананас — медальон вкуса",
+      "tasteMediaKey": "pineapple",
       "cabinetRole": "favorite-circle"
     },
     {

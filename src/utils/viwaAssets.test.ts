@@ -14,8 +14,11 @@ const CANONICAL_TASTE_KEYS = [
   'lemon',
   'lime',
   'lime-mint',
+  'mint',
   'orange',
+  'peach',
   'peach-mango',
+  'pineapple',
   'pomegranate-blueberry',
   'raspberry',
   'strawberry-lemongrass',
@@ -23,13 +26,13 @@ const CANONICAL_TASTE_KEYS = [
 ];
 
 describe('viwaAssets taste paths', () => {
-  it('manifest includes exactly 14 bottle and 14 medallion taste assets', () => {
+  it('manifest includes exactly 17 bottle and 17 medallion taste assets', () => {
     const bottles = manifest.assets.filter((asset) => asset.category === 'taste');
     const medallions = manifest.assets.filter((asset) => asset.category === 'taste-medallion');
 
-    expect(bottles).toHaveLength(14);
-    expect(medallions).toHaveLength(14);
-    expect(manifest.assets).toHaveLength(40);
+    expect(bottles).toHaveLength(17);
+    expect(medallions).toHaveLength(17);
+    expect(manifest.assets).toHaveLength(46);
   });
 
   it('resolves logo paths with corrected SVG aspect', () => {
