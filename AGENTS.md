@@ -15,7 +15,7 @@
 | mrTarget | main |
 | versionFormat | semver in package.json; emitted to dist/version.json and __APP_VERSION__ |
 | workspace | `c:\viwa` |
-| agentRules | `c:\viwa\.cursor\rules\` (общие правила и скиллы — не дублировать в репозитории) |
+| agentRules | `c:\viwa\.agents\` (общие правила и скиллы для Cursor и Claude Code — не дублировать в репозитории) |
 
 > **Transitional note (folder cutover task-11):** на этой машине каталог может ещё называться `c:\wiva\wiva-client-web-app`. Целевой workspace — `c:\viwa\viwa-client-web-app`. GitHub remote после rename — `metaldeth/viwa-client-web-app`.
 
@@ -25,7 +25,7 @@
 - **Modules on viwa-telemetry:** `authModule`, `loyaltyModule` (client methods), `billingModule`, `publicModule` → `${viwaTelemetryApiUrl}/client/*` or `/public/*`.
 - **Legacy URLs** (`loyaltyBaseUrl`, `billingBaseUrl` in `baseUrlFront.ts`) remain for **dashboard/admin** flows only (`fetchClientsList`, `fetchWaterHistoryList`); not used by `/m/:machineSerial/*` routes.
 - Legacy backend URLs and gateway route ids (`ishaker.ru`, Telegram bot usernames) are kept when they point to real services — do not rename runtime paths without a coordinated backend change.
-- Agent rules/skills: only `c:\viwa\.cursor` (open Cursor from workspace root). Do not add a nested project `.cursor/` or copy foreign rules into this repo.
+- Agent rules/skills: only `c:\viwa\.agents` (open Cursor / Claude Code from workspace root). Do not add a nested project `.cursor/` / `.claude/` or copy foreign rules into this repo.
 - Telemetry dashboard (separate repo): `c:\viwa\viwa-telemetry\AGENTS.md`.
 
 ## Client web routes
