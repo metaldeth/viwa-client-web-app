@@ -214,7 +214,7 @@ No fictitious «website-machine» serial.
 
 ### SSH
 
-- Canonical alias: **`wiva-server`** (`viwa-server` **does not resolve** on dev PC).
+- Canonical alias: **`viwa-server`**.
 
 ### Operational reference
 

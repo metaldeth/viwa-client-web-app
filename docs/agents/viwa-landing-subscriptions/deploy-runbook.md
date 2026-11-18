@@ -17,17 +17,16 @@
 
 | Item | Value |
 |------|-------|
-| **Canonical alias (this dev machine)** | **`wiva-server`** |
-| **Do not use** | `viwa-server` — **does not resolve** on this PC (`Could not resolve hostname`) |
+| **Canonical alias** | **`viwa-server`** |
 | Host | `194.67.74.147` |
 | User | `root` |
 | Identity | `%USERPROFILE%\.ssh\id_ed25519` |
-| Full telemetry server reference | `viwa-telemetry/docs/deployment/server.md` (alias there may say `viwa-server`; on deploy use **`wiva-server`**) |
+| Full telemetry server reference | `viwa-telemetry/docs/deployment/server.md` |
 
 Connect:
 
 ```powershell
-ssh wiva-server
+ssh viwa-server
 ```
 
 ---
@@ -113,7 +112,7 @@ powershell -File scripts/verify-assets-idempotent.ps1
 
 ---
 
-## Production topology (validated 2026-07-29 via `ssh wiva-server`)
+## Production topology (validated 2026-07-29 via `ssh viwa-server`)
 
 | Hostname | nginx `root` / target | Release layout | Process / owner |
 |----------|----------------------|----------------|-----------------|
@@ -178,7 +177,7 @@ Disk / — ~22% used (~28G VPS)
 Run on server **before** switching symlink and **before** `npx prisma migrate deploy` for migration `20260729120000_monthly_subscription_and_registration_source` (and any newer pending migrations).
 
 ```bash
-ssh wiva-server
+ssh viwa-server
 
 TS=$(date +%Y%m%d-%H%M%S)
 BACKUP_DIR=/root/backups/viwa-landing-subscriptions
@@ -210,7 +209,7 @@ systemctl start viwa-telemetry-api
 ### Site static backup (mandatory before site deploy)
 
 ```bash
-ssh wiva-server
+ssh viwa-server
 
 TS=$(date +%Y%m%d-%H%M%S)
 BACKUP_ROOT=/var/backups/vitamin-water-ru
@@ -255,19 +254,19 @@ From local repo root after build (example — adjust paths to your rsync/scp too
 
 ```powershell
 $RELEASE = "20260729-1430-$(git rev-parse --short HEAD)"  # example pattern
-scp -r . wiva-server:/opt/viwa-telemetry/releases/$RELEASE/
+scp -r . viwa-server:/opt/viwa-telemetry/releases/$RELEASE/
 ```
 
 Or rsync excluding `.git`:
 
 ```powershell
-rsync -av --delete --exclude .git --exclude node_modules ./ wiva-server:/opt/viwa-telemetry/releases/$RELEASE/
+rsync -av --delete --exclude .git --exclude node_modules ./ viwa-server:/opt/viwa-telemetry/releases/$RELEASE/
 ```
 
 On server, install deps and build if artifact is source tree:
 
 ```bash
-ssh wiva-server
+ssh viwa-server
 
 RELEASE=/opt/viwa-telemetry/releases/<releaseId>
 cd "$RELEASE"
@@ -342,7 +341,7 @@ npm run build
 
 ```powershell
 $TS = Get-Date -Format "yyyyMMddHHmmss"
-scp -r dist/* wiva-server:/opt/viwa-client-web-app/releases/$TS/
+scp -r dist/* viwa-server:/opt/viwa-client-web-app/releases/$TS/
 ```
 
 On server:
@@ -391,7 +390,7 @@ STAGING=/var/www/vitamin-water-ru-staging-${TS}
 DOCROOT=/var/www/vitamin-water-ru
 
 mkdir -p "$STAGING"
-# From dev machine: rsync -av ./ wiva-server:$STAGING/
+# From dev machine: rsync -av ./ viwa-server:$STAGING/
 # Include index.html, css/, js/, assets/, icons/, legacy pages
 
 chown -R www-data:www-data "$STAGING"

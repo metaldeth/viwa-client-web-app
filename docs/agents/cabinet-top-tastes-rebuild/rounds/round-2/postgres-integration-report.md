@@ -1,4 +1,4 @@
-﻿# Round 2 — PostgreSQL integration gate (wiva-server)
+﻿# Round 2 — PostgreSQL integration gate (viwa-server)
 
 **Date:** 2026-07-29  
 **Repo under test:** `C:\wiva\viwa-telemetry` (uncommitted local tree packaged)  
@@ -9,7 +9,7 @@
 
 | Item | Value |
 |------|--------|
-| Host | `wiva-server` (194.67.74.147) |
+| Host | `viwa-server` (194.67.74.147) |
 | Node | v22.22.1 |
 | PostgreSQL | 18.4, bound `127.0.0.1:5432` |
 | `NODE_ENV` | `test` |

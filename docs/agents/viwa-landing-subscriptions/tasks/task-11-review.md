@@ -30,7 +30,7 @@
 | Service restart / smoke / rollback | ✅ | `systemctl restart viwa-telemetry-api`; per-layer smoke curls; rollback table + PG restore |
 | Site atomic swap | ✅ | staging → `mv` `.prev-${TS}` → live; forbids `rsync --delete` into docroot |
 | No Docker | ✅ | Explicit ban; topology = static + symlinks + systemd |
-| Correct **`wiva-server`** alias | ✅ | Canonical everywhere; `viwa-server` marked **does not resolve**; cross-ref to server.md |
+| Correct **`viwa-server`** alias | ✅ | Canonical alias `viwa-server`; cross-ref to server.md |
 | No secrets in git | ✅ | `<password>` placeholder only; admin creds “secure store”; api.env not in git |
 | S1–S8 honest | ✅ | S3/S7 manual or payment-dependent; **S8** explicitly requires real machine |
 | B-17 / B-18 honest | ✅ | Deferred pre-deploy; post-deploy required; **cannot fabricate** without admin DB + hardware |
@@ -41,7 +41,7 @@
 
 | Criterion | Status |
 |-----------|--------|
-| `deploy-runbook.md`: SSH `wiva-server`, paths, ordering, backup/swap | ✅ |
+| `deploy-runbook.md`: SSH `viwa-server`, paths, ordering, backup/swap | ✅ |
 | Pre-deploy: Wave 1, task-10 browser pass, user confirmation | ✅ Gates A–E |
 | Rollback per surface; site <2 min path | ✅ (minor rollback label drift — see 🟡) |
 | No auto-deploy; `/task-completion` owns deploy | ✅ |
@@ -85,7 +85,7 @@
 - [`deploy-runbook.md:254-257`] Prefer rsync exclude block as **primary** upload path; demote full-tree `scp -r .` or add “ensure no node_modules” warning.
 - [`deploy-runbook.md:348-353`] Client `PREV=$(readlink -f ...)` captured but rollback section expects operator to remember `<prevTS>` — link to `PREV` variable in rollback table.
 - [`deploy-runbook.md:320-322`] Disk cleanup references `server.md` but defers full script — acceptable; ensure `/task-completion` agent reads server.md § Release disk cleanup.
-- [`viwa-telemetry/docs/deployment/server.md:3,17`] Still canonical `viwa-server`; runbook warning sufficient for this PC — optional upstream note in server.md “dev machine may use `wiva-server`”.
+- [`viwa-telemetry/docs/deployment/server.md`] Canonical alias `viwa-server`.
 
 ### Новые паттерны
 
@@ -114,7 +114,7 @@
 | Browser gate numbers match `browser-test-report.md` reference | ✅ (36 PASS / 0 FAIL / 2 deferred) |
 | Migration name `20260729120000_monthly_subscription_and_registration_source` | ✅ exists in repo |
 | Docker ban consistent | ✅ |
-| `wiva-server` alias consistent in session docs | ✅ |
+| `viwa-server` alias consistent in session docs | ✅ |
 
 ### S1–S8 / B-17 / B-18 honesty audit
 
@@ -197,7 +197,7 @@
     "Optional: document client release file ownership after scp"
   ],
   "observedTopologyVerified": {
-    "sshAlias": "wiva-server",
+    "sshAlias": "viwa-server",
     "telemetryCurrent": "202607291138-662322e",
     "clientCurrent": "20260728113442",
     "siteDocroot": "/var/www/vitamin-water-ru",

@@ -23,7 +23,7 @@
 1. **Contract-first + telemetry gate:** client/site **не подключают live public API** до закрытия Wave 1 (task-03 CORS + public tiers/tastes стабильны; task-04 auth/profile).
 2. **Canon §0:** `entry=website`, `registrationHint`, `registrationSource` только в response; см. task-01.
 3. **Параллелизация:** после Wave 1 — client (task-05/06), site (task-07), parent image gen — **параллельно**; integration — task-09.
-4. **Deploy:** task-11 → **`deploy-runbook.md`** (ordering telemetry→client→site, M1 PG dump, S1–S8, rollback, `wiva-server` alias); **commit/push/deploy** — только `/task-completion` после all gates; **production deploy explicitly authorized** пользователем (2026-07-29). **CI monitoring** (`/ci-cd-status`) — только по отдельному запросу.
+4. **Deploy:** task-11 → **`deploy-runbook.md`** (ordering telemetry→client→site, M1 PG dump, S1–S8, rollback, `viwa-server` alias); **commit/push/deploy** — только `/task-completion` после all gates; **production deploy explicitly authorized** пользователем (2026-07-29). **CI monitoring** (`/ci-cd-status`) — только по отдельному запросу.
 5. **Mobile landing parity gate:** лендинг обязан быть полноценным на mobile (`360×800`, `390×844`, `430×932`), не desktop-only; owner polish — **task-09**; formal browser gate — **task-10**.
 6. **Docker:** все задачи — **запрет** изменений Docker/compose файлов.
 

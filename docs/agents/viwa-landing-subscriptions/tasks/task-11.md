@@ -28,7 +28,7 @@
 ```
 1. viwa-telemetry (tl.vitamin-water.ru + API)
    - Local: lint, typecheck, test, build
-   - Server (wiva-server): releases/{gitSha}, prisma migrate deploy, symlink current, systemctl restart viwa-telemetry-api
+   - Server (viwa-server): releases/{gitSha}, prisma migrate deploy, symlink current, systemctl restart viwa-telemetry-api
    - Smoke: GET /public/subscription-levels (2 items), admin login
 
 2. viwa-client-web-app (cabinet.vitamin-water.ru)
@@ -66,7 +66,7 @@
 
 ## Acceptance
 
-- [ ] `deploy-runbook.md` documents SSH alias `wiva-server`, paths, ordering, backup/swap
+- [ ] `deploy-runbook.md` documents SSH alias `viwa-server`, paths, ordering, backup/swap
 - [ ] Pre-deploy checklist: Wave 1 gate, task-10 browser pass, user confirmation
 - [ ] Rollback per surface documented (<2 min site rollback path)
 - [ ] Explicit note: **no auto-deploy**; task-completion owns commit/push/deploy

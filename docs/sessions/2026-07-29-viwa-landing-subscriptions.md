@@ -5,7 +5,7 @@
 - **viwa-telemetry** (`main` `84a96fc`, v0.10.6): monthly subscription 12/18 L, public tiers/tastes API, CORS, `registrationSource`, favorites, admin breakdown, migration applied on production.
 - **viwa-client-web-app** (`dev` `3cef6b9`, v0.1.1): concept-16 cabinet redesign, `/register` `/auth` `/home`, serial flows, locale 47 keys, session docs + browser screenshots.
 - **viwa-site** (`master` `4fe1298`, local): VIWA responsive landing, live API integration, 14 flavors, canonical no-droplet logo.
-- **Production deploy** (ordered): telemetry → client → site via `ssh wiva-server`.
+- **Production deploy** (ordered): telemetry → client → site via `ssh viwa-server`.
 - **TEMP cleanup:** removed gate runner/scenarios JSON; preserved permanent browser report and screenshots.
 
 ## Decisions

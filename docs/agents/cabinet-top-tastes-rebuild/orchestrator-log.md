@@ -67,7 +67,7 @@
 | T-C1 fix verification | done | Create-before-debit, outer P2002, post-lock idempotency — approved |
 | Regression scan | done | Migration, top order, 410, offline push — no regressions |
 | Unit tests | done | 32 passed; typecheck exit 0 |
-| DB integration gate | **closed** | strict `client-api` 15/15 on wiva-server (`20260729225815`); combined 17/17 incl. concurrency |
+| DB integration gate | **closed** | strict `client-api` 15/15 on viwa-server (`20260729225815`); combined 17/17 incl. concurrency |
 | Deliverable | done | `rounds/round-2/telemetry-review.md` |
 
 **hasCriticalIssues:** `true` (T-C2 DB gate, T-C3 ops gate — no code blockers)
@@ -240,7 +240,7 @@
 
 | Step | Status | Notes |
 |------|--------|-------|
-| Isolated temp DB on wiva-server | done | `viwa_top3_test_20260729225124`, localhost PG only |
+| Isolated temp DB on viwa-server | done | `viwa_top3_test_20260729225124`, localhost PG only |
 | `prisma migrate deploy` (25 migrations) | PASS | includes `client_taste_pour_stats` |
 | Backfill idempotency + TOP-3 ordering | PASS | 5 keys, 1100 ml, EXPLAIN ~0.062 ms |
 | `loyalty-domain-pour-concurrency.spec.ts` | PASS | replay + stat increment (2 tests) |

@@ -23,7 +23,7 @@ Multi-repo фича: editorial landing (concept-16) на `vitamin-water.ru`, о�
 | 5 | Подписка network-wide (as-is); любимые вкусы — до 3 из canonical 14 |
 | 6 | Split landing: static site + **deep-link / mock preview** (iframe не primary) |
 | 7 | Image assets — manifest от parent-агента; developer подключает по контракту |
-| 8 | Deploy: telemetry → client → site; paths confirmed (`wiva-server`, docroots §8); smoke + rollback без Docker |
+| 8 | Deploy: telemetry → client → site; paths confirmed (`viwa-server`, docroots §8); smoke + rollback без Docker |
 | 9 | Локальные uncommitted analytics UI changes в telemetry — **не откатывать**, работать вокруг |
 | 10 | Touchpoints + волны параллельной разработки — см. §10 |
 
@@ -672,7 +672,7 @@ Both repos receive **same files** (copy or symlink at deploy); canonical manifes
 
 ## Deployment topology & ordering (§8)
 
-> **Подтверждено read-only inspection (2026-07-29).** SSH alias на dev-машине: **`wiva-server`**. Docker **не используется** для deploy этих поверхностей.  
+> **Подтверждено read-only inspection (2026-07-29).** SSH alias на dev-машине: **`viwa-server`**. Docker **не используется** для deploy этих поверхностей.  
 > **Operational runbook (task-11):** `deploy-runbook.md` — preflight gates, M1 PG dump, ordered deploy, S1–S8, B-17/B-18 post-deploy, rollback; commit/push/deploy via `/task-completion` only.
 
 ### Production topology
@@ -683,7 +683,7 @@ Both repos receive **same files** (copy or symlink at deploy); canonical manifes
 | **`cabinet.vitamin-water.ru`** | `/opt/viwa-client-web-app/current` | `/opt/viwa-client-web-app/releases/{timestamp}` → symlink `current` | deploy user → readable by nginx | Static SPA only; REST/WS на `tl.vitamin-water.ru` |
 | **`vitamin-water.ru`** | `/var/www/vitamin-water-ru` | In-place static tree (see release process below) | `www-data:www-data` | Fetch public API на `https://tl.vitamin-water.ru/api/v1` (browser CORS) |
 
-**SSH:** `ssh wiva-server` (alias на этой машине; в `viwa-telemetry/docs/deployment/server.md` может быть указан `viwa-server` — на deploy использовать фактический alias).
+**SSH:** `ssh viwa-server`.
 
 **Env (client build):** `VITE_VIWA_TELEMETRY_API_URL=https://tl.vitamin-water.ru/api/v1`
 
@@ -731,7 +731,7 @@ Docroot: **`/var/www/vitamin-water-ru`**. Тип: plain static files, owner **`w
 #### Pre-deploy backup (обязательно)
 
 ```bash
-ssh wiva-server
+ssh viwa-server
 TS=$(date +%Y%m%d-%H%M%S)
 BACKUP_ROOT=/var/backups/vitamin-water-ru
 sudo mkdir -p "$BACKUP_ROOT"
@@ -751,7 +751,7 @@ DOCROOT=/var/www/vitamin-water-ru
 
 # 1. Upload new tree to staging (rsync from local viwa-site build)
 sudo mkdir -p "$STAGING"
-# rsync -av --delete ./viwa-site/ wiva-server:"$STAGING/"
+# rsync -av --delete ./viwa-site/ viwa-server:"$STAGING/"
 
 # 2. Permissions
 sudo chown -R www-data:www-data "$STAGING"

@@ -42,7 +42,7 @@
 
 - Триггер: снятие блокера read-only inspection production paths
 - Обновлён: `architecture.md` v1.1
-- **Подтверждённые пути:** SSH `wiva-server`; site docroot `/var/www/vitamin-water-ru` (www-data); cabinet `/opt/viwa-client-web-app/current` (releases/{timestamp}); telemetry web `/opt/viwa-telemetry/current/apps/web/dist` (releases/{gitSha}, owner viwa); `/api/` → 127.0.0.1:3000
+- **Подтверждённые пути:** SSH `viwa-server`; site docroot `/var/www/vitamin-water-ru` (www-data); cabinet `/opt/viwa-client-web-app/current` (releases/{timestamp}); telemetry web `/opt/viwa-telemetry/current/apps/web/dist` (releases/{gitSha}, owner viwa); `/api/` → 127.0.0.1:3000
 - **Добавлено:** static site backup (tar pre-deploy) + atomic staging swap + rollback (.prev / tar restore); без Docker
 - **blockingQuestions:** [] — блокер docroot снят
 - **Следующий шаг:** planner
@@ -625,10 +625,10 @@
 - Субагент: developer-complex
 - Repo: docs (`viwa-client-web-app/docs/agents/viwa-landing-subscriptions/`)
 - **Сделано:**
-  - **NEW** `deploy-runbook.md` — validated topology (`ssh wiva-server`; `viwa-server` does not resolve); preflight gates A–E; M1 `pg_dump` before `prisma migrate deploy`; ordered deploy telemetry → client → site; asset pipeline lock + canonical logo hash (no droplet); smoke S1–S8; rollback <2 min site; post-deploy B-17/B-18 (cannot fabricate without admin DB + physical machine)
+  - **NEW** `deploy-runbook.md` — validated topology (`ssh viwa-server`); preflight gates A–E; M1 `pg_dump` before `prisma migrate deploy`; ordered deploy telemetry → client → site; asset pipeline lock + canonical logo hash (no droplet); smoke S1–S8; rollback <2 min site; post-deploy B-17/B-18 (cannot fabricate without admin DB + physical machine)
   - Cross-links: `plan.md`, `architecture.md` §8
 - **Final gates incorporated:** browser **36 PASS / 0 FAIL / 2 deferred**; telemetry **335 API + 502 web**; client **42** tests; site static-regression PASS
-- **Server verification (read-only):** `wiva-server` — telemetry `current` → `202607291138-662322e`; client → `20260728113442`; site `/var/www/vitamin-water-ru`; nginx roots match architecture; `viwa-telemetry-api` active
+- **Server verification (read-only):** `viwa-server` — telemetry `current` → `202607291138-662322e`; client → `20260728113442`; site `/var/www/vitamin-water-ru`; nginx roots match architecture; `viwa-telemetry-api` active
 - **Не в scope:** commit/push/deploy/version bump (→ `/task-completion`); Docker; SSH apply/migration on production
 - **Следующий шаг:** `/task-completion` — version bump, conventional commits (3 repos), push, ordered deploy per runbook; optional B-17/B-18 manual post-deploy
 
@@ -649,7 +649,7 @@
 - Субагент: code-reviewer-complex → parallel `review-docs`, `review-general`, `review-final` (`composer-2.5-fast`)
 - **Scope:** Review only (no fixes) — `deploy-runbook.md`, `architecture.md` §8, `plan.md` task-11 / Wave 4, cross-ref `viwa-telemetry/docs/deployment/server.md`, observed topology
 - **Артефакт:** `tasks/task-11-review.md` + Strict JSON
-- **Validation:** M1 pg_dump before migrate ✅; symlink `chown -h viwa:viwa` ✅; site atomic swap ✅; no Docker ✅; **`wiva-server`** alias ✅ (`viwa-server` does not resolve); no secrets ✅; S1–S8 / B-17 / B-18 honest ✅
+- **Validation:** M1 pg_dump before migrate ✅; symlink `chown -h viwa:viwa` ✅; site atomic swap ✅; no Docker ✅; **`viwa-server`** alias ✅; no secrets ✅; S1–S8 / B-17 / B-18 honest ✅
 - **hasCriticalIssues:** false
 - **🟡 (non-blocking):** site Step 3 upload comment-only (no paste-ready rsync); architecture §8 vs runbook drift on `VITE_VIWA_TELEMETRY_API_URL` (tl vs cabinet) and telemetry release id pattern; rollback Option A `docroot.failed` vs deploy `.prev-${TS}` naming; mixed sudo vs root-SSH in site backup/swap
 - **Acceptance task-11:** all criteria met (docs gates-only)
@@ -663,7 +663,7 @@
 - **Browser gate (final):** **36 PASS / 0 FAIL / 2 DEFERRED** (B-17 admin WEBSITE attribution, B-18 network pour — post-deploy only)
 - **Verification baseline:** telemetry API **335** pass + **169** skip; web **502** pass; client **40** Vitest + **2** root alias = **42**; site static-regression + asset idempotent **PASS**
 - **Ключевые решения зафиксированы:** monthly 12/18 L, canon §0 (`entry`/`registrationHint`/`registrationSource=WEBSITE`), serial flows A/B/C, 14 tastes, canonical no-droplet SVG logo, mobile parity viewports
-- **Deploy:** user-authorized 2026-07-29; order telemetry → client → site; M1 pg_dump; SSH **`wiva-server`**
+- **Deploy:** user-authorized 2026-07-29; order telemetry → client → site; M1 pg_dump; SSH **`viwa-server`**
 - **Git facts:** commits/push/deploy — **pending task-completion** (uncommitted changes in 3 repos at summary time)
 - **blockingQuestions:** [] — none for summary; B-17/B-18 require real admin DB + physical machine post-deploy
 - **Следующий шаг:** `/task-completion` on user request
