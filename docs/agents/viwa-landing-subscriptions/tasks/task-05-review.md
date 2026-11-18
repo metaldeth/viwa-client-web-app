@@ -47,7 +47,7 @@
 | **Не** отправлять `registrationSource` | ✅ `authModule.test.ts` |
 | `npm run lint` | 🔴 **7 parsing errors** (test files excluded from tsconfig) |
 | `npm test` CW05 suites | ✅ 14/14 PASS (task-05); 18/18 full suite |
-| `npm run build` | ✅ exit 0 from `wiva-client-web-app` path |
+| `npm run build` | ✅ exit 0 from `viwa-client-web-app` path |
 
 ---
 
@@ -224,7 +224,7 @@
 ```text
 npm run lint  → exit 1 (7 errors: test files not in tsconfig project)
 npm test      → 18/18 PASS
-npm run build → exit 0 (wiva-client-web-app path)
+npm run build → exit 0 (viwa-client-web-app path)
 ```
 
 Test-report claim «lint exit 0» — **устарел** относительно текущего diff.
@@ -317,10 +317,10 @@ export const getMachineEntryRedirectPath = (authed: boolean): string =>
 |----------|--------|
 | CW05-1 … CW05-5 | ✅ 24/24 PASS (incl. R2-1…R2-3) |
 | `npm run lint` | ✅ exit 0 |
-| `npm test` | ✅ 24/24 PASS (`C:\wiva\wiva-client-web-app`) |
+| `npm test` | ✅ 24/24 PASS (`C:\viwa\viwa-client-web-app`) |
 | `npm run build` | ✅ exit 0 |
 
-**Env note:** `npm test` из `c:\wiva\viwa-client-web-app` может fail suite `useMachineSerialValidation.test.tsx` (path alias) — pre-existing Windows casing; canonical path `wiva-client-web-app`.
+**Env note:** `npm test` из `c:\viwa\viwa-client-web-app` может fail suite `useMachineSerialValidation.test.tsx` (path alias) — pre-existing Windows casing; canonical path `viwa-client-web-app`.
 
 ### Оставшиеся 🟡 (не blockers, из круга 1)
 
@@ -335,7 +335,7 @@ export const getMachineEntryRedirectPath = (authed: boolean): string =>
 
 ```text
 npm run lint  → exit 0 (0 errors, 23 warnings)
-npm test      → 24/24 PASS (wiva-client-web-app path)
+npm test      → 24/24 PASS (viwa-client-web-app path)
 npm run build → exit 0
 ```
 

@@ -32,14 +32,14 @@
 | Site `static-regression-check.ps1` | PASS |
 | Client `npm run lint` | PASS — 0 errors (23 pre-existing warnings) |
 | Client `npm run locale:verify` | PASS — 47 keys |
-| Client `npm test` | PASS — 40/40 (run from `c:\wiva\wiva-client-web-app` literal path) |
+| Client `npm test` | PASS — 40/40 (run from `c:\viwa\viwa-client-web-app` literal path) |
 | Client `npm run build` | PASS — exit 0; `dist/assets/viwa/**` — 37 files |
 
 ## Notes
 
 - Originals remain outside repo (`C:\Users\metal\.cursor\projects\c-wiva\assets\`).
 - Re-run pipeline: `python viwa-site/scripts/process-viwa-assets.py`.
-- Tests/build from junction path `viwa-client-web-app` can fail path resolution; use literal `wiva-client-web-app` on this machine.
+- Tests/build from junction path `viwa-client-web-app` can fail path resolution; use literal `viwa-client-web-app` on this machine.
 
 ## Not in scope
 

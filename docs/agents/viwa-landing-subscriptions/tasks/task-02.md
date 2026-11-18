@@ -49,7 +49,7 @@ Prisma migration `20260729_monthly_subscription_and_registration_source`: rename
 ## Tests / build
 
 ```powershell
-cd c:\wiva\viwa-telemetry
+cd c:\viwa\viwa-telemetry
 npm run lint
 npm run typecheck
 npm test -- subscription-level.service.spec loyalty-domain.service.spec

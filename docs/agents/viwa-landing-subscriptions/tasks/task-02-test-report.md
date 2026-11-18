@@ -26,7 +26,7 @@
 ## Verification commands
 
 ```powershell
-cd c:\wiva\viwa-telemetry
+cd c:\viwa\viwa-telemetry
 npm run lint          # exit 0 (web: 2 pre-existing warnings)
 npm run typecheck     # exit 0
 npx jest subscription-level.service.spec loyalty-domain.service.spec --runInBand  # 18/18 PASS
@@ -36,7 +36,7 @@ npm run build         # exit 0
 ## Migration
 
 ```powershell
-cd c:\wiva\viwa-telemetry\apps\api
+cd c:\viwa\viwa-telemetry\apps\api
 npx prisma migrate dev --name 20260729120000_monthly_subscription_and_registration_source
 ```
 

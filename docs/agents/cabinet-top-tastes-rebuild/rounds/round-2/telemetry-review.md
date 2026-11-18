@@ -1,7 +1,7 @@
 # Telemetry Backend Review — Cabinet TOP-3 (Round 2 of 5)
 
 **Date:** 2026-07-29  
-**Repo:** `viwa-telemetry` (`C:\wiva\viwa-telemetry`)  
+**Repo:** `viwa-telemetry` (`C:\viwa\viwa-telemetry`)  
 **Scope:** Re-review T-C1 fix + full current diff (computed TOP-3, migration, 410 PUT, WS/offline push)  
 **Prior:** `rounds/round-1/telemetry-review.md`, `rounds/round-1/telemetry-review-resolution.md`  
 **Mode:** Read-only — no code edits

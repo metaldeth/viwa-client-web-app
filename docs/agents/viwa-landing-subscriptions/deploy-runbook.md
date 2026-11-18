@@ -100,7 +100,7 @@ https://tl.vitamin-water.ru/api/v1
 Regenerate assets only via:
 
 ```powershell
-cd c:\wiva\viwa-site
+cd c:\viwa\viwa-site
 powershell -File scripts/verify-assets-idempotent.ps1
 ```
 
@@ -235,7 +235,7 @@ Per `viwa-telemetry/docs/deployment/server.md`:
 ### Local (dev machine)
 
 ```powershell
-cd c:\wiva\viwa-telemetry
+cd c:\viwa\viwa-telemetry
 npm run lint
 npm run typecheck
 npm test
@@ -329,7 +329,7 @@ Per `docs/deployment/server.md` — keep **`current` + 1 previous** release unde
 ### Local
 
 ```powershell
-cd c:\wiva\viwa-client-web-app
+cd c:\viwa\viwa-client-web-app
 npm run lint
 npm run locale:verify
 npm test
@@ -367,7 +367,7 @@ Verify mirrored assets under `current/assets/viwa/` including logo SVG hash if n
 ### Local
 
 ```powershell
-cd c:\wiva\viwa-site
+cd c:\viwa\viwa-site
 powershell -File scripts/verify-assets-idempotent.ps1
 powershell -File scripts/static-regression-check.ps1
 # Confirm js/config.js: useMockApi false, apiBaseUrl https://tl.vitamin-water.ru/api/v1

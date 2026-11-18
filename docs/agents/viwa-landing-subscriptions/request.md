@@ -45,9 +45,9 @@
 
 | Репозиторий | Назначение | AGENTS.md |
 |-------------|------------|-----------|
-| `c:\wiva\viwa-site` | Статический маркетинговый сайт **vitamin-water.ru** | отсутствует; README — static HTML/CSS/JS |
-| `c:\wiva\viwa-client-web-app` | React/Vite кабинет **cabinet.vitamin-water.ru** | build `npm run build`, lint `npm run lint`, test `npm test`, target `main` |
-| `c:\wiva\viwa-telemetry` | NestJS/Prisma/React телеметрия + loyalty API | lint/typecheck/test/build, target `main`, deploy runbook `docs/deployment/server.md` |
+| `c:\viwa\viwa-site` | Статический маркетинговый сайт **vitamin-water.ru** | отсутствует; README — static HTML/CSS/JS |
+| `c:\viwa\viwa-client-web-app` | React/Vite кабинет **cabinet.vitamin-water.ru** | build `npm run build`, lint `npm run lint`, test `npm test`, target `main` |
+| `c:\viwa\viwa-telemetry` | NestJS/Prisma/React телеметрия + loyalty API | lint/typecheck/test/build, target `main`, deploy runbook `docs/deployment/server.md` |
 
 ## Референсы
 
@@ -66,4 +66,4 @@
 
 ## Хост артефактов complex-сессии
 
-`c:\wiva\viwa-client-web-app\docs\agents\viwa-landing-subscriptions\`
+`c:\viwa\viwa-client-web-app\docs\agents\viwa-landing-subscriptions\`

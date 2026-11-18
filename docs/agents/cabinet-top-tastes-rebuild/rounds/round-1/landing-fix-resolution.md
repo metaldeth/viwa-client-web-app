@@ -1,7 +1,7 @@
 # Landing Round 1 — fix resolution
 
 **Date:** 2026-07-29  
-**Repo:** `c:\wiva\viwa-site`  
+**Repo:** `c:\viwa\viwa-site`  
 **Inputs:** `landing-code-review.md`, `landing-pixel-browser-report.md`, `landing-pixel-browser-results.json`
 
 ## Critical fixes

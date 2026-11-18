@@ -17,7 +17,7 @@
 | workspace | `c:\viwa` |
 | agentRules | `c:\viwa\.agents\` (общие правила и скиллы для Cursor и Claude Code — не дублировать в репозитории) |
 
-> **Transitional note (folder cutover task-11):** на этой машине каталог может ещё называться `c:\wiva\wiva-client-web-app`. Целевой workspace — `c:\viwa\viwa-client-web-app`. GitHub remote после rename — `metaldeth/viwa-client-web-app`.
+> Каталог на этой машине: `c:\viwa\viwa-client-web-app`. GitHub remote — `metaldeth/viwa-client-web-app`.
 
 ## Notes
 

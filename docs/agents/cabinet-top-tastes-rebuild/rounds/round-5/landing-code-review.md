@@ -1,7 +1,7 @@
 # Landing Code Review — viwa-site Bento Rebuild (Round 5 of 5 — Final)
 
 **Date:** 2026-07-29  
-**Repo:** `c:\wiva\viwa-site`  
+**Repo:** `c:\viwa\viwa-site`  
 **Scope:** Independent final code review; recheck Round 4 open findings only (no inherited verdict)  
 **Reference:** 897×867 PNG (`image-6858bf64-d4a3-4c50-9f98-d15528af69cd.png`)  
 **Requirements:** `docs/agents/cabinet-top-tastes-rebuild/task-site-report.md`, `viwa-site/README.md`  

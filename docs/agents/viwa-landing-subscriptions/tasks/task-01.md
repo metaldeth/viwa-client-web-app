@@ -41,7 +41,7 @@
 ## Tests / build
 
 ```powershell
-cd c:\wiva\viwa-telemetry
+cd c:\viwa\viwa-telemetry
 # Docs-only task — проверка ссылок и согласованности с architecture §1–§5
 npm run lint
 npm run typecheck

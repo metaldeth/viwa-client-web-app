@@ -3,7 +3,7 @@
 **Session:** `viwa-landing-subscriptions`  
 **Repo:** `viwa-client-web-app` (branch `dev`, uncommitted)  
 **Task (parent):** [task-10.md](./task-10.md) — formal browser gate B-1…B-18 (all repos)  
-**Infra subtask:** junction `C:\wiva\viwa-client-web-app` → `C:\wiva\wiva-client-web-app` — Vite/Vitest cwd vs realpath mismatch  
+**Infra subtask:** junction `C:\viwa\viwa-client-web-app` → `C:\viwa\viwa-client-web-app` — Vite/Vitest cwd vs realpath mismatch  
 **Test report:** [task-10-test-report.md](./task-10-test-report.md)  
 **Review agents (parallel):** `review-general`, `review-performance`, `review-docs`, `review-final` (`composer-2.5-fast`)
 
@@ -30,7 +30,7 @@
 | Test discovery / Vitest banner used **junction** path (`viwa-*`) | Единый canonical root через `realpathSync.native` от `scripts/` |
 | Config aliases / HTML entry used **target** path (`wiva-*`) | `root` + aliases абсолютные от `projectRoot` |
 | TSX suites failed (mixed module IDs) | 17 files / 40 Vitest tests PASS с обоих cwd |
-| Build emitted invalid chunk `../wiva-client-web-app/index.html` | `dist/index.html` at repo root — PASS |
+| Build emitted invalid chunk `../viwa-client-web-app/index.html` | `dist/index.html` at repo root — PASS |
 
 Hardcoded `viwa-*` / `wiva-*` path strings в scope-файлах: **нет** (filesystem-driven).
 
@@ -58,8 +58,8 @@ Hardcoded `viwa-*` / `wiva-*` path strings в scope-файлах: **нет** (fi
 
 | Check | Path | Result |
 |-------|------|--------|
-| `npm test` | `C:\wiva\viwa-client-web-app` | ✅ Vitest 17/17 files, 40/40; node regression 2/2 |
-| `npm test` | `C:\wiva\wiva-client-web-app` | ✅ Vitest 17/17 files, 40/40; node regression 2/2 |
+| `npm test` | `C:\viwa\viwa-client-web-app` | ✅ Vitest 17/17 files, 40/40; node regression 2/2 |
+| `npm test` | `C:\viwa\viwa-client-web-app` | ✅ Vitest 17/17 files, 40/40; node regression 2/2 |
 | `npm run build` | `viwa-*` | ✅ exit 0; `dist/index.html` |
 | `npm run build` | `wiva-*` | ✅ exit 0; `dist/index.html` |
 | `npm run lint` | `viwa-*` | ✅ exit 0 |

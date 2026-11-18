@@ -245,7 +245,7 @@
 
 ```text
 npm run lint  → exit 0 (0 errors, 23 warnings)
-npm test      → 32/32 PASS (C:\wiva\wiva-client-web-app)
+npm test      → 32/32 PASS (C:\viwa\viwa-client-web-app)
 npm run build → exit 0
 ```
 
@@ -331,7 +331,7 @@ Functional acceptance **mostly closed**; quality gaps before task-09 wire-up. Fi
 
 🔴 **hasCriticalIssues: true** — 5 consolidated blockers (expired renewal UX, GET/WS data race, locale acceptance, keyboard/progressbar a11y, BottomNav SPA reload). Concept-16 UI, monthly progress semantics, API prices, favorites max-3, WS/billing preservation, and task-08/09 scope boundaries are **substantially correct** for Wave 1 mock baseline; developer-complex круг 2 recommended before merge to `dev` and parallel task-08/09.
 
-**Verification:** lint ✅; test 32/32 ✅; build ✅ (`wiva-client-web-app` path).
+**Verification:** lint ✅; test 32/32 ✅; build ✅ (`viwa-client-web-app` path).
 
 ---
 
@@ -463,7 +463,7 @@ console.log(`locale:verify OK — ${REQUIRED_KEYS.length} subscription keys in r
 ```text
 npm run lint         → exit 0 (0 errors, 23 warnings)
 npm run locale:verify → exit 0 — 47 subscription keys ru/en parity
-npm test             → 40/40 PASS (C:\wiva\wiva-client-web-app)
+npm test             → 40/40 PASS (C:\viwa\viwa-client-web-app)
 npm run build        → exit 0
 ```
 

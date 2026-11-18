@@ -29,7 +29,7 @@
 
 ## Git facts
 
-- **repo:** `viwa-client-web-app` (`c:\wiva\viwa-client-web-app`)
+- **repo:** `viwa-client-web-app` (`c:\viwa\viwa-client-web-app`)
 - **branch:** `dev` (up to date with `origin/dev`)
 - **starting commit:** `962ba4e` — `fix: absolute path при повторной отправке OTP и cooldown 30с`
 - **commit:** none — **pending**

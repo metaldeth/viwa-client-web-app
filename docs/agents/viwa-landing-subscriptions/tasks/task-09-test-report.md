@@ -18,7 +18,7 @@
 
 ### Payload tuning
 - Hero/taste `sizes` attributes; lazy below fold; no new runtime deps.
-- `process-viwa-assets.py` — client root resolves `viwa-client-web-app` then `wiva-client-web-app` (removed hardcoded transitional path only).
+- `process-viwa-assets.py` — client root resolves `viwa-client-web-app` then `viwa-client-web-app` (removed hardcoded transitional path only).
 
 ### Pipeline robustness fix (WinError 32 / partial delete)
 
@@ -34,7 +34,7 @@
 ### Logo follow-up blocker fix (18:24 regression)
 
 - **Root cause:** `process-viwa-assets.py` still used legacy `logo-viwa-mark.png` (512×512 droplet raster) and `shutil.rmtree` on regen — overwrote manifests/files, omitting SVG despite prior manual integration.
-- **Fix:** `process_logo_assets()` copies canonical SVG, derives PNG/WebP via resvg from SVG only, writes manifest `svg` @ 277×243; `resolve_client_root()` prefers `viwa-client-web-app` junction (physical `wiva-client-web-app`, no duplicate repo).
+- **Fix:** `process_logo_assets()` copies canonical SVG, derives PNG/WebP via resvg from SVG only, writes manifest `svg` @ 277×243; `resolve_client_root()` prefers `viwa-client-web-app` junction (physical `viwa-client-web-app`, no duplicate repo).
 - **Idempotence gate:** `scripts/verify-assets-idempotent.ps1` — processor ×2 + static-regression ×2 + manifest triple-sync + SVG SHA256 unchanged → **PASS**.
 - **Evidence (2026-07-29):**
   - `Test-Path` site/client SVG/PNG/WebP: all **True**

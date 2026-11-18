@@ -1,7 +1,7 @@
 # Code Review — Cabinet TOP-3 Rebuild (Round 5 of 5 — Final)
 
 **Date:** 2026-07-29  
-**Repo:** `viwa-client-web-app` (`c:\wiva\viwa-client-web-app`)  
+**Repo:** `viwa-client-web-app` (`c:\viwa\viwa-client-web-app`)  
 **Scope:** Independent final code review after Round 4→5 style remediation + parent `titleRow` gap **18px**  
 **Reference:** Concept bento cabinet mock — inner crop **342×780** (outer 390×832, crop x=24..365, y=20..799)  
 **Requirements:** `docs/agents/cabinet-top-tastes-rebuild/task-client-report.md`  

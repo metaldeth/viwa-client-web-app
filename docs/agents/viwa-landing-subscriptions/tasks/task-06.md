@@ -50,7 +50,7 @@
 ## Tests / build
 
 ```powershell
-cd c:\wiva\viwa-client-web-app
+cd c:\viwa\viwa-client-web-app
 npm run lint
 npm run locale:sync
 npm run locale:sort

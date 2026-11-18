@@ -32,7 +32,7 @@
 
 ## Git facts
 
-- **repo:** `viwa-client-web-app` (`c:\wiva\viwa-client-web-app`)
+- **repo:** `viwa-client-web-app` (`c:\viwa\viwa-client-web-app`)
 - **branch:** `dev` (tracking `origin/dev`)
 - **HEAD:** `d7f62ce` — `feat: добавить плавный стартовый экран кабинета` (unrelated)
 - **task commits:** `e352d4b` (initial guard), `283ee50` (disabled weaker tiers)

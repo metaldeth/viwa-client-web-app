@@ -55,7 +55,7 @@
 ## Tests / build
 
 ```powershell
-cd c:\wiva\viwa-client-web-app
+cd c:\viwa\viwa-client-web-app
 npm run lint
 npm test -- landingEntry auth SerialCapture
 npm run build

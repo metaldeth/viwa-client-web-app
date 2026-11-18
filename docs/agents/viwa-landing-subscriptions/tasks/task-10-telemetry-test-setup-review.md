@@ -3,7 +3,7 @@
 **Session:** `viwa-landing-subscriptions`  
 **Repo:** `viwa-telemetry` (`apps/web`, branch `main`, uncommitted)  
 **Task (parent):** [task-10.md](./task-10.md) — formal browser gate B-1…B-18 + all-repo build gates  
-**Infra subtask:** `@viwa/web` Vitest + `@testing-library/jest-dom` setup; junction `C:\wiva\viwa-telemetry` ↔ `C:\wiva\wiva-telemetry`  
+**Infra subtask:** `@viwa/web` Vitest + `@testing-library/jest-dom` setup; junction `C:\viwa\viwa-telemetry` ↔ `C:\viwa\viwa-telemetry`  
 **Test report:** [task-10-test-report.md](./task-10-test-report.md) § Subtask: `viwa-telemetry`  
 **Review agents (parallel):** `review-general`, `review-performance`, `review-docs`, `review-final` (`composer-2.5-fast`)
 
@@ -60,7 +60,7 @@ Hardcoded `viwa-*` / `wiva-*` path strings в scope-файлах: **нет** (fi
 | `npm run build` | ✅ exit 0 |
 | Test files on disk (`apps/web/src/**/*.{test,spec}.{ts,tsx}`) | ✅ **66** (matches Vitest banner) |
 
-**Not re-run in this review:** junction-path smoke from `C:\wiva\wiva-telemetry` cwd (🟡 gap in test report; fix design supports both via `realpathSync`).
+**Not re-run in this review:** junction-path smoke from `C:\viwa\viwa-telemetry` cwd (🟡 gap in test report; fix design supports both via `realpathSync`).
 
 ---
 

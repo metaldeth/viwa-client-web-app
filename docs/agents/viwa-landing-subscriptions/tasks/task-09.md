@@ -73,13 +73,13 @@ Desktop `1440×900` split layout remains required (B-1).
 
 ```powershell
 # All repos green
-cd c:\wiva\viwa-telemetry
+cd c:\viwa\viwa-telemetry
 npm run lint; npm run typecheck; npm test; npm run build
 
-cd c:\wiva\viwa-client-web-app
+cd c:\viwa\viwa-client-web-app
 npm run lint; npm test; npm run build
 
-cd c:\wiva\viwa-site
+cd c:\viwa\viwa-site
 python -m http.server 8080
 # Manual: flows A–F + mobile parity spot-check 360/390/430 widths
 ```

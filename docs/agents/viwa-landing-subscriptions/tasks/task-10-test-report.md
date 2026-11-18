@@ -1,20 +1,20 @@
 # task-10-test-report (path alias / cutover fix)
 
-**Task:** task-10 — infra bugfix (Windows junction `viwa-client-web-app` → `wiva-client-web-app`)  
+**Task:** task-10 — infra bugfix (Windows junction `viwa-client-web-app` → `viwa-client-web-app`)  
 **Repo:** `viwa-client-web-app`  
 **Date:** 2026-07-29  
 **Scope:** Config-only; no product/UI changes; no commit/push/deploy
 
 ## Root cause
 
-On this machine `C:\wiva\viwa-client-web-app` is a **junction** to `C:\wiva\wiva-client-web-app`. Vite/Vitest used `path.dirname(fileURLToPath(import.meta.url))` and `process.cwd()` inconsistently:
+On this machine `C:\viwa\viwa-client-web-app` is a **junction** to `C:\viwa\viwa-client-web-app`. Vite/Vitest used `path.dirname(fileURLToPath(import.meta.url))` and `process.cwd()` inconsistently:
 
 - Test discovery and Vitest banner used the **junction** path (`viwa-*`).
 - Config aliases, HTML entry, and module resolution used the **target** path (`wiva-*`).
 - TSX suites (jsdom + `@vitejs/plugin-react-swc`) failed with mixed IDs (`viwa-*` vs `wiva-*`).
-- Production build emitted invalid Rollup chunk name `../wiva-client-web-app/index.html`.
+- Production build emitted invalid Rollup chunk name `../viwa-client-web-app/index.html`.
 
-Prior task-05 reports documented the workaround (“run from `wiva-client-web-app`”) but did not canonicalize roots.
+Prior task-05 reports documented the workaround (“run from `viwa-client-web-app`”) but did not canonicalize roots.
 
 ## Fix
 
@@ -32,16 +32,16 @@ No hardcoded `viwa-*` or `wiva-*` path strings — resolution is filesystem-driv
 
 ## Verification (2026-07-29)
 
-### Canonical path `C:\wiva\viwa-client-web-app`
+### Canonical path `C:\viwa\viwa-client-web-app`
 
 | Command | Result |
 |---------|--------|
 | `npm test` | **PASS** — vitest 17 files / 40 tests; node regression 2/2 |
 | `npm run lint` | **PASS** — exit 0 (23 pre-existing warnings) |
 | `npm run locale:verify` | **PASS** — 47 keys ru/en parity |
-| `npm run build` | **PASS** — exit 0; no invalid `../wiva-client-web-app/index.html` chunk |
+| `npm run build` | **PASS** — exit 0; no invalid `../viwa-client-web-app/index.html` chunk |
 
-### Legacy alias smoke `C:\wiva\wiva-client-web-app`
+### Legacy alias smoke `C:\viwa\viwa-client-web-app`
 
 | Command | Result |
 |---------|--------|
@@ -81,7 +81,7 @@ No hardcoded `viwa-*` or `wiva-*` path strings — resolution is filesystem-driv
 ### Root cause
 
 1. **`@testing-library/jest-dom` matchers were not attached to the same `expect` instance used by tests.** `setup.ts` imported `expect` from a separately resolved `vitest` module while tests with `globals: true` used Vitest's global `expect`.
-2. **Duplicate repo paths on Windows (`C:\wiva\viwa-telemetry` junction vs `C:\wiva\wiva-telemetry` real path)** each had their own `node_modules`. Running tests from the junction cwd loaded two Vitest instances → suite registration failures (`No test suite found`, `Vitest failed to find the runner`) and missing DOM matchers.
+2. **Duplicate repo paths on Windows (`C:\viwa\viwa-telemetry` junction vs `C:\viwa\viwa-telemetry` real path)** each had their own `node_modules`. Running tests from the junction cwd loaded two Vitest instances → suite registration failures (`No test suite found`, `Vitest failed to find the runner`) and missing DOM matchers.
 
 `@testing-library/jest-dom@6.9.1` was already present; no new dependency required.
 
@@ -99,7 +99,7 @@ No hardcoded `viwa-*` or `wiva-*` path strings — resolution is filesystem-driv
 
 | Command | Exit | Result |
 |---------|------|--------|
-| `npm test -w @viwa/web` (from `C:\wiva\viwa-telemetry`) | 0 | **66 files, 502 tests passed** |
+| `npm test -w @viwa/web` (from `C:\viwa\viwa-telemetry`) | 0 | **66 files, 502 tests passed** |
 | `npm test` (root, api + web) | 0 | API **335 passed** + web **502 passed** |
 | `npm run lint` | 0 | 0 errors (2 pre-existing warnings) |
 | `npm run typecheck` | 0 | OK |

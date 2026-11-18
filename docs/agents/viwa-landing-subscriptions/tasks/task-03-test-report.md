@@ -32,7 +32,7 @@ Additional (non-matrix):
 ## Verification commands
 
 ```powershell
-cd c:\wiva\viwa-telemetry
+cd c:\viwa\viwa-telemetry
 npm run lint          # exit 0 (web: 2 pre-existing warnings)
 npm run typecheck     # exit 0
 cd apps\api

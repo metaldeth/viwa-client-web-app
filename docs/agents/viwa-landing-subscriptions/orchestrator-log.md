@@ -295,7 +295,7 @@
   - Post-first-reg `history.replaceState` → `/home`; serial stripped from URL + `viwa_serial` cleared
   - Returning `/auth` without serial gate; `hasAuthTokens` → auto `/home`; 401 redirect → `/auth`
   - Tests CW05-1…CW05-5; vitest 3.2.4 + `globals: true` (Node 22 fix)
-- **Verification:** lint exit 0; test 18/18 PASS; build exit 0 from `wiva-client-web-app` path
+- **Verification:** lint exit 0; test 18/18 PASS; build exit 0 from `viwa-client-web-app` path
 - **Артефакт:** `tasks/task-05-test-report.md`
 - **Не в scope:** SubscriptionPage UI (task-06), live API gate (task-09), Docker, commit/push
 - **Следующий шаг:** code-review task-05 → task-06 concept-16 UI on routes
@@ -308,7 +308,7 @@
 - Арtefact: `tasks/task-05-review.md`
 - **hasCriticalIssues:** true
 - **Вывод:** CW05-1…CW05-5 и architecture v1.2 §0 routing/hint logic в коде — OK (`registrationHint`, не `registrationSource`; post-reg `/home`; returning `/auth`). **Blockers:** (1) ESLint 7 parsing errors — `tsconfig exclude` test files без sync ESLint project; test-report lint exit 0 устарел; (2) authed entry `/m/:serial/` → relative `home` = `/m/:serial/home`, не канон `/home`; (3) double `fetchMachineBySerial` SerialCapture → ValidationPage (Flow B). Некритично: 401+skipAuth, hint в returning flow, sessionStorage spoof MVP-risk, auth helpers в ValidationPage, слабые component tests, Vitest 3.2.4 infra.
-- **Verification re-check:** lint exit 1; test 18/18 PASS; build exit 0 (`wiva-client-web-app` path)
+- **Verification re-check:** lint exit 1; test 18/18 PASS; build exit 0 (`viwa-client-web-app` path)
 - **Следующий шаг:** developer-complex круг 2 (lint/tsconfig.eslint, ValidationPage `/home`, dedup public lookup) → re-review → task-06
 
 ## [developer] task-05 — круг 2 — 2026-07-29
@@ -330,7 +330,7 @@
 
 - Субагент: developer-complex (прерванный круг 2 — verify-only)
 - **Состояние:** все 3 🔴 blockers уже применены в предыдущем ходе; дублирование правок не выполнялось
-- **Re-verification:** lint exit 0; test 24/24 PASS; build exit 0 (`C:\wiva\wiva-client-web-app`)
+- **Re-verification:** lint exit 0; test 24/24 PASS; build exit 0 (`C:\viwa\viwa-client-web-app`)
 - **Blockers closed:** ESLint `tsconfig.eslint.json`; authed entry → `/home`; `machineSerialValidationCache` dedup
 - **Артефакт:** `tasks/task-05-test-report.md` (verification timestamp updated)
 - **Не в scope:** commit/push
@@ -354,7 +354,7 @@
   1. ESLint — `tsconfig.eslint.json` + `.eslintrc` project sync; lint exit 0 (0 errors)
   2. Authed `/m/:serial/` entry → `getMachineEntryRedirectPath(true)` = `/home` (architecture v1.2)
   3. `machineSerialValidationCache` — one-shot mark/consume; Flow B single API call; refresh/direct entry re-fetch; no cross-serial consume
-- **Verification:** lint exit 0; test 24/24 PASS; build exit 0 (`C:\wiva\wiva-client-web-app`)
+- **Verification:** lint exit 0; test 24/24 PASS; build exit 0 (`C:\viwa\viwa-client-web-app`)
 - **🟡 без изменений:** 401 skipAuth, returning hint, auth helpers coupling, component tests, Vitest infra
 - **Следующий шаг:** task-06 concept-16 UI on routes; optional 🟡 backlog; commit/push → user confirmation + `/task-completion`
 
@@ -370,7 +370,7 @@
   - `BottomNav` MVP — home + profile active; history/settings stubs
   - `viwa-tokens.css`, `publicModule` tastes/tiers, `clientDTO` monthly + favorites
   - WS `client.profile.updated` + billing flow preserved
-- **Verification:** lint exit 0; test 32/32 PASS; build exit 0 (`C:\wiva\wiva-client-web-app`)
+- **Verification:** lint exit 0; test 32/32 PASS; build exit 0 (`C:\viwa\viwa-client-web-app`)
 - **Locale:** RU via `subscriptionLocale.ts` + `ru.json`/`en.json`; `locale:sync/sort/verify` scripts absent in package.json
 - **Артефакт:** `tasks/task-06-test-report.md`
 - **Не в scope:** task-08 assets, task-09 live wire-up, Docker, commit/push
@@ -400,7 +400,7 @@
 - Арtefact: `tasks/task-06-review.md`
 - **hasCriticalIssues:** true
 - **Вывод:** concept-16 SubscriptionPage, monthly progress (`resolveMonthlyProgress` + trial fallback), API `priceKopecks`, favorites max-3 from public catalog, WS `client.profile.updated` + billing preserved, viwa tokens, BottomNav MVP, no routing/task-08/09 leakage — OK vs task/architecture. **Blockers:** (1) `isActiveSubscription` ignores expired `subscriptionEndsAt` — plan cards hidden, renewal blocked; (2) GET `/client/me` full-replace races WS/PATCH merge — stale profile can overwrite favorites/monthly progress; (3) locale verify acceptance open — `locale:sync|sort|verify` absent, partial ru/en vs `subscriptionLocale.ts`; (4) progress card keyboard + `VolumeCircle` `role=img`; (5) `BottomNav` `<a href>` full SPA reload. Некритично: SubscriptionPage monolith, SCSS `var()` fallbacks, CW06-3 weak (helper not UI), pre-task-08 image waterfall, hardcoded RU aria fragments.
-- **Verification re-check:** lint exit 0; test 32/32 PASS; build exit 0 (`C:\wiva\wiva-client-web-app`)
+- **Verification re-check:** lint exit 0; test 32/32 PASS; build exit 0 (`C:\viwa\viwa-client-web-app`)
 - **Следующий шаг:** developer-complex круг 2 (expired UX, profile merge race, locale/a11y/nav) → re-review → task-08 assets parallel OK → task-09 staging gate
 
 ## [developer] task-06 — круг 2 — 2026-07-29
@@ -428,7 +428,7 @@
   3. Locale verify — 47 `subscription.*` keys ru/en; `tSubscription` from JSON + `setSubscriptionLocale`; `locale:verify` exit 0; R2-3 test
   4. a11y — progress card native `<button>`; `VolumeCircle` `role="progressbar"` + aria values; CW06-1
   5. BottomNav — `NavLink` SPA nav; localized `navAriaLabel`; R2-5 test
-- **Verification:** lint exit 0; locale:verify exit 0 (47 keys); test 40/40 PASS; build exit 0 (`C:\wiva\wiva-client-web-app`)
+- **Verification:** lint exit 0; locale:verify exit 0 (47 keys); test 40/40 PASS; build exit 0 (`C:\viwa\viwa-client-web-app`)
 - **🟡 без изменений:** SubscriptionPage monolith, SCSS var() fallbacks, CW06-3 UI gap, dual nav item `/home`, pre-task-08 image waterfall
 - **Следующий шаг:** task-08 assets (parallel OK) → task-09 staging gate → task-10 browser B-scenarios; commit/push → user confirmation + `/task-completion`
 
@@ -469,7 +469,7 @@
 - Verification re-check: `static-regression-check.ps1` PASS; manifest 18×webp/png on disk; Pillow 0 dimension mismatches; taste keys ≡ `TASTE_MEDIA_KEYS`; triple manifest byte-sync
 - Арtefact: `tasks/task-08-review.md`
 - **hasCriticalIssues:** false
-- **Вывод:** §7 contract закрыт — 18 assets in manifest + generated files; site hero-bottle + cabinet mock + 14 lazy taste `<picture>` with manifest `altRu`; client mirror + `FavoriteFlavorsSection` manifest paths/fallback; no originals in repo; no price leakage. 🟡 `hero-station`/logo PNG not wired in site HTML (SVG logo follow-up separate — not blocker); ~22 MB payload; README stale; script hardcodes `wiva-client-web-app` path.
+- **Вывод:** §7 contract закрыт — 18 assets in manifest + generated files; site hero-bottle + cabinet mock + 14 lazy taste `<picture>` with manifest `altRu`; client mirror + `FavoriteFlavorsSection` manifest paths/fallback; no originals in repo; no price leakage. 🟡 `hero-station`/logo PNG not wired in site HTML (SVG logo follow-up separate — not blocker); ~22 MB payload; README stale; script hardcodes `viwa-client-web-app` path.
 - **Следующий шаг:** task-09 staging gate (live API + mobile polish) → task-10 browser B-scenarios; optional 🟡 backlog (hero-station wire-up, README, preload LCP)
 
 ## [user-correction] logo canonical — 2026-07-29
@@ -542,7 +542,7 @@
 ## [developer-complex] task-10 — path alias fix — 2026-07-29
 
 - Repo: `viwa-client-web-app` (branch `dev`, uncommitted)
-- **Root cause:** Windows junction `viwa-client-web-app` → `wiva-client-web-app`; Vite/Vitest mixed junction cwd with realpath config dir → 4 TSX suite load failures + invalid build HTML chunk `../wiva-client-web-app/index.html`
+- **Root cause:** Windows junction `viwa-client-web-app` → `viwa-client-web-app`; Vite/Vitest mixed junction cwd with realpath config dir → 4 TSX suite load failures + invalid build HTML chunk `../viwa-client-web-app/index.html`
 - **Fix:** `scripts/projectRoot.mjs` (`realpathSync.native`), explicit `root` + `process.chdir(projectRoot)` in `vite.config.ts` / `vitest.config.ts`; Node regression `scripts/projectRoot.test.mjs` chained in `npm test`
 - **Артефакт:** `tasks/task-10-test-report.md`
 - **Verification (viwa canonical):** lint 0 errors; locale:verify 47 keys OK; test 40/40 + regression 2/2; build exit 0
@@ -602,7 +602,7 @@
 
 - Repo: `viwa-telemetry` (`apps/web`, uncommitted)
 - **Symptom:** `@viwa/web` — 64 files / 78 tests fail (`Invalid Chai property: toBeInTheDocument`); `@viwa/api` 335 pass
-- **Root cause:** global `expect` vs setup `import { expect }` mismatch + Windows junction `viwa-telemetry` / `wiva-telemetry` duplicate `node_modules` → две копии Vitest
+- **Root cause:** global `expect` vs setup `import { expect }` mismatch + Windows junction `viwa-telemetry` / `viwa-telemetry` duplicate `node_modules` → две копии Vitest
 - **Fix:** `setup.ts` `expect.extend(matchers)` на global expect; `vitest/config` + `realpathSync`; `scripts/vitest-run.mjs`
 - **Артефакт:** `tasks/task-10-test-report.md` (§ Subtask: viwa-telemetry)
 - **Verification:** `npm test -w @viwa/web` **502/502**; root `npm test` **0** (api 335 + web 502); lint/typecheck/build **0**

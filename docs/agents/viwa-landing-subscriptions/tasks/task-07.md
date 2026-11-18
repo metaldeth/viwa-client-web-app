@@ -50,7 +50,7 @@
 ## Tests / build
 
 ```powershell
-cd c:\wiva\viwa-site
+cd c:\viwa\viwa-site
 python -m http.server 8080
 # Static checks:
 # - all relative asset links resolve

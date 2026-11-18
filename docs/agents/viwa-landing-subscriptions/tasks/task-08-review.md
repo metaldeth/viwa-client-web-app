@@ -203,7 +203,7 @@
 | Logo PNG vs SVG preferred | 🟡 | explicit out-of-scope per orchestrator |
 | API/price leakage | ✅ | none in asset layer |
 | Originals outside repo | ✅ | parent batch path only |
-| Script path `wiva-client-web-app` | 🟡 | cutover to `viwa-*` naming may break re-run on some machines |
+| Script path `viwa-client-web-app` | 🟡 | cutover to `viwa-*` naming may break re-run on some machines |
 | Mock tier prices in `landing-api.js` | ✅ | task-07 guard unchanged; not introduced by task-08 |
 | Docker untouched | ✅ | |
 

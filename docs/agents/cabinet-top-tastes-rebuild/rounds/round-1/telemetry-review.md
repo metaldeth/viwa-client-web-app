@@ -1,7 +1,7 @@
 # Telemetry Backend Review — Cabinet TOP-3 (Round 1 of 5)
 
 **Date:** 2026-07-29  
-**Repo:** `viwa-telemetry` (`C:\wiva\viwa-telemetry`)  
+**Repo:** `viwa-telemetry` (`C:\viwa\viwa-telemetry`)  
 **Scope:** Uncommitted backend implementation — computed `favoriteTasteKeys`, migration/backfill, domain stats, PUT 410, WS/offline push  
 **Spec sources:** `task-telemetry-report.md`, `docs/contracts/loyalty-client-rest.md`, `docs/contracts/client-ws.md`  
 **Reviewers:** review-general, review-performance, review-docs, review-final (`composer-2.5-fast`)  

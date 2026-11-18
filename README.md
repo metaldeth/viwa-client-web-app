@@ -1,6 +1,6 @@
 # viwa-client-web-app
 
-Mobile-oriented web client for **Viwa** (React, TypeScript, Vite, Redux). Part of the Wiva workspace (`c:\wiva`, folder `wiva-client-web-app`); shared agent rules live in `c:\wiva\.cursor`.
+Mobile-oriented web client for **Viwa** (React, TypeScript, Vite, Redux). Part of the Wiva workspace (`c:\wiva`, folder `viwa-client-web-app`); shared agent rules live in `c:\viwa\.cursor`.
 
 Backend API paths and dev hosts may still reference legacy infrastructure where required for compatibility — do not rename gateway routes or infra URLs without a coordinated backend change.
 

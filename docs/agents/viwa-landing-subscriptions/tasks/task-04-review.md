@@ -140,7 +140,7 @@
 
 🔴 **Критично (contract ↔ runtime shape):**
 
-- [`loyalty-admin-rest.md` `GET /admin/clients/:id`] Документирует primary `monthlyLimitMl` / `monthlyUsedMl` / `monthlyRemainingMl` + deprecated `daily*`. Реализация [`admin-client.dto.ts`](c:\wiva\viwa-telemetry\apps\api\src\loyalty\admin-api\dto\admin-client.dto.ts) / `toListItem` отдаёт **только** `daily*` (значения из monthly pool). Dashboard по контракту будет искать отсутствующие `monthly*`. Круг 2: либо добавить `monthly*` в admin DTO, либо поправить контракт под as-is (+ deprecated note).
+- [`loyalty-admin-rest.md` `GET /admin/clients/:id`] Документирует primary `monthlyLimitMl` / `monthlyUsedMl` / `monthlyRemainingMl` + deprecated `daily*`. Реализация [`admin-client.dto.ts`](c:\viwa\viwa-telemetry\apps\api\src\loyalty\admin-api\dto\admin-client.dto.ts) / `toListItem` отдаёт **только** `daily*` (значения из monthly pool). Dashboard по контракту будет искать отсутствующие `monthly*`. Круг 2: либо добавить `monthly*` в admin DTO, либо поправить контракт под as-is (+ deprecated note).
 
 - [`loyalty-client-rest.md` `POST /check-code` 200] Пример с `limitResetsAt`; код вызывает `toClientProfile(status)` **без** `includeLimits` → нет `limitResetsAt` / `limitExhausted` / `poolExpiresAt`. При этом `favoriteTasteKeys` всегда есть — в примере check-code часто отсутствует. Синхронизировать docs ↔ mapper.
 

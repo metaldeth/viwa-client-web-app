@@ -38,7 +38,7 @@
 
 ## Git facts
 
-- **repo:** `viwa-client-web-app` (`c:\wiva\viwa-client-web-app`)
+- **repo:** `viwa-client-web-app` (`c:\viwa\viwa-client-web-app`)
 - **branch:** `dev` (tracking `origin/dev`)
 - **HEAD:** `283ee50` — `fix: показывать недоступный тариф до окончания подписки`
 - **commit:** none for this task — **pending**

@@ -47,7 +47,7 @@
 ## Tests / build
 
 ```powershell
-cd c:\wiva\viwa-telemetry
+cd c:\viwa\viwa-telemetry
 npm run lint
 npm run typecheck
 npm test -- subscription-level client-api

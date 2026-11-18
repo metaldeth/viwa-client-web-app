@@ -1,7 +1,7 @@
 # Task report — telemetry backend (computed TOP-3 favorites)
 
 **Date:** 2026-07-29  
-**Repo:** `viwa-telemetry` (`C:\wiva\viwa-telemetry`)  
+**Repo:** `viwa-telemetry` (`C:\viwa\viwa-telemetry`)  
 **Scope:** Backend only — computed `favoriteTasteKeys`, stats table, migration/backfill, API/WS contracts, PUT deprecation.
 
 ## Summary

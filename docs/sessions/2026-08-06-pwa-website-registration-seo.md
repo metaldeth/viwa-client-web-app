@@ -17,9 +17,9 @@
 
 ## Risks
 
-- **Dirty source trees uncommitted:** `wiva-client-web-app`, `wiva-telemetry`, `viwa-site` hold WIP not yet pushed — production runs RC artifacts, not these working copies.
+- **Dirty source trees uncommitted:** `viwa-client-web-app`, `viwa-telemetry`, `viwa-site` hold WIP not yet pushed — production runs RC artifacts, not these working copies.
 - **OTP E2E not run** — registration/auth attribution and refresh/session flows not fully validated on production.
-- **Local dirty `main` gate still open** — root `npm test` / `npm run build` on recipe WIP tree not green; do not treat dirty tree as release source (brief ref: `wiva-telemetry/docs/agents/build-troubleshooting-log.md`).
+- **Local dirty `main` gate still open** — root `npm test` / `npm run build` on recipe WIP tree not green; do not treat dirty tree as release source (brief ref: `viwa-telemetry/docs/agents/build-troubleshooting-log.md`).
 
 ## Verification
 
@@ -33,21 +33,21 @@
 
 ## Git facts
 
-### `wiva-client-web-app` (`c:\wiva\wiva-client-web-app`)
+### `viwa-client-web-app` (`c:\viwa\viwa-client-web-app`)
 
 - **branch:** `dev` (tracks `origin/dev`)
 - **HEAD:** `2b2c522` — `feat: добавить согласие на повышение цены подписки`
 - **status:** dirty — 31 tracked modified (+536/−216), many untracked (PWA assets, `public/manifest.webmanifest`, `public/sw.js`, `src/pwa/`, register/auth tests, site-metadata scripts)
 - **commit/push this session:** none
 
-### `wiva-telemetry` (`c:\wiva\wiva-telemetry`)
+### `viwa-telemetry` (`c:\viwa\viwa-telemetry`)
 
 - **branch:** `main` — **behind `origin/main` by 1**
 - **HEAD:** `d1fc44d` — `fix: запретить downgrade активной подписки`
 - **status:** dirty — ~101 tracked modified (+6994/−1440), large untracked recipe-sync/pricing WIP; deploy used **clean TEMP RC**, not this tree
 - **commit/push this session:** none
 
-### `viwa-site` (`c:\wiva\viwa-site`)
+### `viwa-site` (`c:\viwa\viwa-site`)
 
 - **branch:** `master` (no remote tracking shown)
 - **HEAD:** `be1e91c` — `Revert "feat: добавить юридический футер как у Shaker"`

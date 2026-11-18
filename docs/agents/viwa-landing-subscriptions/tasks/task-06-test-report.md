@@ -40,7 +40,7 @@
 ## Verification commands (re-checked 2026-07-29 round 2)
 
 ```powershell
-cd C:\wiva\wiva-client-web-app
+cd C:\viwa\viwa-client-web-app
 npm run lint          # exit 0 (23 pre-existing warnings, 0 errors)
 npm run locale:verify # exit 0 — 47 subscription keys ru/en parity
 npm test              # 40/40 PASS

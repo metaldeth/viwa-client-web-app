@@ -36,7 +36,7 @@ Cross-repo: [`viwa-telemetry` session log](../../viwa-telemetry/docs/sessions/20
 
 ## Git facts
 
-- **repo:** `viwa-client-web-app` (`C:\wiva\viwa-client-web-app`)
+- **repo:** `viwa-client-web-app` (`C:\viwa\viwa-client-web-app`)
 - **branch:** `dev` — tracking `origin/dev` (even)
 - **HEAD:** `2b2c522` — `feat: добавить согласие на повышение цены подписки`
 - **task diff/stat (tracked):** 35 files, **+606 / −215** — `AuthPage`, `RegisterPage`, `CabinetAuthShell`, locales, `publicSubscriptionLevels` types/utils, subscription locale verify, auth thunk tests, asset manifest tweaks, deleted plan assets in worktree

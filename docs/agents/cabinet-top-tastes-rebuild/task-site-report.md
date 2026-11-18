@@ -4,7 +4,7 @@
 
 **Session:** `cabinet-top-tastes-rebuild`  
 
-**Repo:** `c:\wiva\viwa-site`  
+**Repo:** `c:\viwa\viwa-site`  
 
 **Reference:** 897×867 PNG (`image-6858bf64-d4a3-4c50-9f98-d15528af69cd.png`)  
 
@@ -102,7 +102,7 @@
 
 
 
-- **repo:** `c:\wiva\viwa-site`
+- **repo:** `c:\viwa\viwa-site`
 
 - **branch:** `master`
 

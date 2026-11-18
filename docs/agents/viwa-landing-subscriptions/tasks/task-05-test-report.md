@@ -43,7 +43,7 @@
 ## Verification commands (re-checked 2026-07-29 round 2 — final)
 
 ```powershell
-cd C:\wiva\wiva-client-web-app
+cd C:\viwa\viwa-client-web-app
 npm run lint          # exit 0 (23 pre-existing warnings, 0 errors)
 npm test              # 24/24 PASS
 npm run build         # exit 0
@@ -54,7 +54,7 @@ npm run build         # exit 0
 - Vitest `3.2.4` + `globals: true` — required on Node 22
 - `tsconfig.json` excludes `*.test.{ts,tsx}` from `tsc -b`; `tsconfig.eslint.json` for ESLint type-aware lint
 - `jsdom@26` devDep for hook test (`useMachineSerialValidation.test.tsx`)
-- Build from git root path `C:\wiva\wiva-client-web-app` (Windows casing alias)
+- Build from git root path `C:\viwa\viwa-client-web-app` (Windows casing alias)
 
 ## Not in scope (by plan)
 

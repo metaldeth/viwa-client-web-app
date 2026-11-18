@@ -1,7 +1,7 @@
 # Landing pixel+browser report — Round 4
 
 **Date:** 2026-07-29T18:05:43.783Z
-**Repo:** `C:\wiva\viwa-site` (read-only verification)
+**Repo:** `C:\viwa\viwa-site` (read-only verification)
 **Base URL:** http://127.0.0.1:8765
 **Reference:** 897×867 canonical PNG (user design image via round-1 canonical path)
 **Reference source:** `C:\Users\metal\.cursor\projects\c-wiva\assets\C__Users_metal_.cursor_projects_c-wiva_assets_c__Users_metal_AppData_Roaming_Cursor_User_workspaceStorage_3db40d35d3f4047b9fe7c179a72f5a37_images_image-6858bf64-d4a3-4c50-9f98-d15528af69cd.png`

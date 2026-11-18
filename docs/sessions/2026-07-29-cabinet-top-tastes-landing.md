@@ -52,7 +52,7 @@
 
 ## Git facts
 
-- **repo:** `viwa-client-web-app` (`c:\wiva\viwa-client-web-app`)
+- **repo:** `viwa-client-web-app` (`c:\viwa\viwa-client-web-app`)
 - **branch:** `dev` (up to date with `origin/dev`)
 - **commit:** none (per user)
 - **pending:** 25 modified tracked files + extensive untracked (components, assets, tests, `docs/agents/cabinet-top-tastes-rebuild/`)

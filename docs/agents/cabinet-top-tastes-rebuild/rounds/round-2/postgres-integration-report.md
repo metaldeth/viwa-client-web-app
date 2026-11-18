@@ -1,7 +1,7 @@
 ﻿# Round 2 — PostgreSQL integration gate (viwa-server)
 
 **Date:** 2026-07-29  
-**Repo under test:** `C:\wiva\viwa-telemetry` (uncommitted local tree packaged)  
+**Repo under test:** `C:\viwa\viwa-telemetry` (uncommitted local tree packaged)  
 **Session ids:** `20260729225124` (initial combined gate), `20260729225815` (strict `client-api` rerun)  
 **Isolation:** temp role/DB per session on localhost PostgreSQL only; no production credentials, Docker, deploy, or git changes
 
@@ -94,7 +94,7 @@ Artifacts retained locally: `%TEMP%\viwa-top3-run-remote.log`, `%TEMP%\viwa-top3
 ### Rerun command (isolated PostgreSQL)
 
 ```powershell
-cd C:\wiva\viwa-telemetry\apps\api
+cd C:\viwa\viwa-telemetry\apps\api
 $env:DATABASE_URL = '<isolated-postgres-url>'
 $env:NODE_ENV = 'test'
 # applyMachineTestEnv equivalents + CLIENT_JWT_SECRET from test-helpers

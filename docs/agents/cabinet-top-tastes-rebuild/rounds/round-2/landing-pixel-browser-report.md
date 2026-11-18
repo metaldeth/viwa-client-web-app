@@ -1,7 +1,7 @@
 # Landing pixel+browser report — Round 2
 
 **Date:** 2026-07-29T17:49:37.097Z
-**Repo:** `C:\wiva\viwa-site` (read-only verification)
+**Repo:** `C:\viwa\viwa-site` (read-only verification)
 **Base URL:** http://127.0.0.1:8765
 **Reference:** 897×867 canonical PNG
 **Result:** **FAIL**

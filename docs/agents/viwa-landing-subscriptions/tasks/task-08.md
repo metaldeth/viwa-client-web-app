@@ -64,11 +64,11 @@
 
 ```powershell
 # Site
-cd c:\wiva\viwa-site
+cd c:\viwa\viwa-site
 # Verify no 404 for manifest paths referenced in HTML/JS
 
 # Client
-cd c:\wiva\viwa-client-web-app
+cd c:\viwa\viwa-client-web-app
 npm run lint
 npm run build
 # Check dist contains public/assets/viwa/*

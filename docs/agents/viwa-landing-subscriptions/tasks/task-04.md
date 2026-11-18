@@ -55,7 +55,7 @@ Server-side `registrationSource` derivation, serial gate for new clients, profil
 ## Tests / build
 
 ```powershell
-cd c:\wiva\viwa-telemetry
+cd c:\viwa\viwa-telemetry
 npm run lint
 npm run typecheck
 npm test -- client-api client-auth loyalty-domain

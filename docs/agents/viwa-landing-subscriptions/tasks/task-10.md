@@ -62,19 +62,19 @@
 ## Tests / build
 
 ```powershell
-cd c:\wiva\viwa-telemetry
+cd c:\viwa\viwa-telemetry
 npm run lint
 npm run typecheck
 npm test
 npm run build
 
-cd c:\wiva\viwa-client-web-app
+cd c:\viwa\viwa-client-web-app
 npm run lint
 npm run locale:verify
 npm test
 npm run build
 
-cd c:\wiva\viwa-site
+cd c:\viwa\viwa-site
 python -m http.server 8080
 # Browser: TEMP_TEST_SCENARIOS.md — all viewports
 ```
